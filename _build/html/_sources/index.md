@@ -8,6 +8,6 @@
 
 ## Advisor
 
-[Dr. Milad Toutounchian](https://drexel.edu/cci/about/directory/T/Toutounchian-Milad/
+[Dr. Milad Toutounchian](https://drexel.edu/cci/about/directory/T/Toutounchian-Milad/)
 
 **Email**: mt3393@drexel.edu
