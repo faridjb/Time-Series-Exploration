@@ -1,4 +1,5 @@
-# **Time Series Exploration with Python:** _A Journey from Traditional to Advanced Forecasting Models_
+# **Time Series Exploration with Python:** 
+_A Journey from Traditional to Advanced Forecasting Models_
 
 ## Author
 
