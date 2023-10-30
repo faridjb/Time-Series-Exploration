@@ -1,0 +1,20 @@
+format: jb-book
+root: index.md
+chapters:
+  - file: TOC.ipynb
+  - file: chapters/chapter_01.ipynb
+  - file: chapters/chapter_02.ipynb
+  - file: chapters/chapter_03.ipynb
+  - file: chapters/chapter_04.ipynb
+  - file: chapters/chapter_05.ipynb
+  - file: chapters/chapter_06.ipynb
+  - file: chapters/chapter_07.ipynb
+  - file: chapters/chapter_08.ipynb
+  - file: chapters/chapter_09.ipynb
+  - file: chapters/chapter_10.ipynb
+  - file: chapters/chapter_11.ipynb
+  - file: chapters/chapter_12.ipynb
+  - file: chapters/chapter_13.ipynb
+  - file: chapters/chapter_14.ipynb
+  - file: chapters/chapter_15.ipynb
+  - file: chapters/chapter_16.ipynb

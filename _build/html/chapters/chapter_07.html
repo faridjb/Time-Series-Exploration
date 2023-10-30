@@ -1,0 +1,672 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>7. Stationarity &#8212; Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter_07';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="8. Discovered a suite of classical time series forecasting methods" href="chapter_08.html" />
+    <link rel="prev" title="6. Data Prepration" href="chapter_06.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Time Series Exploration with Python: A Journey from Traditional to Advanced Forecasting Models
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TOC.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_01.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_02.html">2. Importing data in colab notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_03.html">3. Data Wrangling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_04.html">4. Time Series Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_05.html">5. Exploratory Data Analysis (EDA) for Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_06.html">6. Data Prepration</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Stationarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_08.html">8. Discovered a suite of classical time series forecasting methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_09.html">9. Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_10.html">10. Classical models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_11.html">11. Deep Learning for Time Series Forecasting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_12.html">12. Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_13.html">13. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_14.html">14. Preprocessing using Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_15.html">15. Time Series Analysis toolkits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_16.html">16. NeuralProphet</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter_07.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter_07.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>7. Stationarity</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-make-a-time-series-stationary">7.1 How to make a time series stationary</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#differencing-and-its-importance">7.1.1 Differencing and its Importance</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-code">Example Code</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonal-decomposition">7.1.2 Seasonal Decomposition</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="stationarity">
+<h1>7. Stationarity<a class="headerlink" href="#stationarity" title="Permalink to this heading">#</a></h1>
+<p>Understanding stationarity and differencing is fundamental when working with time series data. Stationarity is a key assumption in many time series models, as it simplifies the analysis and makes predictions more reliable. Differencing is a common technique used to achieve stationarity in non-stationary time series data.
+<strong>Stationarity</strong> refers to a time series whose statistical properties, such as mean, variance, and autocorrelation, <em><strong>do not change over time</strong></em>. In simpler terms, a stationary time series has a constant statistical behavior across different time periods. Many time series forecasting methods assume stationarity to make predictions.</p>
+<section id="how-to-make-a-time-series-stationary">
+<h2>7.1 How to make a time series stationary<a class="headerlink" href="#how-to-make-a-time-series-stationary" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Plotting</strong>: Start by visualizing your time series data using line plots, histograms, or other relevant plots. Look for any obvious trends, seasonality, or irregularities.</p></li>
+<li><p><strong>Statistical Tests</strong>: Use statistical tests like the Augmented Dickey-Fuller (ADF) test to check for stationarity. The null hypothesis of the ADF test is that the time series is non-stationary. If the p-value is below a certain threshold, you can reject the null hypothesis and consider the time series as stationary.</p></li>
+<li><p><strong>Differencing</strong>: If the time series is not stationary, you can make it stationary by differencing. This involves subtracting the previous value from the current value.</p></li>
+<li><p><strong>Seasonal Decomposition</strong>: If there is a clear seasonal component in your data, you can decompose the time series into its trend, seasonal, and residual components. This helps in identifying and removing seasonality.</p></li>
+</ol>
+<section id="differencing-and-its-importance">
+<h3>7.1.1 Differencing and its Importance<a class="headerlink" href="#differencing-and-its-importance" title="Permalink to this heading">#</a></h3>
+<p><strong>Differencing</strong> is a technique used to transform a non-stationary time series into a stationary one. It involves subtracting a lagged version of the time series from itself. The order of differencing (i.e., how many lag values to subtract) depends on the data.</p>
+<section id="example-code">
+<h4>Example Code<a class="headerlink" href="#example-code" title="Permalink to this heading">#</a></h4>
+<p>Let’s illustrate these concepts with Python code using a sample time series dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Import necessary libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from statsmodels.tsa.stattools import adfuller
+
+# Generate a non-stationary time series
+np.random.seed(0)
+n = 100
+time = np.arange(n)
+data = 0.5 * time + np.random.randn(n)
+
+# Plot the original time series
+plt.figure(figsize=(8, 4))  # Adjust figure size as per your preference
+plt.plot(time, data)
+plt.title(&quot;Non-Stationary Time Series&quot;, fontsize=12)  # Adjust title font size
+plt.xlabel(&quot;Time&quot;, fontsize=9)  # Adjust x-axis label font size
+plt.ylabel(&quot;Value&quot;, fontsize=9)  # Adjust y-axis label font size
+plt.grid(True)  # Add grid
+
+plt.show()
+
+# Check stationarity using ADF test
+adf_result = adfuller(data)
+p_value = adf_result[1]
+print(f&quot;ADF p-value: {p_value}&quot;)
+
+# Perform differencing to make it stationary
+data_diff = np.diff(data, 1)  # First-order differencing
+
+# Plot the differenced time series
+plt.figure(figsize=(8, 4))  # Adjust figure size as per your preference
+plt.plot(time[1:], data_diff)
+plt.title(&quot;Stationary Time Series (After Differencing)&quot;, fontsize=12)  # Adjust title font size
+plt.xlabel(&quot;Time&quot;, fontsize=9)  # Adjust x-axis label font size
+plt.ylabel(&quot;Differenced Value&quot;, fontsize=9)  # Adjust y-axis label font size
+plt.grid(True)  # Add grid
+
+plt.show()
+
+# Check stationarity of the differenced series
+adf_result_diff = adfuller(data_diff)
+p_value_diff = adf_result_diff[1]
+print(f&quot;ADF p-value after differencing: {p_value_diff}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/549e705cb26aa445271cd4e374d27362f26c0060d2263ffd767ec6382660130d.png" src="../_images/549e705cb26aa445271cd4e374d27362f26c0060d2263ffd767ec6382660130d.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ADF p-value: 0.998736655331758
+</pre></div>
+</div>
+<img alt="../_images/ec14126a3d9d12df0ce55c17a5e173b748ba0782750999b3aaceb6805a870e0b.png" src="../_images/ec14126a3d9d12df0ce55c17a5e173b748ba0782750999b3aaceb6805a870e0b.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ADF p-value after differencing: 2.434315814195165e-06
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this example, we first create a non-stationary time series with a linear trend and random noise. We then use the Augmented Dickey-Fuller test to check for stationarity. Since the p-value is high, we conclude that the original series is non-stationary.</p>
+<p>Next, we perform first-order differencing on the time series, creating a new series. We visualize this differenced series and again use the ADF test to check for stationarity. The lower p-value suggests that the differenced series is now stationary, which is a desirable property for time series analysis.</p>
+<p>Keep in mind that the order of differencing may vary depending on your specific dataset, and you may need to apply further transformations if seasonality is present. Time series analysis often involves experimentation to find the best approach for your data.</p>
+</section>
+</section>
+<section id="seasonal-decomposition">
+<h3>7.1.2 Seasonal Decomposition<a class="headerlink" href="#seasonal-decomposition" title="Permalink to this heading">#</a></h3>
+<p><strong>Seasonal decomposition</strong> involves separating a time series into its constituent components: trend, seasonal, and residual (or error) components. By removing the trend and seasonality, you can work with the residual component, which should ideally be stationary.</p>
+<p>We’ll use Python and the <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> library to perform seasonal decomposition on a sample time series dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Import necessary libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+# Generate a non-stationary time series with seasonality
+np.random.seed(0)
+n = 100
+time = np.arange(n)
+data = 0.5 * time + 10 * np.sin(2 * np.pi * time / 12) + np.random.randn(n)
+
+# Set font size
+plt.rcParams.update({&#39;font.size&#39;: 9})
+
+# Perform seasonal decomposition
+result = seasonal_decompose(data, model=&#39;additive&#39;, period=12)  # 12 for monthly data
+
+# Plot the decomposed components
+plt.figure(figsize=(8, 8))  # Adjust figure size as per your preference
+
+plt.subplot(4, 1, 1)
+plt.plot(time, data, label=&#39;Original&#39;)
+plt.title(&quot;Original Time Series&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.grid(True)
+
+plt.subplot(4, 1, 2)
+plt.plot(time, result.trend, label=&#39;Trend&#39;)
+plt.title(&quot;Trend Component&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.grid(True)
+
+plt.subplot(4, 1, 3)
+plt.plot(time, result.seasonal, label=&#39;Seasonal&#39;)
+plt.title(&quot;Seasonal Component&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.grid(True)
+
+plt.subplot(4, 1, 4)
+plt.plot(time, result.resid, label=&#39;Residual&#39;, color=&#39;red&#39;)
+plt.title(&quot;Residual Component (Stationary)&quot;)
+plt.xlabel(&quot;Time&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.grid(True)
+
+plt.tight_layout()
+plt.legend()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/65a03b1dfa143167eaa4a862c14dec0f90bcdb54be9e761931a9ec9216a2ed7f.png" src="../_images/65a03b1dfa143167eaa4a862c14dec0f90bcdb54be9e761931a9ec9216a2ed7f.png" />
+</div>
+</div>
+<p>In this example, we generate a non-stationary time series with both a linear trend and seasonality. We then perform seasonal decomposition using the <code class="docutils literal notranslate"><span class="pre">seasonal_decompose</span></code> function from <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code>. We specify the <code class="docutils literal notranslate"><span class="pre">model</span></code> as ‘additive’ since we assume that the components add up to the observed series. The <code class="docutils literal notranslate"><span class="pre">period</span></code> parameter is set to 12 because the data is assumed to have monthly seasonality.</p>
+<p>We visualize the original time series along with its decomposed components: trend, seasonal, and residual. The goal is to make the residual component (bottom subplot) stationary. You can further analyze and model this stationary residual component for forecasting or analysis.</p>
+<p>Remember that the choice of the decomposition model and period may vary depending on your specific dataset and domain knowledge. Seasonal decomposition is particularly useful for handling time series data with strong seasonal patterns.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter_06.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">6. Data Prepration</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter_08.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">8. Discovered a suite of classical time series forecasting methods</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-make-a-time-series-stationary">7.1 How to make a time series stationary</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#differencing-and-its-importance">7.1.1 Differencing and its Importance</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-code">Example Code</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonal-decomposition">7.1.2 Seasonal Decomposition</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Farid Jabbari Maleki
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  LinkedIn <a href="https://www.linkedin.com/in/farid-j-maleki/">Farid J. Maleki</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

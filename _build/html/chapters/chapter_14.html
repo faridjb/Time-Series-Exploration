@@ -1,0 +1,776 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>14. Preprocessing using Deep Learning &#8212; Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter_14';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="15. Time Series Analysis toolkits" href="chapter_15.html" />
+    <link rel="prev" title="13. Feature Engineering" href="chapter_13.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Time Series Exploration with Python: A Journey from Traditional to Advanced Forecasting Models
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TOC.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_01.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_02.html">2. Importing data in colab notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_03.html">3. Data Wrangling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_04.html">4. Time Series Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_05.html">5. Exploratory Data Analysis (EDA) for Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_06.html">6. Data Prepration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_07.html">7. Stationarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_08.html">8. Discovered a suite of classical time series forecasting methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_09.html">9. Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_10.html">10. Classical models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_11.html">11. Deep Learning for Time Series Forecasting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_12.html">12. Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_13.html">13. Feature Engineering</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">14. Preprocessing using Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_15.html">15. Time Series Analysis toolkits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_16.html">16. NeuralProphet</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter_14.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter_14.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>14. Preprocessing using Deep Learning</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-missing-values-using-an-rnn">14.1 Handling missing values using an RNN</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outlier-detection-using-an-autoencoder">14.2 Outlier detection using an autoencoder</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-seasonality-and-trends-using-a-cnn">14.3 Handling seasonality and trends using a CNN</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="preprocessing-using-deep-learning">
+<h1>14. Preprocessing using Deep Learning<a class="headerlink" href="#preprocessing-using-deep-learning" title="Permalink to this heading">#</a></h1>
+<p>how deep learning can be used in data preprocessing for time series analysis:</p>
+<p>Let’s consider a scenario where you have a time series dataset that contains temperature measurements recorded every hour over a period of several years. The dataset may have missing values, outliers, and varying scales. You want to preprocess the data before using it for time series analysis.</p>
+<ol class="arabic simple">
+<li><p><strong>Handling missing values</strong>: One common approach is to use deep learning models, such as recurrent neural networks (RNNs), to impute missing values in the time series. You can train an RNN on the available data and use it to predict the missing values based on the pattern in the surrounding data points.</p></li>
+<li><p><strong>Outlier detection</strong>: Deep learning models, such as autoencoders, can be used to detect outliers in the time series data. An autoencoder is trained to reconstruct the input data, and data points that have a high reconstruction error can be considered outliers. By identifying and removing or handling outliers, you can ensure that they don’t negatively impact the analysis.</p></li>
+<li><p><strong>Scaling and normalization</strong>: Deep learning models often benefit from input data that is scaled or normalized. For time series data, you can use techniques like min-max scaling or z-score normalization to bring the values to a consistent range. This helps the model converge faster during training and makes the model more robust to variations in the data.</p></li>
+<li><p><strong>Handling seasonality and trends</strong>: Deep learning models can also be used to extract seasonality and trends from time series data. For example, you can use a convolutional neural network (CNN) to learn the patterns in the data over different time intervals. This can help in identifying and removing the underlying seasonal or trend components, making the data more stationary and suitable for analysis.</p></li>
+</ol>
+<p>By applying these deep learning techniques in data preprocessing, you can address various challenges associated with time series data, such as missing values, outliers, and varying scales. This sets the foundation for accurate and effective time series analysis and prediction using deep learning models.</p>
+<section id="handling-missing-values-using-an-rnn">
+<h2>14.1 Handling missing values using an RNN<a class="headerlink" href="#handling-missing-values-using-an-rnn" title="Permalink to this heading">#</a></h2>
+<p>In this simple example:</p>
+<ol class="arabic simple">
+<li><p>We first create a time series data based on a sine wave.</p></li>
+<li><p>We then introduce some missing values in the data.</p></li>
+<li><p>We then prepare sequences of a given timestep (here 5) to use as inputs and the next value as output. We skip sequences with NaN values.</p></li>
+<li><p>We define an RNN model and train it on the sequences.</p></li>
+<li><p>We then use the model to predict the missing values in the data.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import SimpleRNN, Dense
+import matplotlib.pyplot as plt
+
+
+# Create some simple data
+data = np.array([i + np.sin(i/5) for i in range(100)])
+original_data = data.copy()
+
+# Introduce some missing values
+missing_indices = [10, 15, 30, 45, 60]
+for idx in missing_indices:
+    data[idx] = None
+
+data_with_missing = data.copy()
+
+# Prepare data for RNN
+def prepare_data(data, timestep=5):
+    X, y = [], []
+    for i in range(len(data)-timestep):
+        seq = data[i:i+timestep]
+        if not np.isnan(seq).any() and not np.isnan(data[i+timestep]):
+            X.append(seq)
+            y.append(data[i+timestep])
+    return np.array(X), np.array(y)
+
+X, y = prepare_data(data)
+
+# Reshape to [samples, timesteps, features]
+X = X.reshape(X.shape[0], X.shape[1], 1)
+
+# Define the RNN model
+model = Sequential([
+    SimpleRNN(50, activation=&#39;relu&#39;, input_shape=(X.shape[1], X.shape[2])),
+    Dense(1)
+])
+
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mse&#39;)
+model.fit(X, y, epochs=200, verbose=1)
+
+# Predict the missing values
+for idx in missing_indices:
+    seq = data[idx-5:idx].reshape(1, 5, 1)
+    prediction = model.predict(seq)
+    data[idx] = prediction[0, 0]
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Visualization
+plt.figure(figsize=(10, 4))
+
+plt.plot(original_data, label=&quot;Original Data&quot;, color=&#39;blue&#39;)
+plt.plot(data_with_missing, &#39;o&#39;, label=&quot;Data with Missing Values&quot;, color=&#39;red&#39;)
+plt.plot(data, &#39;--&#39;, label=&quot;After RNN Imputation&quot;, color=&#39;green&#39;)
+
+for idx in missing_indices:
+    plt.axvline(x=idx, color=&#39;gray&#39;, linestyle=&#39;--&#39;)
+
+plt.legend()
+plt.title(&quot;Handling Missing Values using RNN&quot;)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/3f62a4669468c8f7ddb1d99577045fc66448190033f8a4ec0b96def027fe62fe.png" src="../_images/3f62a4669468c8f7ddb1d99577045fc66448190033f8a4ec0b96def027fe62fe.png" />
+</div>
+</div>
+</section>
+<section id="outlier-detection-using-an-autoencoder">
+<h2>14.2 Outlier detection using an autoencoder<a class="headerlink" href="#outlier-detection-using-an-autoencoder" title="Permalink to this heading">#</a></h2>
+<p>Autoencoders can be used for outlier detection because they are trained to reconstruct their input data. If an input data point is an outlier, the autoencoder will typically have a higher reconstruction error for that point than for “normal” points. We can thus use the reconstruction error as a measure to detect outliers.</p>
+<p>In the below example we will foloow steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Data Creation</strong>: I’ll use the <code class="docutils literal notranslate"><span class="pre">make_blobs</span></code> function from <code class="docutils literal notranslate"><span class="pre">sklearn.datasets</span></code> to create some clustered data and add a few outliers.</p></li>
+<li><p><strong>Autoencoder Design</strong>: I’ll create a simple autoencoder using TensorFlow and Keras.</p></li>
+<li><p><strong>Training</strong>: I’ll train the autoencoder on the data.</p></li>
+<li><p><strong>Outlier Detection</strong>: I’ll use the reconstruction error to determine outliers.</p></li>
+<li><p><strong>Visualization</strong>: Finally, I’ll visualize the data, highlighting outliers.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_blobs
+from tensorflow import keras
+from keras.layers import Input, Dense
+from keras.models import Model
+
+# 1. Data Creation
+data, _ = make_blobs(n_samples=300, centers=3, random_state=42)
+# Add some outliers
+outliers = np.array([[10, -10], [10, 10], [-10, -10], [-10, 10]])
+all_data = np.vstack([data, outliers])
+
+# 2. Autoencoder Design
+input_layer = Input(shape=(2,))
+encoded = Dense(64, activation=&#39;relu&#39;)(input_layer)
+encoded = Dense(32, activation=&#39;relu&#39;)(encoded)
+decoded = Dense(64, activation=&#39;relu&#39;)(encoded)
+decoded = Dense(2, activation=&#39;linear&#39;)(decoded)
+
+autoencoder = Model(input_layer, decoded)
+autoencoder.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# 3. Training
+autoencoder.fit(all_data, all_data, epochs=100, batch_size=16, shuffle=True, verbose=0)
+
+# 4. Outlier Detection
+decoded_data = autoencoder.predict(all_data)
+reconstruction_error = np.mean(np.power(all_data - decoded_data, 2), axis=1)
+
+threshold = np.percentile(reconstruction_error, 95)  # Here, 95% quantile is used. Adjust as needed.
+outliers_idx = np.where(reconstruction_error &gt; threshold)[0]
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># 5. Visualization
+plt.scatter(all_data[:, 0], all_data[:, 1], c=&#39;b&#39;, label=&#39;Data points&#39;)
+plt.scatter(all_data[outliers_idx, 0], all_data[outliers_idx, 1], c=&#39;r&#39;, marker=&#39;x&#39;, label=&#39;Outliers&#39;)
+plt.xlabel(&#39;Feature 1&#39;)
+plt.ylabel(&#39;Feature 2&#39;)
+plt.legend()
+plt.title(&#39;Outlier Detection using Autoencoder&#39;)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/048459221b2589d00ad394b2f5776bd7207f455d36b29695e4115ec3c2b5cf48.png" src="../_images/048459221b2589d00ad394b2f5776bd7207f455d36b29695e4115ec3c2b5cf48.png" />
+</div>
+</div>
+</section>
+<section id="handling-seasonality-and-trends-using-a-cnn">
+<h2>14.3 Handling seasonality and trends using a CNN<a class="headerlink" href="#handling-seasonality-and-trends-using-a-cnn" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from keras.models import Sequential
+from keras.layers import Conv1D, MaxPooling1D, Flatten, Dense
+
+# Generate synthetic data with seasonality and trends
+np.random.seed(0)
+time = np.arange(0, 1000)
+trend = 0.05 * time
+seasonality = 10 * np.sin(0.02 * time)
+noise = 5 * np.random.randn(len(time))
+data = trend + seasonality + noise
+# Prepare the data for CNN input
+window_size = 50
+X = []
+y = []
+for i in range(len(data) - window_size):
+    X.append(data[i:i+window_size])
+    y.append(data[i+window_size])
+X = np.array(X)
+y = np.array(y)
+
+# Reshape the data for CNN input
+X = X.reshape(X.shape[0], X.shape[1], 1)
+
+# Split the data into training and testing sets
+split_ratio = 0.8
+split_index = int(split_ratio * len(X))
+X_train, X_test = X[:split_index], X[split_index:]
+y_train, y_test = y[:split_index], y[split_index:]
+
+# Create the CNN model
+model = Sequential()
+model.add(Conv1D(filters=32, kernel_size=3, activation=&#39;relu&#39;, input_shape=(window_size, 1)))
+model.add(MaxPooling1D(pool_size=2))
+model.add(Flatten())
+model.add(Dense(1))
+
+# Compile and train the model
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+model.fit(X_train, y_train, epochs=10, batch_size=32)
+
+# Evaluate the model on the testing data
+loss = model.evaluate(X_test, y_test)
+print(&quot;Test Loss:&quot;, loss)
+
+# Make predictions on the testing data
+predictions = model.predict(X_test)
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Visualize the actual data, trends, seasonality, and predictions
+plt.figure()
+
+plt.subplot(2, 1, 1)
+plt.plot(time, data)
+plt.title(&#39;Unprocessed Data&#39;)
+plt.xlabel(&#39;Time&#39;)
+plt.ylabel(&#39;Value&#39;)
+
+plt.subplot(2, 1, 2)
+plt.plot(time, trend, label=&#39;Trend&#39;)
+plt.plot(time, seasonality, label=&#39;Seasonality&#39;)
+plt.xlabel(&#39;Time&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Trend and Seasonality&#39;)
+plt.legend()
+
+plt.tight_layout()
+plt.show()
+
+plt.figure()
+plt.plot(y_test, label=&#39;Actual&#39;)
+plt.plot(predictions, label=&#39;Predicted&#39;)
+plt.xlabel(&#39;Time&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Model Predictions&#39;)
+plt.legend()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d91f6b8b1a210f234d900ea485487e9bbc629ae5661a74698b1d3d04710e2e14.png" src="../_images/d91f6b8b1a210f234d900ea485487e9bbc629ae5661a74698b1d3d04710e2e14.png" />
+<img alt="../_images/76f9fead3a670def161e1516bd8bdf19821b25193761a3ede0c900599fe744a2.png" src="../_images/76f9fead3a670def161e1516bd8bdf19821b25193761a3ede0c900599fe744a2.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter_13.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">13. Feature Engineering</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter_15.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">15. Time Series Analysis toolkits</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-missing-values-using-an-rnn">14.1 Handling missing values using an RNN</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outlier-detection-using-an-autoencoder">14.2 Outlier detection using an autoencoder</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-seasonality-and-trends-using-a-cnn">14.3 Handling seasonality and trends using a CNN</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Farid Jabbari Maleki
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  LinkedIn <a href="https://www.linkedin.com/in/farid-j-maleki/">Farid J. Maleki</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
