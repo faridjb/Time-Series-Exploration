@@ -1,0 +1,83 @@
+Traceback (most recent call last):
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\jupyter_cache\executors\utils.py", line 58, in single_nb_execution
+    executenb(
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\nbclient\client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Roaming\Python\Python311\site-packages\jupyter_core\utils\__init__.py", line 166, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 222, in __aexit__
+    await self.gen.athrow(typ, value, traceback)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\nbclient\client.py", line 650, in async_setup_kernel
+    yield
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\nbclient\client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\nbclient\client.py", line 1058, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "C:\Users\lenovo\AppData\Local\Programs\Python\Python311\Lib\site-packages\nbclient\client.py", line 914, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Import necessary libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from statsmodels.tsa.stattools import adfuller
+
+# Generate a non-stationary time series
+np.random.seed(0)
+n = 100
+time = np.arange(n)
+data = 0.5 * time + np.random.randn(n)
+
+# Plot the original time series
+plt.figure(figsize=(8, 4))  # Adjust figure size as per your preference
+plt.plot(time, data)
+plt.title("Non-Stationary Time Series", fontsize=12)  # Adjust title font size
+plt.xlabel("Time", fontsize=9)  # Adjust x-axis label font size
+plt.ylabel("Value", fontsize=9)  # Adjust y-axis label font size
+plt.grid(True)  # Add grid
+
+plt.show()
+
+# Check stationarity using ADF test
+adf_result = adfuller(data)
+p_value = adf_result[1]
+print(f"ADF p-value: {p_value}")
+
+# Perform differencing to make it stationary
+data_diff = np.diff(data, 1)  # First-order differencing
+
+# Plot the differenced time series
+plt.figure(figsize=(8, 4))  # Adjust figure size as per your preference
+plt.plot(time[1:], data_diff)
+plt.title("Stationary Time Series (After Differencing)", fontsize=12)  # Adjust title font size
+plt.xlabel("Time", fontsize=9)  # Adjust x-axis label font size
+plt.ylabel("Differenced Value", fontsize=9)  # Adjust y-axis label font size
+plt.grid(True)  # Add grid
+
+plt.show()
+
+# Check stationarity of the differenced series
+adf_result_diff = adfuller(data_diff)
+p_value_diff = adf_result_diff[1]
+print(f"ADF p-value after differencing: {p_value_diff}")
+
+------------------
+
+
+[1;31m---------------------------------------------------------------------------[0m
+[1;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+Cell [1;32mIn[1], line 5[0m
+[0;32m      3[0m [38;5;28;01mimport[39;00m [38;5;21;01mpandas[39;00m [38;5;28;01mas[39;00m [38;5;21;01mpd[39;00m
+[0;32m      4[0m [38;5;28;01mimport[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpyplot[39;00m [38;5;28;01mas[39;00m [38;5;21;01mplt[39;00m
+[1;32m----> 5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mstatsmodels[39;00m[38;5;21;01m.[39;00m[38;5;21;01mtsa[39;00m[38;5;21;01m.[39;00m[38;5;21;01mstattools[39;00m [38;5;28;01mimport[39;00m adfuller
+[0;32m      7[0m [38;5;66;03m# Generate a non-stationary time series[39;00m
+[0;32m      8[0m np[38;5;241m.[39mrandom[38;5;241m.[39mseed([38;5;241m0[39m)
+
+[1;31mModuleNotFoundError[0m: No module named 'statsmodels'
+

@@ -1,0 +1,951 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>4. Time Series Concepts &#8212; Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter_04';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5. Exploratory Data Analysis (EDA) for Time Series" href="chapter_05.html" />
+    <link rel="prev" title="3. Data Wrangling" href="chapter_03.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Time Series Exploration with Python: A Journey from Traditional to Advanced Forecasting Models
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TOC.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_01.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_02.html">2. Importing data in colab notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_03.html">3. Data Wrangling</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Time Series Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_05.html">5. Exploratory Data Analysis (EDA) for Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_06.html">6. Data Prepration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_07.html">7. Stationarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_08.html">8. Discovered a suite of classical time series forecasting methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_09.html">9. Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_10.html">10. Classical models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_11.html">11. Deep Learning for Time Series Forecasting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_12.html">12. Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_13.html">13. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_14.html">14. Preprocessing using Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_15.html">15. Time Series Analysis toolkits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_16.html">16. NeuralProphet</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter_04.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter_04.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>4. Time Series Concepts</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-time-series">4.1 What is a Time Series?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applications-of-time-series-analysis">4.2 Applications of Time Series Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-time-series-data">4.3 Types of Time Series Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series-components">4.4 Time Series Components</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series-decomposition">4.5 Time Series Decomposition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stationarity-and-non-stationarity">4.6 Stationarity and Non-stationarity</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="time-series-concepts">
+<h1>4. Time Series Concepts<a class="headerlink" href="#time-series-concepts" title="Permalink to this heading">#</a></h1>
+<p>Let’s dive deeper into each of the topics: What is a time series, types of time series data, and applications of time series analysis, with more detailed explanations and example code where applicable.</p>
+<section id="what-is-a-time-series">
+<h2>4.1 What is a Time Series?<a class="headerlink" href="#what-is-a-time-series" title="Permalink to this heading">#</a></h2>
+<p>A time series is a sequence of data points collected or recorded at specific time intervals. Each data point is associated with a timestamp, indicating when the observation was made. Time series data is typically collected in chronological order, making it suitable for analyzing and forecasting trends and patterns over time.</p>
+<p>Time series data represents observations made sequentially through time. The field of time series analysis combined with AI offers numerous opportunities for extracting insights, modeling, prediction, and decision-making.</p>
+<p>Here’s a comprehensive list of things you can do with time series information using AI:</p>
+<ol class="arabic simple">
+<li><p><strong>Forecasting</strong>:</p>
+<ul class="simple">
+<li><p><strong>Short-Term Forecasts</strong>: Predicting values in the near future based on historical data (e.g., stock prices for the next week).</p></li>
+<li><p><strong>Long-Term Forecasts</strong>: Predicting values over longer time horizons (e.g., yearly sales projections).</p></li>
+</ul>
+</li>
+<li><p><strong>Anomaly Detection</strong>:</p>
+<ul class="simple">
+<li><p>Identifying unusual patterns that do not conform to expected behavior (e.g., spikes in website traffic or detecting fraud in credit card transactions).</p></li>
+</ul>
+</li>
+<li><p><strong>Trend Analysis</strong>:</p>
+<ul class="simple">
+<li><p>Discovering underlying trends in the data (e.g., increasing or decreasing sales, seasonal variations).</p></li>
+</ul>
+</li>
+<li><p><strong>Seasonality Detection</strong>:</p>
+<ul class="simple">
+<li><p>Identifying recurring short-term patterns at fixed intervals, such as hourly, daily, or yearly patterns.</p></li>
+</ul>
+</li>
+<li><p><strong>Cyclical Patterns</strong>:</p>
+<ul class="simple">
+<li><p>Identifying longer-term patterns that aren’t fixed (e.g., economic cycles).</p></li>
+</ul>
+</li>
+<li><p><strong>Decomposition</strong>:</p>
+<ul class="simple">
+<li><p>Breaking down a time series into its constituent components: trend, seasonality, and residual.</p></li>
+</ul>
+</li>
+<li><p><strong>Classification</strong>:</p>
+<ul class="simple">
+<li><p>Categorizing time series data into distinct classes or labels based on patterns (e.g., classifying machine operating modes based on sensor readings).</p></li>
+</ul>
+</li>
+<li><p><strong>Clustering</strong>:</p>
+<ul class="simple">
+<li><p>Grouping time series with similar patterns (e.g., customer purchase patterns).</p></li>
+</ul>
+</li>
+<li><p><strong>Feature Extraction</strong>:</p>
+<ul class="simple">
+<li><p>Extracting meaningful features from time series for further analysis, like Fourier transforms or wavelet coefficients.</p></li>
+</ul>
+</li>
+<li><p><strong>Change Point Detection</strong>:</p>
+<ul class="simple">
+<li><p>Detecting points in time where the statistical properties of the series change (e.g., detecting system changes or regime switches).</p></li>
+</ul>
+</li>
+<li><p><strong>Fill Missing Values</strong>:</p>
+<ul class="simple">
+<li><p>Using methods like interpolation, statistical imputation, or deep learning to fill in missing or corrupted time series data.</p></li>
+</ul>
+</li>
+<li><p><strong>Causal Impact Analysis</strong>:</p>
+<ul class="simple">
+<li><p>Evaluating the impact of an event on a time series (e.g., the effect of a marketing campaign on sales).</p></li>
+</ul>
+</li>
+<li><p><strong>Time Series Segmentation</strong>:</p>
+<ul class="simple">
+<li><p>Dividing a time series into meaningful segments or regimes (e.g., separating a long ECG signal into individual heartbeats).</p></li>
+</ul>
+</li>
+<li><p><strong>Dynamic Time Warping (DTW)</strong>:</p>
+<ul class="simple">
+<li><p>Measuring similarity between two temporal sequences which may vary in speed (e.g., comparing speech patterns).</p></li>
+</ul>
+</li>
+<li><p><strong>Cross-Correlation Analysis</strong>:</p>
+<ul class="simple">
+<li><p>Evaluating the relationship between two or more time series (e.g., understanding the relationship between stock prices of two companies).</p></li>
+</ul>
+</li>
+<li><p><strong>Embedding and Dimensionality Reduction</strong>:</p>
+<ul class="simple">
+<li><p>Techniques like UMAP or t-SNE to visualize high-dimensional time series data in lower-dimensional space.</p></li>
+</ul>
+</li>
+<li><p><strong>Transfer Learning</strong>:</p>
+<ul class="simple">
+<li><p>Leveraging pre-trained models on one time series task and adapting it for another similar task.</p></li>
+</ul>
+</li>
+<li><p><strong>Multivariate Time Series Analysis</strong>:</p>
+<ul class="simple">
+<li><p>Handling and analyzing multiple time series simultaneously (e.g., forecasting stock prices using multiple related indicators).</p></li>
+</ul>
+</li>
+<li><p><strong>Time Series Generative Models</strong>:</p>
+<ul class="simple">
+<li><p>Generating new, synthetic time series data that resembles the original data, using methods like Generative Adversarial Networks (GANs).</p></li>
+</ul>
+</li>
+<li><p><strong>Reinforcement Learning for Time Series</strong>:</p>
+<ul class="simple">
+<li><p>Designing strategies for decision-making over time, for example, in stock trading.</p></li>
+</ul>
+</li>
+</ol>
+<p>Tools &amp; Frameworks:</p>
+<ul class="simple">
+<li><p>Traditional statistical models like ARIMA, Exponential Smoothing.</p></li>
+<li><p>Machine Learning models such as Random Forests, SVMs, and Gradient Boosting tailored for time series.</p></li>
+<li><p>Deep Learning models like Long Short-Term Memory (LSTM) networks, GRUs, and 1D CNNs.</p></li>
+<li><p>Libraries like Prophet (by Facebook), TensorFlow, PyTorch, and scikit-learn.</p></li>
+</ul>
+<p>When working with time series data using AI, it’s important to consider aspects like stationarity, autocorrelation, lag variables, and more. Proper preprocessing and understanding of the data are key to effective modeling and analysis.</p>
+</section>
+<section id="applications-of-time-series-analysis">
+<h2>4.2 Applications of Time Series Analysis<a class="headerlink" href="#applications-of-time-series-analysis" title="Permalink to this heading">#</a></h2>
+<p>Time series analysis has a wide range of applications across various domains, including:</p>
+<ol class="arabic simple">
+<li><p><strong>Economics:</strong> Analyzing economic indicators like GDP, inflation rates, and unemployment data for forecasting and policy-making.</p></li>
+<li><p><strong>Finance:</strong> Predicting stock prices, analyzing financial market data, and risk assessment using techniques like GARCH models.</p></li>
+<li><p><strong>Meteorology:</strong> Forecasting weather patterns, temperature, precipitation, and climate change modeling.</p></li>
+<li><p><strong>Healthcare:</strong> Monitoring and analyzing patient data, disease outbreaks, medical device telemetry, and drug development.</p></li>
+<li><p><strong>Manufacturing:</strong> Quality control, demand forecasting, and production optimization to reduce costs and improve efficiency.</p></li>
+<li><p><strong>Marketing:</strong> Analyzing sales data, customer behavior, and campaign effectiveness for targeted marketing strategies.</p></li>
+<li><p><strong>Environmental Science:</strong> Studying environmental data such as air quality, pollution levels, and ecological trends.</p></li>
+<li><p><strong>Energy:</strong> Predicting energy demand, optimizing energy production, and forecasting renewable energy generation.</p></li>
+<li><p><strong>Anomaly Detection:</strong> Identifying unusual patterns or anomalies in data for fraud detection, fault detection, and network security.</p></li>
+<li><p><strong>Social Sciences:</strong> Analyzing social data over time, such as population demographics, social media trends, and sentiment analysis.</p></li>
+</ol>
+<p>These are just a few examples of the many applications of time series analysis. Depending on your domain or specific problem, you can apply various time series modeling techniques and statistical methods to gain insights and make predictions.</p>
+</section>
+<section id="types-of-time-series-data">
+<h2>4.3 Types of Time Series Data<a class="headerlink" href="#types-of-time-series-data" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Univariate Time Series:</strong> This type contains a single variable recorded over time, such as temperature or stock prices. It involves the analysis of a single data series.</p></li>
+</ol>
+<p><strong>Applications of univariate time series analysis include:</strong></p>
+<ul class="simple">
+<li><p>Economic forecasting: Predicting future economic trends based on past trends in key economic indicators such as inflation rates and GDP.</p></li>
+<li><p>Financial forecasting: Predicting future trends in financial markets based on historical data.</p></li>
+<li><p>Weather forecasting: Predicting future weather patterns based on historical weather data.</p></li>
+<li><p>Sales forecasting: Predicting future sales of a product based on historical sales data.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate a simple time series dataset
+date_rng = pd.date_range(start=&#39;2021-01-01&#39;, end=&#39;2021-12-31&#39;, freq=&#39;D&#39;)
+data = np.random.randn(len(date_rng))  # Random data for illustration
+ts = pd.Series(data, index=date_rng)
+
+# Plot the time series data
+plt.figure(figsize=(10, 4))  # Adjust the figure size as per your preference
+plt.plot(ts)
+plt.title(&quot;Example Univariate Time Series Data&quot;, fontsize=12)  # Adjust title font size
+plt.xlabel(&quot;Date&quot;, fontsize=10)  # Adjust x-axis label font size
+plt.ylabel(&quot;Value&quot;, fontsize=10)  # Adjust y-axis label font size
+plt.grid(True)
+
+# Adjust tick label font size for both x and y axes
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+
+plt.tight_layout()  # Ensure all elements fit within the figure
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/602f9b07e45045cf80282e044559b932a9dcfeb470c7abb2b647ab303c9ca487.png" src="../_images/602f9b07e45045cf80282e044559b932a9dcfeb470c7abb2b647ab303c9ca487.png" />
+</div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p><strong>Multivariate Time Series:</strong> In this type, multiple variables are recorded over time. For example, you might have time series data for temperature, humidity, and wind speed over the same time period.</p></li>
+</ol>
+<p><strong>Applications of multivariate time series analysis include:</strong></p>
+<ul class="simple">
+<li><p>Traffic forecasting: Predicting future traffic patterns based on weather, time of day, and other factors.</p></li>
+<li><p>Climate modeling: Modeling how different factors such as temperature, precipitation, and CO2 emissions impact global climate patterns.</p></li>
+<li><p>Marketing analytics: Analyzing the impact of multiple marketing channels on sales and customer behavior.</p></li>
+<li><p>Supply chain optimization: Optimizing the supply chain by analyzing multiple variables such as production capacity, shipping times, and inventory levels.</p></li>
+</ul>
+<p>In the field of time-series machine learning, it is important to differentiate between univariate and multivariate datasets. Univariate algorithms are only capable of working with a single feature, while multivariate algorithms are able to work with many features.</p>
+<p>Traditionally, classical modeling techniques have focused on univariate datasets and their applications. These datasets consist of cases that have a single series and a class label, and they are often the only ones available for analysis.</p>
+<p>However, in practice, multivariate time-series datasets are much more common than univariate ones. These datasets have multiple feature dimensions and are found in many real-life applications, such as human activity recognition, diagnoses based on an electrocardiogram (ECG), electroencephalogram (EEG), magnetoencephalography (MEG), and systems monitoring.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate multivariate time series data
+date_rng = pd.date_range(start=&#39;2021-01-01&#39;, end=&#39;2021-12-31&#39;, freq=&#39;D&#39;)
+data = np.random.randn(len(date_rng), 2)  # Simulated data for two variables
+df_multivariate = pd.DataFrame(data, index=date_rng, columns=[&#39;Temperature&#39;, &#39;Humidity&#39;])
+
+# Create a figure with two subplots
+fig, axs = plt.subplots(2, 1, figsize=(10, 6), sharex=True)  # Adjust the figure size
+
+# Plot Temperature in the first subplot
+axs[0].plot(df_multivariate.index, df_multivariate[&#39;Temperature&#39;], label=&#39;Temperature&#39;, color=&#39;blue&#39;)
+axs[0].set_ylabel(&quot;Temperature&quot;, fontsize=10)  # Adjust font size
+axs[0].legend()
+plt.grid(True)
+
+# Plot Humidity in the second subplot
+axs[1].plot(df_multivariate.index, df_multivariate[&#39;Humidity&#39;], label=&#39;Humidity&#39;, color=&#39;green&#39;)
+axs[1].set_xlabel(&quot;Date&quot;, fontsize=10)  # Adjust font size
+axs[1].set_ylabel(&quot;Humidity&quot;, fontsize=10)  # Adjust font size
+axs[1].legend()
+
+# Set a common title for both subplots
+plt.suptitle(&quot;Example Multivariate Time Series Data&quot;, fontsize=12)  # Adjust title font size
+plt.grid(True)
+
+# Adjust tick label font size for both subplots
+for ax in axs:
+    ax.tick_params(axis=&#39;both&#39;, labelsize=8)
+
+plt.tight_layout()  # Ensure all elements fit within the figure
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f1519fa5b3c594f5e35f49f2ba339888a79505274f4bc3074d81947873bc94a2.png" src="../_images/f1519fa5b3c594f5e35f49f2ba339888a79505274f4bc3074d81947873bc94a2.png" />
+</div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p><strong>Regularly Spaced Time Series:</strong> Data points are collected at fixed, regular intervals, such as hourly, daily, or monthly.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate regularly spaced time series data (daily sales)
+date_rng = pd.date_range(start=&#39;2021-01-01&#39;, end=&#39;2021-12-31&#39;, freq=&#39;D&#39;)
+sales_data = np.random.randint(1000, 5000, size=len(date_rng))  # Simulated daily sales data
+sales_ts = pd.Series(sales_data, index=date_rng)
+
+# Plot the regularly spaced time series data
+plt.figure(figsize=(10, 4))  # Adjust the figure size as per your preference
+plt.plot(sales_ts)
+plt.title(&quot;Example Regularly Spaced Time Series Data (Daily Sales)&quot;, fontsize=12)  # Adjust title font size
+plt.xlabel(&quot;Date&quot;, fontsize=10)  # Adjust x-axis label font size
+plt.ylabel(&quot;Sales&quot;, fontsize=10)  # Adjust y-axis label font size
+plt.grid(True)
+
+# Adjust tick label font size for both x and y axes
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+
+plt.tight_layout()  # Ensure all elements fit within the figure
+plt.show()
+
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d4f1f2a099635def13298563832b61f32a8ba9c272a88ebb0e1d4d53b656b6db.png" src="../_images/d4f1f2a099635def13298563832b61f32a8ba9c272a88ebb0e1d4d53b656b6db.png" />
+</div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p><strong>Irregularly Spaced Time Series:</strong> Data points are collected at irregular intervals, and handling missing data or irregular time gaps becomes necessary.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import matplotlib.pyplot as plt
+
+# Example: Irregularly spaced time series data
+dates = [&#39;2021-01-01&#39;, &#39;2021-02-15&#39;, &#39;2021-03-20&#39;, &#39;2021-04-30&#39;]
+values = [100, 150, 200, 250]
+irregular_ts = pd.Series(values, index=pd.to_datetime(dates))
+
+# Plot the irregularly spaced time series data
+plt.figure(figsize=(10, 4))  # Adjust the figure size as per your preference
+plt.plot(irregular_ts.index, irregular_ts.values, &#39;o-&#39;, markersize=8, label=&#39;Irregular Data&#39;)
+plt.title(&quot;Example Irregularly Spaced Time Series Data&quot;, fontsize=12)  # Adjust title font size
+plt.xlabel(&quot;Date&quot;, fontsize=10)  # Adjust x-axis label font size
+plt.ylabel(&quot;Value&quot;, fontsize=10)  # Adjust y-axis label font size
+plt.legend()
+plt.grid(True)
+
+# Adjust tick label font size for both x and y axes
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+
+plt.tight_layout()  # Ensure all elements fit within the figure
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/6c2769376d760b7dd94a988376d5535edd8f349b0a35595cb51e30ffdf4929bb.png" src="../_images/6c2769376d760b7dd94a988376d5535edd8f349b0a35595cb51e30ffdf4929bb.png" />
+</div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p><strong>Longitudinal Data:</strong> Time series data recorded for the same entities (e.g., individuals or companies) at multiple time points. It’s often used in medical and social sciences research.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import matplotlib.pyplot as plt
+
+# Example: Longitudinal data for individuals
+individuals = [&#39;Alice&#39;, &#39;Bob&#39;, &#39;Charlie&#39;]
+data = {
+    &#39;Alice&#39;: [160, 162, 163],
+    &#39;Bob&#39;: [175, 177, 180],
+    &#39;Charlie&#39;: [150, 151, 152]
+}
+df_longitudinal = pd.DataFrame(data, index=[2021, 2022, 2023])
+
+# Plot longitudinal data for individuals
+plt.figure(figsize=(10, 6))  # Adjust the figure size as per your preference
+for person in individuals:
+    plt.plot(df_longitudinal.index, df_longitudinal[person], label=person)
+
+plt.title(&quot;Example Longitudinal Data for Individuals&quot;, fontsize=12)  # Adjust title font size
+plt.xlabel(&quot;Year&quot;, fontsize=10)  # Adjust x-axis label font size
+plt.ylabel(&quot;Height (cm)&quot;, fontsize=10)  # Adjust y-axis label font size
+plt.legend()
+plt.grid(True)
+
+# Adjust tick label font size for both x and y axes
+plt.xticks(df_longitudinal.index, fontsize=8)
+plt.yticks(fontsize=8)
+
+plt.tight_layout()  # Ensure all elements fit within the figure
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/507d483b26a4864ce6978e423f5be323d8b01350373a75b1feab22571afb657e.png" src="../_images/507d483b26a4864ce6978e423f5be323d8b01350373a75b1feab22571afb657e.png" />
+</div>
+</div>
+</section>
+<section id="time-series-components">
+<h2>4.4 Time Series Components<a class="headerlink" href="#time-series-components" title="Permalink to this heading">#</a></h2>
+<p><strong>Time series</strong> data is a sequence of observations collected at successive points in time, usually at regular intervals. There are three primary components in most time series datasets:</p>
+<ul class="simple">
+<li><p><strong>Trend</strong>: The long-term movement in the data. It could be upward, downward, or flat.</p></li>
+<li><p><strong>Seasonality</strong>: Patterns that repeat at known regular intervals. This is usually observed in data like retail sales, which may spike during holiday seasons.</p></li>
+<li><p><strong>Noise</strong>: Random fluctuations in data that don’t have any pattern.</p></li>
+</ul>
+<p>Example: Monthly sales data for an ice cream shop may have an upward trend in summer (because of increased consumption) and downward in winter. The spikes in sales during weekends might be the seasonality, and any random events causing spikes or drops would be considered noise.</p>
+</section>
+<section id="time-series-decomposition">
+<h2>4.5 Time Series Decomposition<a class="headerlink" href="#time-series-decomposition" title="Permalink to this heading">#</a></h2>
+<p>This is the process of breaking down a time series into its constituent components: trend, seasonality, and noise.</p>
+<p>Python’s <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> library provides a method for decomposing time series.</p>
+<p>Example code:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+# Set the figure size and font size
+plt.rcParams[&#39;figure.figsize&#39;] = (10, 8)  # width, height in inches
+plt.rcParams[&#39;font.size&#39;] = 10  # Decrease the font size
+
+# Generate sample time series data
+time = np.linspace(0, 2 * np.pi, 100)
+trend = time * 0.5
+seasonality = np.sin(time)
+noise = np.random.normal(0, 0.5, 100)
+timeseries = trend + seasonality + noise
+
+# Decompose the time series
+result = seasonal_decompose(timeseries, model=&#39;additive&#39;, period=25)
+
+# Plot the decomposed time series
+result.plot()
+plt.tight_layout()  # Adjust subplot parameters to give specified padding
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/508cf5d3cebe02f088aa57ef4959a8b7fb36ac2ad9f46d5489d59a226bcdd0d1.png" src="../_images/508cf5d3cebe02f088aa57ef4959a8b7fb36ac2ad9f46d5489d59a226bcdd0d1.png" />
+</div>
+</div>
+</section>
+<section id="stationarity-and-non-stationarity">
+<h2>4.6 Stationarity and Non-stationarity<a class="headerlink" href="#stationarity-and-non-stationarity" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Stationarity</strong>: A time series is said to be stationary if its statistical properties (like mean, variance) remain constant over time. This is important because most time series forecasting methods assume that the series is stationary.</p></li>
+<li><p><strong>Non-stationarity</strong>: If the series has varying mean or variance over time.</p></li>
+</ul>
+<p>To test for stationarity, one popular method is the Augmented Dickey-Fuller (ADF) test. A p-value smaller than a threshold (e.g., 0.05) suggests that the series is stationary.</p>
+<p>Example code:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>
+from statsmodels.tsa.stattools import adfuller
+
+# Conduct ADF test
+result = adfuller(timeseries)
+
+print(&#39;ADF Statistic:&#39;, result[0])
+print(&#39;p-value:&#39;, result[1])
+
+if result[1] &lt; 0.05:
+    print(&quot;The series is likely stationary.&quot;)
+else:
+    print(&quot;The series is likely non-stationary.&quot;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ADF Statistic: -3.5211291325488783
+p-value: 0.007460747736202724
+The series is likely stationary.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter_03.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">3. Data Wrangling</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter_05.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">5. Exploratory Data Analysis (EDA) for Time Series</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-time-series">4.1 What is a Time Series?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applications-of-time-series-analysis">4.2 Applications of Time Series Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-time-series-data">4.3 Types of Time Series Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series-components">4.4 Time Series Components</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series-decomposition">4.5 Time Series Decomposition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stationarity-and-non-stationarity">4.6 Stationarity and Non-stationarity</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Farid Jabbari Maleki
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  LinkedIn <a href="https://www.linkedin.com/in/farid-j-maleki/">Farid J. Maleki</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

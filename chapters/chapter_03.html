@@ -1,0 +1,1313 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>3. Data Wrangling &#8212; Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter_03';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. Time Series Concepts" href="chapter_04.html" />
+    <link rel="prev" title="2. Importing data in colab notebook" href="chapter_02.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Time Series Exploration with Python: A Journey from Traditional to Advanced Forecasting Models
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TOC.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_01.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_02.html">2. Importing data in colab notebook</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Data Wrangling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_04.html">4. Time Series Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_05.html">5. Exploratory Data Analysis (EDA) for Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_06.html">6. Data Prepration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_07.html">7. Stationarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_08.html">8. Discovered a suite of classical time series forecasting methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_09.html">9. Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_10.html">10. Classical models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_11.html">11. Deep Learning for Time Series Forecasting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_12.html">12. Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_13.html">13. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_14.html">14. Preprocessing using Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_15.html">15. Time Series Analysis toolkits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_16.html">16. NeuralProphet</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter_03.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter_03.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>3. Data Wrangling</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-missing-values">3.1 handling missing values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dealing-with-outliers">3.2 Dealing with outliers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-and-aggregation">3.3 Resampling and aggregation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-inconsistent-formats">3.4 Handling inconsistent formats</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-engineering">3.5 Feature engineering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lag-plots">3.6 Lag Plots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#normalization-and-scaling">3.7 Normalization and scaling</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="data-wrangling">
+<h1>3. Data Wrangling<a class="headerlink" href="#data-wrangling" title="Permalink to this heading">#</a></h1>
+<p>Data wrangling, also known as data preprocessing or data cleaning, is a crucial step in time series analysis. It involves manipulating and transforming raw time series data into a structured format that is suitable for analysis. Data wrangling aims to address issues such as missing values, outliers, inconsistent formats, and other anomalies that can affect the quality and reliability of time series analysis results.</p>
+<p>Here are some common data wrangling tasks in time series analysis:</p>
+<ol class="arabic simple">
+<li><p><strong>Handling missing values</strong>: Time series data often contains missing values, which can occur due to various reasons such as sensor failures, data collection errors, or gaps in the data collection process. Missing values need to be dealt with before analysis. Some approaches to handle missing values include interpolation (e.g., linear interpolation or spline interpolation) or filling missing values with the mean, median, or previous/next observed values.</p></li>
+<li><p><strong>Dealing with outliers</strong>: Outliers are extreme values that deviate significantly from the normal pattern of the time series. They can be caused by measurement errors or significant events. Outliers can distort analysis results, and therefore, they need to be identified and handled appropriately. Various techniques such as statistical methods (e.g., z-score, median absolute deviation), smoothing methods, or domain knowledge can be employed to identify and handle outliers.</p></li>
+<li><p><strong>Resampling and aggregation</strong>: Time series data is often collected at irregular intervals or at a higher frequency than needed for analysis. Resampling involves converting the time series to a lower or higher frequency while preserving the data’s essential characteristics. Aggregation methods like mean, sum, or maximum can be used to aggregate data into larger time intervals.</p></li>
+<li><p><strong>Handling inconsistent formats</strong>: Time series data may have inconsistent formats, such as varying date/time formats or inconsistent labeling. It is essential to standardize the format to ensure consistent analysis. This may involve converting date/time strings to a standardized format, renaming variables, or aligning different time series datasets.</p></li>
+<li><p><strong>Feature engineering</strong>: In time series analysis, additional features or predictors can be derived from the existing time series data to enhance the analysis. This may include creating lagged variables, rolling averages, or other derived features that capture patterns or trends in the data.</p></li>
+<li><p><strong>Normalization and scaling</strong>: Depending on the analysis techniques and models employed, it may be necessary to normalize or scale the time series data to ensure all variables have similar ranges or distributions. Common normalization techniques include min-max scaling or z-score normalization.</p></li>
+</ol>
+<p>These are some of the key data wrangling tasks involved in time series analysis. Proper data wrangling techniques help ensure the accuracy, quality, and reliability of time series analysis results by addressing data quality issues and preparing the data for further analysis techniques such as forecasting, anomaly detection, or pattern recognition.</p>
+<section id="handling-missing-values">
+<h2>3.1 handling missing values<a class="headerlink" href="#handling-missing-values" title="Permalink to this heading">#</a></h2>
+<p>In Python, the Pandas library provides powerful tools for handling missing values in DataFrames. Here are some common ways to handle missing values in a Python DataFrame:</p>
+<ol class="arabic simple">
+<li><p>Dropping Rows or Columns:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df.dropna()</span></code>: Drops any rows containing missing values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df.dropna(axis=1)</span></code>: Drops any columns containing missing values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df.dropna(thresh=n)</span></code>: Drops rows that have fewer than n non-null values.</p></li>
+</ul>
+</li>
+<li><p>Filling Missing Values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df.fillna(value)</span></code>: Fills missing values with a specific value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df.fillna(method='ffill')</span></code>: Forward fills missing values with the previous non-null value in the column.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df.fillna(method='bfill')</span></code>: Backward fills missing values with the next non-null value in the column.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df.fillna(df.mean())</span></code>: Fills missing values with the mean value of the column.</p></li>
+</ul>
+</li>
+<li><p>Interpolation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df.interpolate()</span></code>: Performs linear interpolation to fill missing values based on the column values.</p></li>
+</ul>
+</li>
+<li><p>Replacing Missing Values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df.replace(to_replace,</span> <span class="pre">value)</span></code>: Replaces specific values with another value.</p></li>
+</ul>
+</li>
+<li><p>Indicator Variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df.isna()</span></code>: Returns a boolean DataFrame indicating the missing values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df.notna()</span></code>: Returns a boolean DataFrame indicating the non-missing values.</p></li>
+</ul>
+</li>
+<li><p>Customized Handling:</p>
+<ul class="simple">
+<li><p>You can also define your own custom logic to handle missing values based on your specific requirements.</p></li>
+</ul>
+</li>
+</ol>
+<p>It’s important to analyze the dataset and understand the nature of missing values before selecting an appropriate method for handling them. Different approaches may be suitable depending on the context and the nature of the missing data.</p>
+<p>Remember to assign the results of these operations to a new DataFrame or overwrite the existing one to apply the changes permanently.</p>
+<p>Here’s an example code that demonstrates how to handle missing values in a time series dataset using forward-fill and backward-fill methods:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter
+
+# Example time series data with missing values
+data = pd.DataFrame({
+    &#39;timestamp&#39;: pd.date_range(start=&#39;2023-01-01&#39;, periods=10, freq=&#39;D&#39;),
+    &#39;value&#39;: [10, 15, np.nan, 20, np.nan, 25, 30, np.nan, np.nan, 35]
+})
+
+# Visualization of original data
+plt.figure(figsize=(8, 5))
+plt.plot(data[&#39;timestamp&#39;], data[&#39;value&#39;], marker=&#39;o&#39;)
+plt.xlabel(&#39;Timestamp&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Original Data&#39;)
+plt.grid(True)
+plt.xticks(rotation=45)  # Rotate x-axis labels by 45 degrees
+plt.show()
+
+# Forward-fill missing values
+data_ffill = data.fillna(method=&#39;ffill&#39;)
+
+# Visualization of data with forward-filled missing values
+plt.figure(figsize=(8, 5))
+plt.plot(data_ffill[&#39;timestamp&#39;], data_ffill[&#39;value&#39;], marker=&#39;o&#39;, color=&#39;green&#39;)
+plt.xlabel(&#39;Timestamp&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Data with Forward-Filled Missing Values&#39;)
+plt.grid(True)
+plt.xticks(rotation=45)  # Rotate x-axis labels by 45 degrees
+plt.show()
+
+# Backward-fill missing values
+data_bfill = data.fillna(method=&#39;bfill&#39;)
+
+# Visualization of data with backward-filled missing values
+plt.figure(figsize=(8, 5))
+plt.plot(data_bfill[&#39;timestamp&#39;], data_bfill[&#39;value&#39;], marker=&#39;o&#39;, color=&#39;red&#39;)
+plt.xlabel(&#39;Timestamp&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Data with Backward-Filled Missing Values&#39;)
+plt.grid(True)
+plt.xticks(rotation=45)  # Rotate x-axis labels by 45 degrees
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a4b9b3867036768b2a94e82275f0c2d5d7e65f92632509f2a66dac1fd879bc16.png" src="../_images/a4b9b3867036768b2a94e82275f0c2d5d7e65f92632509f2a66dac1fd879bc16.png" />
+<img alt="../_images/226b695904c4d32c485292c565ccb0d152e7f371af8f634fc221151cdeabbf02.png" src="../_images/226b695904c4d32c485292c565ccb0d152e7f371af8f634fc221151cdeabbf02.png" />
+<img alt="../_images/99e84cb43869764aa5090e3a280cb4c1046e94e232c54df5c66a2e77595cab1d.png" src="../_images/99e84cb43869764aa5090e3a280cb4c1046e94e232c54df5c66a2e77595cab1d.png" />
+</div>
+</div>
+<p>In this code, we create an example time series dataset with some missing values using <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> to represent the missing values. The dataset contains a timestamp column and a value column.</p>
+<p>To handle missing values, we use the <code class="docutils literal notranslate"><span class="pre">fillna()</span></code> function from Pandas. In the code, we fill the missing values using two different methods:</p>
+<ol class="arabic simple">
+<li><p>Forward-fill (<code class="docutils literal notranslate"><span class="pre">method='ffill'</span></code>): This method fills the missing values with the most recent observed value. In the example, the missing values are filled with the previous non-missing value in the column.</p></li>
+<li><p>Backward-fill (<code class="docutils literal notranslate"><span class="pre">method='bfill'</span></code>): This method fills the missing values with the next observed value. In the example, the missing values are filled with the next non-missing value in the column.</p></li>
+</ol>
+<p>After filling the missing values, the code prints the resulting datasets with the filled values.</p>
+<p>You can run this code in a Python environment to see the output with the missing values filled using forward-fill and backward-fill methods.</p>
+</section>
+<section id="dealing-with-outliers">
+<h2>3.2 Dealing with outliers<a class="headerlink" href="#dealing-with-outliers" title="Permalink to this heading">#</a></h2>
+<p>Outliers are data points that deviate significantly from the majority of the observations in a dataset. Outliers can occur due to various reasons, such as measurement errors, data entry mistakes, or rare events. Detecting and handling outliers is an important step in data analysis to ensure accurate and reliable results. Here are some common methods for detecting outliers:</p>
+<ol class="arabic simple">
+<li><p>Visualizing Data:</p>
+<ul class="simple">
+<li><p>Box plots: Box plots provide a visual representation of the distribution of data, making it easy to identify potential outliers as individual points outside the whiskers.</p></li>
+<li><p>Scatter plots: Scatter plots can help identify outliers by visualizing the relationship between two variables. Outliers may appear as points that deviate significantly from the general pattern.</p></li>
+<li><p>Histograms: Histograms can reveal the distribution of data, and outliers might be noticeable as data points far from the main cluster.</p></li>
+</ul>
+</li>
+<li><p>Statistical Methods:</p>
+<ul class="simple">
+<li><p>Z-Score: The Z-score measures how many standard deviations an observation is away from the mean. Data points with a Z-score greater than a certain threshold (e.g., 2 or 3) can be considered outliers.</p></li>
+<li><p>Modified Z-Score: Similar to the Z-score, but it uses the median and median absolute deviation (MAD) instead of the mean and standard deviation. It is more robust to outliers in the data.</p></li>
+<li><p>Interquartile Range (IQR): The IQR is the range between the 25th and 75th percentiles of the data. Observations below the 25th percentile minus a multiple of the IQR or above the 75th percentile plus a multiple of the IQR can be considered outliers.</p></li>
+</ul>
+</li>
+<li><p>Machine Learning-Based Approaches:</p>
+<ul class="simple">
+<li><p>Clustering: Outliers can be identified as data points that do not belong to any cluster or form their own separate clusters.</p></li>
+<li><p>Density-Based Outlier Detection: Algorithms like DBSCAN (Density-Based Spatial Clustering of Applications with Noise) can identify outliers as data points with low density compared to their neighbors.</p></li>
+<li><p>Isolation Forest: This algorithm isolates outliers by constructing random forests and measuring the number of splits required to isolate an observation. Outliers will have shorter paths in the trees.</p></li>
+</ul>
+</li>
+</ol>
+<p>It’s important to note that outlier detection is not an exact science, and the choice of method depends on the specific dataset and domain knowledge. It’s often a good practice to combine multiple approaches and carefully consider the context before labeling data points as outliers.
+Here’s an example code that demonstrates how to identify and handle outliers in a time series dataset using the <code class="docutils literal notranslate"><span class="pre">z-score</span></code> method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import zscore
+
+# Example time series data with outliers
+data = pd.DataFrame({
+    &#39;timestamp&#39;: pd.date_range(start=&#39;2023-01-01&#39;, periods=10, freq=&#39;D&#39;),
+    &#39;value&#39;: [10, 15, 200, 20, 500, 25, 30, 150, 120, 35]
+})
+
+# Visualization of original data
+plt.figure(figsize=(8, 5))
+plt.plot(data[&#39;timestamp&#39;], data[&#39;value&#39;], marker=&#39;o&#39;, color=&#39;blue&#39;, label=&#39;Data&#39;)
+plt.xlabel(&#39;Timestamp&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Original Data&#39;)
+plt.xticks(rotation=45)  # Rotate x-axis labels by 45 degrees
+plt.grid(True)
+
+# Identify outliers using z-score
+data[&#39;z_score&#39;] = np.abs(zscore(data[&#39;value&#39;]))
+threshold = 2  # Adjust the threshold as needed
+outliers = data[data[&#39;z_score&#39;] &gt; threshold]
+
+# Highlight outliers with red dots
+plt.plot(outliers[&#39;timestamp&#39;], outliers[&#39;value&#39;], marker=&#39;o&#39;, color=&#39;red&#39;, linestyle=&#39;none&#39;, label=&#39;Outliers&#39;)
+
+plt.legend()
+plt.show()
+
+# Handling outliers by replacing with NaN
+data.loc[data[&#39;z_score&#39;] &gt; threshold, &#39;value&#39;] = np.nan
+
+# Visualization of data after handling outliers
+plt.figure(figsize=(8, 5))
+plt.plot(data[&#39;timestamp&#39;], data[&#39;value&#39;], marker=&#39;o&#39;, color=&#39;green&#39;)
+plt.xlabel(&#39;Timestamp&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Data after Handling Outliers&#39;)
+plt.grid(True)
+plt.xticks(rotation=45)  # Rotate x-axis labels by 45 degrees
+plt.show()
+
+print(&quot;Outliers:&quot;)
+print(outliers)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/99dccfa6798102a6a921ccf3a7878f4be906df028fa07d9ce7e1d4e35b68accd.png" src="../_images/99dccfa6798102a6a921ccf3a7878f4be906df028fa07d9ce7e1d4e35b68accd.png" />
+<img alt="../_images/43d824465bf0a4e0db61504262d035a82d3a29cb677c91304a5fc300ff273ec6.png" src="../_images/43d824465bf0a4e0db61504262d035a82d3a29cb677c91304a5fc300ff273ec6.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Outliers:
+   timestamp  value   z_score
+4 2023-01-05    500  2.698929
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this code, we create an example time series dataset with some outliers. We use the z-score method to identify outliers, where we calculate the z-score for each value in the ‘value’ column. The z-score measures the number of standard deviations a data point is from the mean. We set a threshold value (in this case, 2) to determine which values are considered outliers.</p>
+<p>After identifying the outliers, we handle them by replacing the outlier values with NaN (missing values) in the ‘value’ column. The code then visualizes the data after handling outliers using a line plot.</p>
+<p>Additionally, the code prints the identified outliers for reference.</p>
+<p>You can run this code in a Python environment to see the original time series data, the identified outliers, and the data after handling the outliers. Adjust the threshold value to suit your specific needs for identifying outliers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate a sample DataFrame with outliers
+data = {&#39;Values&#39;: [-45, 10, 12, 15, 14, 11, 20, 25, 27, 30, 28, 100]}
+df = pd.DataFrame(data)
+
+# Calculate Z-scores for each value
+z_scores = (df - df.mean()) / df.std()
+
+# Define a threshold for outlier detection
+threshold = 2.5
+
+# Identify outliers based on the threshold
+outliers = df[abs(z_scores[&#39;Values&#39;]) &gt; threshold]
+
+# Set font size
+plt.rcParams.update({&#39;font.size&#39;: 9})
+
+# Visualize the data using box plot, scatter plot, and histogram
+fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(8, 8))  # Adjust figure size
+
+# Box plot
+axes[0].boxplot(df[&#39;Values&#39;], vert=False)
+if not outliers.empty:
+    axes[0].scatter(outliers.index, outliers[&#39;Values&#39;], color=&#39;red&#39;, marker=&#39;o&#39;, label=&#39;Outliers&#39;)
+axes[0].set_xlabel(&#39;Values&#39;)
+axes[0].set_title(&#39;Box Plot&#39;)
+axes[0].legend()
+axes[0].grid(True)  # Add grid
+
+# Scatter plot
+axes[1].scatter(df.index, df[&#39;Values&#39;], label=&#39;Data&#39;)
+if not outliers.empty:
+    axes[1].scatter(outliers.index, outliers[&#39;Values&#39;], color=&#39;red&#39;, marker=&#39;o&#39;, label=&#39;Outliers&#39;)
+axes[1].set_xlabel(&#39;Index&#39;)
+axes[1].set_ylabel(&#39;Values&#39;)
+axes[1].set_title(&#39;Scatter Plot&#39;)
+axes[1].legend()
+axes[1].grid(True)  # Add grid
+
+# Check if there are outliers before plotting the histogram
+if not outliers.empty:
+    # Histogram for outliers
+    axes[2].hist(outliers[&#39;Values&#39;], bins=10, alpha=0.7, color=&#39;red&#39;, label=&#39;Outliers&#39;)
+axes[2].hist(df[&#39;Values&#39;], bins=10, alpha=0.7, label=&#39;Data&#39;)
+axes[2].set_xlabel(&#39;Values&#39;)
+axes[2].set_ylabel(&#39;Frequency&#39;)
+axes[2].set_title(&#39;Histogram&#39;)
+axes[2].legend()
+axes[2].grid(True)  # Add grid
+
+plt.tight_layout()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+</pre></div>
+</div>
+<img alt="../_images/b25d9be37d202318337ad0763d1be8d2b76b5f9f81f482ab55f65572f7c7f856.png" src="../_images/b25d9be37d202318337ad0763d1be8d2b76b5f9f81f482ab55f65572f7c7f856.png" />
+</div>
+</div>
+</section>
+<section id="resampling-and-aggregation">
+<h2>3.3 Resampling and aggregation<a class="headerlink" href="#resampling-and-aggregation" title="Permalink to this heading">#</a></h2>
+<p>This is an example code that demonstrates how to resample and aggregate a time series dataset to a lower frequency using Pandas:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Example time series data
+data = pd.DataFrame({
+    &#39;timestamp&#39;: pd.date_range(start=&#39;2023-01-01&#39;, periods=100, freq=&#39;D&#39;),
+    &#39;value&#39;: np.random.randint(0, 100, size=100)
+})
+
+# Resampling and aggregation
+data[&#39;timestamp&#39;] = pd.to_datetime(data[&#39;timestamp&#39;])
+data = data.set_index(&#39;timestamp&#39;)
+resampled_monthly = data.resample(&#39;M&#39;).mean()  # Resample to monthly frequency and take the mean
+resampled_weekly = data.resample(&#39;W&#39;).mean()  # Resample to weekly frequency and take the mean
+
+# Visualization of original data
+data.plot(figsize=(8, 5), marker=&#39;o&#39;)
+plt.xlabel(&#39;Timestamp&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Original Data&#39;)
+plt.grid(True)
+plt.show()
+
+# Visualization of monthly resampled data
+resampled_monthly.plot(figsize=(8, 5), marker=&#39;o&#39;)
+plt.xlabel(&#39;Timestamp&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Resampled Data (Monthly)&#39;)
+plt.grid(True)
+plt.show()
+
+# Visualization of weekly resampled data
+resampled_weekly.plot(figsize=(8, 5), marker=&#39;o&#39;)
+plt.xlabel(&#39;Timestamp&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Resampled Data (Weekly)&#39;)
+plt.grid(True)
+plt.show()
+
+print(&quot;Original Data:&quot;)
+print(data.head(10))
+print(&quot;\nMonthly Resampled Data:&quot;)
+print(resampled_monthly.head(10))
+print(&quot;\nWeekly Resampled Data:&quot;)
+print(resampled_weekly.head(10))
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e29cab3b2b9e73e813de35b2f35214f73f02f8a22b245aa9c5a99614caa7c068.png" src="../_images/e29cab3b2b9e73e813de35b2f35214f73f02f8a22b245aa9c5a99614caa7c068.png" />
+<img alt="../_images/9bb5c6263b93438ae5d7bafc69857a9ecad099bfc1b1fb9bc3cbefb687a995b3.png" src="../_images/9bb5c6263b93438ae5d7bafc69857a9ecad099bfc1b1fb9bc3cbefb687a995b3.png" />
+<img alt="../_images/ee8b95ad3ab9e954a52e29f7d4aab0a8ceffe8d4fcc1827ebfb69d5112a1b714.png" src="../_images/ee8b95ad3ab9e954a52e29f7d4aab0a8ceffe8d4fcc1827ebfb69d5112a1b714.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Original Data:
+            value
+timestamp        
+2023-01-01     27
+2023-01-02     92
+2023-01-03     16
+2023-01-04      2
+2023-01-05     33
+2023-01-06      4
+2023-01-07     84
+2023-01-08     35
+2023-01-09     44
+2023-01-10     32
+
+Monthly Resampled Data:
+                value
+timestamp            
+2023-01-31  50.354839
+2023-02-28  54.464286
+2023-03-31  40.967742
+2023-04-30  55.600000
+
+Weekly Resampled Data:
+                value
+timestamp            
+2023-01-01  27.000000
+2023-01-08  38.000000
+2023-01-15  50.714286
+2023-01-22  61.142857
+2023-01-29  44.857143
+2023-02-05  65.000000
+2023-02-12  38.571429
+2023-02-19  41.142857
+2023-02-26  71.571429
+2023-03-05  50.714286
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this code, we create an example time series dataset with a daily frequency. The dataset consists of a ‘timestamp’ column and a ‘value’ column.</p>
+<p>To resample and aggregate the data to a lower frequency, we convert the ‘timestamp’ column to a datetime format and set it as the index of the DataFrame. We then use the <code class="docutils literal notranslate"><span class="pre">resample</span></code> function to resample the data to a monthly frequency (‘M’) and take the mean of the values in each monthly interval.</p>
+<p>The code includes visualizations of both the original data and the resampled data using line plots with markers.</p>
+<p>Finally, the code prints the first 10 rows of the original data and the resampled data for comparison.</p>
+<p>You can run this code in a Python environment to see the original time series data, the resampled data, and the printed dataframes. Adjust the resampling frequency and aggregation method according to your specific needs.</p>
+</section>
+<section id="handling-inconsistent-formats">
+<h2>3.4 Handling inconsistent formats<a class="headerlink" href="#handling-inconsistent-formats" title="Permalink to this heading">#</a></h2>
+<p>The below code is an example code that demonstrates how to handle inconsistent date formats in a time series dataset using Pandas:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+
+# Example time series data with inconsistent date formats
+data = pd.DataFrame({
+    &#39;date&#39;: [&#39;2023-01-01&#39;, &#39;02/01/2023&#39;, &#39;2023-03-01&#39;, &#39;04/01/2023&#39;, &#39;2023-05-01&#39;],
+    &#39;value&#39;: [10, 15, 20, 25, 30]
+})
+print(f&#39;Raw data:\n {data}&#39;)
+# Convert &#39;date&#39; column to datetime format
+data[&#39;date&#39;] = pd.to_datetime(data[&#39;date&#39;], dayfirst=True, errors=&#39;coerce&#39;)
+
+print(f&#39;\n\n Original Data:\n{data} \n&#39;)
+
+
+# Visualization of original data
+data.plot(x=&#39;date&#39;, y=&#39;value&#39;, marker=&#39;o&#39;)
+plt.xlabel(&#39;Date&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Original Data&#39;)
+plt.grid(True)
+plt.show()
+
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Raw data:
+          date  value
+0  2023-01-01     10
+1  02/01/2023     15
+2  2023-03-01     20
+3  04/01/2023     25
+4  2023-05-01     30
+
+
+ Original Data:
+        date  value
+0 2023-01-01     10
+1 2023-01-02     15
+2 2023-03-01     20
+3 2023-01-04     25
+4 2023-05-01     30 
+</pre></div>
+</div>
+<img alt="../_images/f589578c2e7b0b135590a0f2a17f726489c2645a7525b03868035c85aaa0be98.png" src="../_images/f589578c2e7b0b135590a0f2a17f726489c2645a7525b03868035c85aaa0be98.png" />
+</div>
+</div>
+<p>In this code, we have an example time series dataset with inconsistent date formats in the ‘date’ column. The formats used are ‘YYYY-MM-DD’ and ‘DD/MM/YYYY’.</p>
+<p>To handle the inconsistent date formats, we use the <code class="docutils literal notranslate"><span class="pre">pd.to_datetime</span></code> function from Pandas. By passing the <code class="docutils literal notranslate"><span class="pre">dayfirst=True</span></code> parameter, we specify that the day should come before the month in the ‘DD/MM/YYYY’ format. The <code class="docutils literal notranslate"><span class="pre">errors='coerce'</span></code> parameter is used to convert any invalid dates to <code class="docutils literal notranslate"><span class="pre">NaT</span></code> (Not a Time) value.</p>
+<p>The code also includes a visualization of the original data using a line plot with markers.</p>
+<p>Finally, the code prints the original data, including the ‘date’ column converted to the datetime format.</p>
+<p>You can run this code in a Python environment to see the original time series data, the converted datetime format, and the printed dataframe. Adjust the date formats and conversion parameters (<code class="docutils literal notranslate"><span class="pre">dayfirst</span></code>, <code class="docutils literal notranslate"><span class="pre">errors</span></code>) according to your specific needs.</p>
+</section>
+<section id="feature-engineering">
+<h2>3.5 Feature engineering<a class="headerlink" href="#feature-engineering" title="Permalink to this heading">#</a></h2>
+<p>the below code is an example code that demonstrates some common feature engineering techniques on a time series dataset:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+
+# Example time series data
+data = pd.DataFrame({
+    &#39;timestamp&#39;: pd.date_range(start=&#39;2023-01-01&#39;, periods=10, freq=&#39;D&#39;),
+    &#39;value&#39;: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
+})
+print(f&#39;original data:\n{data.head(5)}&#39;)
+
+
+# Create additional features
+data[&#39;year&#39;] = data[&#39;timestamp&#39;].dt.year
+data[&#39;month&#39;] = data[&#39;timestamp&#39;].dt.month
+data[&#39;day&#39;] = data[&#39;timestamp&#39;].dt.day
+data[&#39;weekday&#39;] = data[&#39;timestamp&#39;].dt.weekday
+data[&#39;weekend&#39;] = np.where(data[&#39;weekday&#39;] &lt; 5, 0, 1)
+
+# Compute lag features
+data[&#39;lag_1&#39;] = data[&#39;value&#39;].shift(1)
+data[&#39;lag_2&#39;] = data[&#39;value&#39;].shift(2)
+data[&#39;rolling_mean_3&#39;] = data[&#39;value&#39;].rolling(window=3).mean()
+
+
+print(f&#39;\n Data with Engineered Features::\n{data.head(5)}&#39;)
+
+# Visualization of original and engineered features
+plt.figure(figsize=(10, 6))
+plt.plot(data[&#39;timestamp&#39;], data[&#39;value&#39;], marker=&#39;o&#39;, label=&#39;Original Value&#39;)
+plt.plot(data[&#39;timestamp&#39;], data[&#39;lag_1&#39;], marker=&#39;o&#39;, label=&#39;Lag 1&#39;)
+plt.plot(data[&#39;timestamp&#39;], data[&#39;lag_2&#39;], marker=&#39;o&#39;, label=&#39;Lag 2&#39;)
+plt.plot(data[&#39;timestamp&#39;], data[&#39;rolling_mean_3&#39;], marker=&#39;o&#39;, label=&#39;Rolling Mean (Window=3)&#39;)
+plt.xlabel(&#39;Timestamp&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Original and Engineered Features&#39;)
+plt.legend()
+plt.grid(True)
+plt.xticks(rotation=45)  # Rotate x-axis labels by 45 degrees
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>original data:
+   timestamp  value
+0 2023-01-01     10
+1 2023-01-02     15
+2 2023-01-03     20
+3 2023-01-04     25
+4 2023-01-05     30
+
+ Data with Engineered Features::
+   timestamp  value  year  month  day  weekday  weekend  lag_1  lag_2  \
+0 2023-01-01     10  2023      1    1        6        1    NaN    NaN   
+1 2023-01-02     15  2023      1    2        0        0   10.0    NaN   
+2 2023-01-03     20  2023      1    3        1        0   15.0   10.0   
+3 2023-01-04     25  2023      1    4        2        0   20.0   15.0   
+4 2023-01-05     30  2023      1    5        3        0   25.0   20.0   
+
+   rolling_mean_3  
+0             NaN  
+1             NaN  
+2            15.0  
+3            20.0  
+4            25.0  
+</pre></div>
+</div>
+<img alt="../_images/8da1f7712ee47f8364a2358ae777ea89165c4d0eda83a97d0a3909c22fd4d0a5.png" src="../_images/8da1f7712ee47f8364a2358ae777ea89165c4d0eda83a97d0a3909c22fd4d0a5.png" />
+</div>
+</div>
+</section>
+<section id="lag-plots">
+<h2>3.6 Lag Plots<a class="headerlink" href="#lag-plots" title="Permalink to this heading">#</a></h2>
+<p>A <strong>Lag plot</strong> is a scatter plot of a time series against a lag of itself. It is normally used to check for autocorrelation. If there is any pattern existing in the series, the series is autocorrelated. If there is no such pattern, the series is likely to be random white noise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from pandas.plotting import lag_plot
+import matplotlib.pyplot as plt
+
+# Load the dataset
+url = &#39;https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv&#39;
+df = pd.read_csv(url, header=0, index_col=0, parse_dates=True)
+
+# Extract the passenger counts as the data
+data = df[&#39;Passengers&#39;]
+
+plt.rcParams.update({&#39;ytick.left&#39; : False, &#39;axes.titlepad&#39;:10})
+
+# Plot
+fig, axes = plt.subplots(1, 4, figsize=(10,3), sharex=True, sharey=True, dpi=100)
+for i, ax in enumerate(axes.flatten()[:4]):
+    lag_plot(df[&#39;Passengers&#39;], lag=i+1, ax=ax, c=&#39;firebrick&#39;)
+    ax.set_title(&#39;Lag &#39; + str(i+1))
+
+fig.suptitle(&#39;Lag Plots of Air Passengers&#39;, y=1.05)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/464299c97286b7bacc0b7bf618b2672ca56c92bd4b259a530aca92e04cd3d4b1.png" src="../_images/464299c97286b7bacc0b7bf618b2672ca56c92bd4b259a530aca92e04cd3d4b1.png" />
+</div>
+</div>
+<p>In this code, we start with an example time series dataset containing a ‘timestamp’ column and a ‘value’ column.</p>
+<p>We perform the following feature engineering techniques:</p>
+<ol class="arabic simple">
+<li><p>Create additional features:</p>
+<ul class="simple">
+<li><p>Extract the ‘year’, ‘month’, ‘day’, ‘weekday’ from the ‘timestamp’ column using Pandas datetime properties.</p></li>
+<li><p>Create a ‘weekend’ feature to indicate if a day is a weekend or weekday (0 for weekdays, 1 for weekends).</p></li>
+</ul>
+</li>
+<li><p>Compute lag features:</p>
+<ul class="simple">
+<li><p>Create lag features by shifting the ‘value’ column by a specified number of time periods. In this example, we create ‘lag_1’ and ‘lag_2’ by shifting the ‘value’ column by 1 and 2 time periods, respectively.</p></li>
+<li><p>Compute the rolling mean feature ‘rolling_mean_3’ by taking the mean of the ‘value’ column over a rolling window of size 3.</p></li>
+</ul>
+</li>
+</ol>
+<p>The code also includes a visualization of the original ‘value’ column along with the engineered features.</p>
+<p>Finally, the code prints the data with the engineered features for reference.</p>
+<p>You can run this code in a Python environment to see the original time series data, the engineered features, and the printed dataframe. Feel free to modify the feature engineering techniques according to your specific requirements.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import matplotlib.pyplot as plt
+
+# Create example input data
+data = {&#39;Timestamp&#39;: pd.date_range(&#39;2023-01-01&#39;, periods=10, freq=&#39;D&#39;),
+        &#39;Variable&#39;: [1, 3, 5, 2, 4, 6, 8, 7, 9, 10]}
+df = pd.DataFrame(data)
+
+# Create lagged variables
+lag_1 = df[&#39;Variable&#39;].shift(1)
+lag_2 = df[&#39;Variable&#39;].shift(2)
+df[&#39;Lag_1&#39;] = lag_1
+df[&#39;Lag_2&#39;] = lag_2
+
+# Visualize the results
+fig, ax = plt.subplots(figsize=(8, 4))
+
+ax.plot(df[&#39;Timestamp&#39;], df[&#39;Variable&#39;], label=&#39;Variable&#39;)
+ax.plot(df[&#39;Timestamp&#39;], df[&#39;Lag_1&#39;], label=&#39;Lag 1&#39;)
+ax.plot(df[&#39;Timestamp&#39;], df[&#39;Lag_2&#39;], label=&#39;Lag 2&#39;)
+
+# Format x-axis labels
+ax.xaxis.set_major_locator(plt.MaxNLocator(5))
+ax.xaxis.set_major_formatter(plt.FixedFormatter(df[&#39;Timestamp&#39;].dt.strftime(&#39;%Y-%m-%d&#39;)))
+plt.xticks(rotation=45)
+
+ax.set_xlabel(&#39;Timestamp&#39;)
+ax.set_ylabel(&#39;Value&#39;)
+ax.legend()
+
+plt.tight_layout()
+plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="normalization-and-scaling">
+<h2>3.7 Normalization and scaling<a class="headerlink" href="#normalization-and-scaling" title="Permalink to this heading">#</a></h2>
+<p>In time series analysis, scaling refers to the process of transforming the data so that it has a common scale or range. This can be useful in many ways, such as reducing the impact of outliers, improving the accuracy of statistical models, and making the data easier to visualize.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+pts = 10000
+vals = np.random.lognormal(0, 1.0, pts)
+
+plt.hist(vals, bins=20, density=True)
+plt.yscale(&quot;log&quot;)
+plt.ylabel(&quot;frequency&quot;)
+plt.xlabel(&quot;value range&quot;);
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/09a1c0c7cf4f2986c715799a0bcc2bbefffc1da4984d91497b27ed0be1e95636.png" src="../_images/09a1c0c7cf4f2986c715799a0bcc2bbefffc1da4984d91497b27ed0be1e95636.png" />
+</div>
+</div>
+<p>There are several methods for scaling time series data, including:</p>
+<ul>
+<li><p><strong>Min-max scaling</strong>: This method scales the data to a range between 0 and 1. It is calculated by subtracting the minimum value from each observation and dividing by the range (i.e., the difference between the maximum and minimum values).</p>
+<p><span class="math notranslate nohighlight">\(X_{norm} = \frac{X - X_{min}}{X_{max} - X_{min}}\)</span></p>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!pip install sklearn
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from sklearn.preprocessing import minmax_scale
+from sklearn.preprocessing import StandardScaler
+from scipy.stats import normaltest
+
+vals_mm = minmax_scale(vals)
+scaler = StandardScaler()
+vals_ss = scaler.fit_transform(vals.reshape(-1, 1))
+_, p = normaltest(vals_ss.squeeze())
+print(f&quot;significance: {p:.2f}&quot;)
+
+# In this statistical test, the null hypothesis assumes
+# that the sample is drawn from a normal distribution.
+_, p = normaltest(vals_mm.squeeze())
+print(f&quot;significance: {p:.2f}&quot;)
+
+# plt.hist(vals_ss, bins=20, density=True)
+# plt.yscale(&quot;log&quot;)
+# plt.ylabel(&quot;frequency&quot;)
+# plt.xlabel(&quot;value range&quot;);
+
+
+plt.scatter(vals, vals_ss, alpha=0.3)
+plt.ylabel(&quot;standard scaled&quot;)
+plt.xlabel(&quot;original&quot;);
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>significance: 0.00
+significance: 0.00
+</pre></div>
+</div>
+<img alt="../_images/a193b021cf9fe90e835b5b96514140ae9dae8df8c90a13938febd39e07aed2f8.png" src="../_images/a193b021cf9fe90e835b5b96514140ae9dae8df8c90a13938febd39e07aed2f8.png" />
+</div>
+</div>
+<ul>
+<li><p><strong>Standardization(Z-score normalization)</strong>: This method scales the data to have a mean of 0 and a standard deviation of 1. It is calculated by subtracting the mean from each observation and dividing by the standard deviation.</p>
+<p><span class="math notranslate nohighlight">\(z = \frac{x-\mu}{\sigma}\)</span></p>
+</li>
+</ul>
+<ul>
+<li><p><strong>Log transformation</strong>: This method transforms the data by taking the logarithm of each observation. This can be useful when the data has a skewed distribution.Perhaps one of the most widely used types of transformations for bringing data distributions closer to a Gaussian distribution is the log transformation.</p>
+<p><span class="math notranslate nohighlight">\(y = k * log(x + c)\)</span></p>
+<p>(<code class="docutils literal notranslate"><span class="pre">k</span></code> is a scaling factor, and <code class="docutils literal notranslate"><span class="pre">c</span></code> is a constant offset.)</p>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from statsmodels.stats.diagnostic import *
+
+log_transformed = np.log(vals)
+_, p = kstest_normal(log_transformed)  # stats.normaltest
+print(f&quot;significance: {p:.2f}&quot;)
+
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>significance: 0.31
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>np.std(log_transformed)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9875565681761207
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>np.mean(log_transformed)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.01843372015826582
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>plt.hist(log_transformed, bins=20, density=True)
+#plt.yscale(&quot;log&quot;)
+plt.ylabel(&quot;frequency&quot;)
+plt.xlabel(&quot;value range&quot;);
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/acced6908804bfa183d105d1563d066c6b3e24e76816012dd086dd25290dc04f.png" src="../_images/acced6908804bfa183d105d1563d066c6b3e24e76816012dd086dd25290dc04f.png" />
+</div>
+</div>
+<ul>
+<li><p><strong>Box-Cox transformation</strong>: This is a more general transformation that can be used to transform the data to have a normal distribution. It is a family of power transformations that includes the log transformation as a special case.</p>
+<p><span class="math notranslate nohighlight">\(
+\begin{equation}
+y(\lambda)=\begin{cases}
+\dfrac{y^{\lambda}-1}{\lambda}, &amp; \text{if } \lambda\neq 0\ \newline
+\ln(y), &amp; \text{if } \lambda=0
+\end{cases}
+\end{equation}
+\)</span></p>
+<p>In this equation, <span class="math notranslate nohighlight">\(y\)</span> is the original data, and <span class="math notranslate nohighlight">\(\lambda\)</span> is the Box-Cox transformation parameter. The transformation is used to make the data more normally distributed and improve the performance of statistical models.</p>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from scipy.stats import boxcox
+vals_bc = boxcox(vals, 0.0)
+_, p = normaltest(vals_bc)
+print(f&quot;significance: {p:.2f}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>significance: 0.46
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>plt.hist(vals_bc, bins=20, density=True)
+plt.ylabel(&quot;frequency&quot;)
+plt.xlabel(&quot;value range&quot;);
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/acced6908804bfa183d105d1563d066c6b3e24e76816012dd086dd25290dc04f.png" src="../_images/acced6908804bfa183d105d1563d066c6b3e24e76816012dd086dd25290dc04f.png" />
+</div>
+</div>
+<p>The choice of scaling method depends on the specific characteristics of the data and the goals of the analysis. It is important to keep in mind that scaling should be done carefully, as it can sometimes lead to loss of information or introduce bias in the analysis.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter_02.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">2. Importing data in colab notebook</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter_04.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">4. Time Series Concepts</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-missing-values">3.1 handling missing values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dealing-with-outliers">3.2 Dealing with outliers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-and-aggregation">3.3 Resampling and aggregation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-inconsistent-formats">3.4 Handling inconsistent formats</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-engineering">3.5 Feature engineering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lag-plots">3.6 Lag Plots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#normalization-and-scaling">3.7 Normalization and scaling</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Farid Jabbari Maleki
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  LinkedIn <a href="https://www.linkedin.com/in/farid-j-maleki/">Farid J. Maleki</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

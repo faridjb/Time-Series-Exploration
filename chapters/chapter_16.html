@@ -1,0 +1,1519 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>16. NeuralProphet &#8212; Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter_16';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="15. Time Series Analysis toolkits" href="chapter_15.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Time Series Exploration with Python: A Journey from Traditional to Advanced Forecasting Models
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TOC.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_01.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_02.html">2. Importing data in colab notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_03.html">3. Data Wrangling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_04.html">4. Time Series Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_05.html">5. Exploratory Data Analysis (EDA) for Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_06.html">6. Data Prepration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_07.html">7. Stationarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_08.html">8. Discovered a suite of classical time series forecasting methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_09.html">9. Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_10.html">10. Classical models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_11.html">11. Deep Learning for Time Series Forecasting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_12.html">12. Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_13.html">13. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_14.html">14. Preprocessing using Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_15.html">15. Time Series Analysis toolkits</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">16. NeuralProphet</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter_16.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter_16.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>16. NeuralProphet</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">16.1 Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">16.2 Basic Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-libraries">16.2.1 Importing Libraries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-synthetic-data">16.2.2 Generating Synthetic Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-training">16.2.3 Model Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forecasting">16.2.4 Forecasting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manualy-visualization-of-forecast">16.2.5 Manualy Visualization of Forecast</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-components">16.2.6 Visualizing Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-change-points">16.2.7 Visualizing change points</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-visualization-of-change-points">16.2.8 Manual Visualization of Change Points</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-using-plotly-backend">16.2.9 Plot using plotly backend</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="neuralprophet">
+<h1>16. NeuralProphet<a class="headerlink" href="#neuralprophet" title="Permalink to this heading">#</a></h1>
+<p>Neural Prophet is a time series forecasting tool that is designed as an extension to the popular Prophet package. By incorporating neural network components into the Prophet model, Neural Prophet aims to provide more flexibility and improved forecasting performance. Here are some of the notable capabilities of Neural Prophet:</p>
+<ol class="arabic simple">
+<li><p><strong>Trend Forecasting</strong>: Like Prophet, Neural Prophet can capture the underlying trend in the data, whether it’s linear or logistic.</p></li>
+<li><p><strong>Seasonality</strong>: Neural Prophet models yearly, weekly, and daily seasonality and can also handle custom seasonalities.</p></li>
+<li><p><strong>Holidays and Special Events</strong>: You can specify known events (e.g., holidays) that might affect your forecast.</p></li>
+<li><p><strong>Autoregressive Components</strong>: Neural Prophet can use lagged values of the time series (AR terms) to improve predictions.</p></li>
+<li><p><strong>Neural Network Components</strong>: The model utilizes a feed-forward neural network architecture which allows it to capture complex patterns in the data.</p></li>
+<li><p><strong>Missing Data Handling</strong>: Neural Prophet can handle missing data points without the need for manual imputation.</p></li>
+<li><p><strong>Changepoints</strong>: Just like in Prophet, you can specify changepoints or let the model detect them automatically. These are points where the trend changes its trajectory.</p></li>
+<li><p><strong>Regularization</strong>: The model supports regularization techniques to prevent overfitting.</p></li>
+<li><p><strong>Configurable Model Components</strong>: Users can customize which components (trend, seasonality, holidays, etc.) to include in the model.</p></li>
+<li><p><strong>Uncertainty Intervals</strong>: Neural Prophet provides uncertainty intervals for its forecasts.</p></li>
+<li><p><strong>Model Interpretability</strong>: The model provides components’ plots, similar to Prophet, which allow users to visualize the trend, seasonality, and holiday effects.</p></li>
+<li><p><strong>Diagnostics</strong>: Neural Prophet provides tools to diagnose the performance of the model, such as plotting the forecast, residuals, and more.</p></li>
+<li><p><strong>Integration with other tools</strong>: Neural Prophet provides utilities to convert its models to and from other popular forecasting libraries.</p></li>
+<li><p><strong>Scalability</strong>: The package is designed to be scalable and efficient.</p></li>
+<li><p><strong>Multivariate Forecasting</strong>: At the time of my last update, Neural Prophet was working towards supporting multivariate time series forecasting.</p></li>
+<li><p><strong>Hyperparameter Tuning</strong>: Neural Prophet integrates with tools like Optuna to allow for efficient hyperparameter tuning.</p></li>
+</ol>
+<section id="installation">
+<h2>16.1 Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
+<p>To begin using NeuralProphet, you’ll need to install it. You can do this using pip:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!pip install neuralprophet
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you plan to use NeuralProphet in Google Colab, please use the following commands to avoid conflicts with pre-installed packages in Colab:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>if &quot;google.colab&quot; in str(get_ipython()):
+    # uninstall preinstalled packages from Colab to avoid conflicts
+    !pip uninstall -y torch notebook notebook_shim tensorflow tensorflow-datasets prophet torchaudio torchdata torchtext torchvision
+    !pip install git+https://github.com/ourownstory/neural_prophet.git # may take a while
+    #!pip install neuralprophet # much faster, but may not have the latest upgrades/bugfixes
+
+import pandas as pd
+from neuralprophet import NeuralProphet, set_log_level
+
+set_log_level(&quot;ERROR&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>if you have conflict issue run below cell</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!pip uninstall fastai
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!pip install git+https://github.com/ourownstory/neural_prophet.git
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="basic-usage">
+<h2>16.2 Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">#</a></h2>
+<section id="importing-libraries">
+<h3>16.2.1 Importing Libraries<a class="headerlink" href="#importing-libraries" title="Permalink to this heading">#</a></h3>
+<p>First, you’ll need to import the necessary libraries:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from neuralprophet import NeuralProphet
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="generating-synthetic-data">
+<h3>16.2.2 Generating Synthetic Data<a class="headerlink" href="#generating-synthetic-data" title="Permalink to this heading">#</a></h3>
+<p>We’ll create synthetic data that incorporates daily, weekly, monthly, quarterly, and yearly seasonality, as well as a trend and a change point.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+# Creating the synthetic data as per the provided snippet
+np.random.seed(0)
+n = 365 * 5
+dates = pd.date_range(start=&quot;1/1/2018&quot;, periods=n, freq=&quot;D&quot;)
+y = (
+    np.sin(dates.dayofyear / 365 * 2 * np.pi) +
+    np.sin(dates.weekday / 7 * 2 * np.pi) +
+    np.sin(dates.month / 12 * 2 * np.pi) +
+    np.sin(dates.quarter / 4 * 2 * np.pi) +
+    np.sin(dates.year / 2023 * 2 * np.pi) +
+    dates.year / 2023 +
+    np.where(dates.year &gt; 2020, 1, 0) +
+    np.random.normal(scale=0.5, size=n)
+)
+data = pd.DataFrame({&#39;ds&#39;: dates, &#39;y&#39;: y})
+
+# Separating the components for plotting
+components = {
+    &quot;Daily Seasonality&quot;: np.sin(dates.dayofyear / 365 * 2 * np.pi),
+    &quot;Weekly Seasonality&quot;: np.sin(dates.weekday / 7 * 2 * np.pi),
+    &quot;Monthly Seasonality&quot;: np.sin(dates.month / 12 * 2 * np.pi),
+    &quot;Quarterly Seasonality&quot;: np.sin(dates.quarter / 4 * 2 * np.pi),
+    &quot;Yearly Seasonality&quot;: np.sin(dates.year / 2023 * 2 * np.pi),
+    &quot;Trend&quot;: dates.year / 2023,
+    &quot;Change Point&quot;: np.where(dates.year &gt; 2020, 1, 0),
+    &quot;Noise&quot;: np.random.normal(scale=0.5, size=n)
+}
+# Generate noise once to keep it consistent
+noise = np.random.normal(scale=0.5, size=n)
+
+# Update the &#39;Noise&#39; component with the pre-generated noise
+components[&#39;Noise&#39;] = noise
+# Plotting
+fig, axs = plt.subplots(len(components) + 1, 1, figsize=(8, 15))  # Adjust the figure size
+
+# Plot each component in a subplot
+for i, (label, component) in enumerate(components.items()):
+    axs[i].plot(dates, component)
+    axs[i].set_title(label)
+    axs[i].grid(True)  # Add grid
+
+# Plot the sum of all components
+axs[-1].plot(dates, y, label=&#39;Sum of Components&#39;)
+axs[-1].set_title(&#39;Sum of All Components&#39;)
+axs[-1].grid(True)  # Add grid
+
+plt.tight_layout()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/978c7482b6e2dadbeda26885d0f22b30b6020860aa3427a676fa4035037b9f0b.png" src="../_images/978c7482b6e2dadbeda26885d0f22b30b6020860aa3427a676fa4035037b9f0b.png" />
+</div>
+</div>
+</section>
+<section id="model-training">
+<h3>16.2.3 Model Training<a class="headerlink" href="#model-training" title="Permalink to this heading">#</a></h3>
+<p>We’ll utilize NeuralProphet to model the synthetic data. It’s crucial to specify the correct seasonalities and other model components for an accurate fit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Initialize and fit the NeuralProphet model
+model = NeuralProphet(
+    yearly_seasonality=True,
+    weekly_seasonality=True,
+    daily_seasonality=True,
+    seasonality_mode=&#39;additive&#39;,
+    changepoints_range=0.9,
+    n_changepoints=1
+)
+
+# Fit the model
+metrics = model.fit(data, freq=&#39;D&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>model.set_plotting_backend(&quot;plotly-static&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="forecasting">
+<h3>16.2.4 Forecasting<a class="headerlink" href="#forecasting" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>future = model.make_future_dataframe(data, periods=365)  # predicting 1 year into the future
+forecast = model.predict(future)
+model.plot(forecast)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a8d57ca1ef9b42dd8935490de71436de", "version_major": 2, "version_minor": 0}</script><img alt="../_images/365950905a42f8366c4bc2d1a6825231fd240fbea5fa82ad8b614c15bfdfd9ce.svg" src="../_images/365950905a42f8366c4bc2d1a6825231fd240fbea5fa82ad8b614c15bfdfd9ce.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>model.plot_components(forecast)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/67f75f5eafa931d009595d6d1418d1ea31cffea8f57a78665c090937694e58b7.svg" src="../_images/67f75f5eafa931d009595d6d1418d1ea31cffea8f57a78665c090937694e58b7.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>forecast.head()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-40107440-29ed-446b-bcf8-aaf9f016fa10" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ds</th>
+      <th>y</th>
+      <th>yhat1</th>
+      <th>trend</th>
+      <th>season_yearly</th>
+      <th>season_weekly</th>
+      <th>season_daily</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2022-12-31</td>
+      <td>None</td>
+      <td>2.155269</td>
+      <td>0.208777</td>
+      <td>0.724550</td>
+      <td>-0.916695</td>
+      <td>2.138636</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2023-01-01</td>
+      <td>None</td>
+      <td>2.376627</td>
+      <td>0.210075</td>
+      <td>0.805269</td>
+      <td>-0.792410</td>
+      <td>2.153694</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2023-01-02</td>
+      <td>None</td>
+      <td>3.239869</td>
+      <td>0.211372</td>
+      <td>0.885376</td>
+      <td>-0.019778</td>
+      <td>2.162899</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2023-01-03</td>
+      <td>None</td>
+      <td>4.141049</td>
+      <td>0.212669</td>
+      <td>0.964882</td>
+      <td>0.788777</td>
+      <td>2.174720</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2023-01-04</td>
+      <td>None</td>
+      <td>4.377048</td>
+      <td>0.213967</td>
+      <td>1.043561</td>
+      <td>0.981072</td>
+      <td>2.138448</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-40107440-29ed-446b-bcf8-aaf9f016fa10')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-40107440-29ed-446b-bcf8-aaf9f016fa10 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-40107440-29ed-446b-bcf8-aaf9f016fa10');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+<div id="df-f2b7b290-50be-497c-a389-fdf961a99fff">
+  <button class="colab-df-quickchart" onclick="quickchart('df-f2b7b290-50be-497c-a389-fdf961a99fff')"
+            title="Suggest charts."
+            style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+  </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+  <script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-f2b7b290-50be-497c-a389-fdf961a99fff button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="manualy-visualization-of-forecast">
+<h3>16.2.5 Manualy Visualization of Forecast<a class="headerlink" href="#manualy-visualization-of-forecast" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+
+# Assuming data and forecast dataframes are already defined
+fig, ax = plt.subplots(2, 1, figsize=(8, 6))  # Adjust the figure size
+
+# Define a common font size
+font_size = 10
+
+# Plot 1: Original Data
+ax[0].plot(data[&#39;ds&#39;], data[&#39;y&#39;], label=&#39;Original Data&#39;)
+ax[0].set_title(&#39;Original Time Series Data&#39;, fontsize=font_size)
+ax[0].set_xlabel(&#39;Date&#39;, fontsize=font_size)
+ax[0].set_ylabel(&#39;Value&#39;, fontsize=font_size)
+ax[0].legend(fontsize=font_size)
+ax[0].grid(True)  # Add grid
+
+# Plot 2: Original Data + Predicted Data
+ax[1].plot(data[&#39;ds&#39;], data[&#39;y&#39;], label=&#39;Original Data&#39;)
+ax[1].plot(forecast[&#39;ds&#39;], forecast[&#39;yhat1&#39;], label=&#39;Predicted Data&#39;, linestyle=&#39;dashed&#39;)
+ax[1].axvline(x=data[&#39;ds&#39;].iloc[-1], color=&#39;r&#39;, linestyle=&#39;--&#39;, label=&#39;Prediction Start&#39;)
+ax[1].set_title(&#39;Original + Predicted Time Series Data&#39;, fontsize=font_size)
+ax[1].set_xlabel(&#39;Date&#39;, fontsize=font_size)
+ax[1].set_ylabel(&#39;Value&#39;, fontsize=font_size)
+ax[1].legend(fontsize=font_size)
+ax[1].grid(True)  # Add grid
+
+# Adjust the space between the plots
+plt.subplots_adjust(hspace=1)
+
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b7b462e9dccdd1edafb7886e5879651f7c24025a5fccdfca4ec4dcd6de53467f.png" src="../_images/b7b462e9dccdd1edafb7886e5879651f7c24025a5fccdfca4ec4dcd6de53467f.png" />
+</div>
+</div>
+</section>
+<section id="visualizing-components">
+<h3>16.2.6 Visualizing Components<a class="headerlink" href="#visualizing-components" title="Permalink to this heading">#</a></h3>
+<p>To evaluate the model’s capability in capturing the underlying patterns (like seasonality and trends), utilize the <code class="docutils literal notranslate"><span class="pre">plot_parameters</span></code> method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>fig_param = model.plot_parameters()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/141d56da5e4815f8a4031b2466a28aaf42e0339eca3c2e639b121e03c8c3ab1e.svg" src="../_images/141d56da5e4815f8a4031b2466a28aaf42e0339eca3c2e639b121e03c8c3ab1e.svg" /></div>
+</div>
+<p>plot manually using Matplotlib</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+
+# Ensure you&#39;ve created the &#39;forecast&#39; dataframe already
+# forecast = model.predict(future)
+
+# Extract the column names related to the seasonal components and the trend
+seasonal_components = [col for col in forecast.columns if &#39;season&#39; in col]
+trend = [col for col in forecast.columns if &#39;trend&#39; in col]
+
+# Plot the forecast and components
+fig, axs = plt.subplots(len(seasonal_components) + len(trend) + 1, 1, figsize=(8, 15))
+
+# Plot the original and forecasted series
+axs[0].plot(forecast[&#39;ds&#39;], forecast[&#39;yhat1&#39;], label=&#39;Forecasted&#39;)
+axs[0].plot(data[&#39;ds&#39;], data[&#39;y&#39;], label=&#39;Original&#39;)
+axs[0].legend(loc=&#39;upper right&#39;)
+axs[0].set_title(&#39;Original and Forecasted Series&#39;)
+axs[0].grid(True)
+
+# Plot the trend
+for i, t in enumerate(trend):
+    axs[i+1].plot(forecast[&#39;ds&#39;], forecast[t], label=t)
+    axs[i+1].legend(loc=&#39;upper right&#39;)
+    axs[i+1].set_title(f&#39;Trend: {t}&#39;)
+    axs[i+1].grid(True)
+
+# Plot the seasonal components
+for i, season in enumerate(seasonal_components, start=i+2):
+    axs[i].plot(forecast[&#39;ds&#39;], forecast[season], label=season)
+    axs[i].legend(loc=&#39;upper right&#39;)
+    axs[i].set_title(f&#39;Seasonal Component: {season}&#39;)
+    axs[i].grid(True)
+
+plt.tight_layout()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/02c1ca76e01141a608db65ca4d76fe882269e6951e8a52dc4de92b1931fd4a21.png" src="../_images/02c1ca76e01141a608db65ca4d76fe882269e6951e8a52dc4de92b1931fd4a21.png" />
+</div>
+</div>
+</section>
+<section id="visualizing-change-points">
+<h3>16.2.7 Visualizing change points<a class="headerlink" href="#visualizing-change-points" title="Permalink to this heading">#</a></h3>
+<p>Visualizing change points can provide insights into when significant changes in the trend of the time series data occur. In NeuralProphet, you can use the <code class="docutils literal notranslate"><span class="pre">plot_forecast</span></code> method with <code class="docutils literal notranslate"><span class="pre">plot_changepoints=True</span></code> to visualize the forecast along with the change points. However, if you wish to visualize the change points separately, you might need to extract them from the model and plot them manually.</p>
+<p>Below is a general method to visualize the change points using NeuralProphet:</p>
+</section>
+<section id="manual-visualization-of-change-points">
+<h3>16.2.8 Manual Visualization of Change Points<a class="headerlink" href="#manual-visualization-of-change-points" title="Permalink to this heading">#</a></h3>
+<p>If you want to visualize the change points manually, you can extract them from the model and plot them on your original time series graph as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Plotting
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(data[&#39;ds&#39;], data[&#39;y&#39;], label=&#39;Original Data&#39;)
+ax.axvline(x=pd.Timestamp(&#39;2021-01-01&#39;), color=&#39;r&#39;, linestyle=&#39;--&#39;, label=&#39;Known Change Point&#39;)
+ax.set_title(&#39;Change Points in Time Series Data&#39;)
+ax.legend()
+ax.grid(True)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/dfdd104dcf68c569535bf468effc6fbd9ec9aeaf557df35ef2b55ced3db2fbff.png" src="../_images/dfdd104dcf68c569535bf468effc6fbd9ec9aeaf557df35ef2b55ced3db2fbff.png" />
+</div>
+</div>
+<p>Note: Ensure to check whether <code class="docutils literal notranslate"><span class="pre">model.model.changepoints_t</span></code> provides the correct change points in your version of NeuralProphet, as implementations might change.</p>
+</section>
+<section id="plot-using-plotly-backend">
+<h3>16.2.9 Plot using plotly backend<a class="headerlink" href="#plot-using-plotly-backend" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from neuralprophet import NeuralProphet
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+
+data_location = &quot;https://raw.githubusercontent.com/ourownstory/neuralprophet-data/main/datasets/&quot;
+
+df = pd.read_csv(data_location + &quot;wp_log_peyton_manning.csv&quot;)
+df.head()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-95f50bcc-abbc-4d7a-bfb6-6bbca0ea08da" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ds</th>
+      <th>y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2007-12-10</td>
+      <td>9.5908</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2007-12-11</td>
+      <td>8.5196</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2007-12-12</td>
+      <td>8.1837</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2007-12-13</td>
+      <td>8.0725</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2007-12-14</td>
+      <td>7.8936</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-95f50bcc-abbc-4d7a-bfb6-6bbca0ea08da')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-95f50bcc-abbc-4d7a-bfb6-6bbca0ea08da button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-95f50bcc-abbc-4d7a-bfb6-6bbca0ea08da');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+<div id="df-8e812ab0-61b2-4613-853d-840057461996">
+  <button class="colab-df-quickchart" onclick="quickchart('df-8e812ab0-61b2-4613-853d-840057461996')"
+            title="Suggest charts."
+            style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+  </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+  <script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-8e812ab0-61b2-4613-853d-840057461996 button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from neuralprophet import NeuralProphet
+m = NeuralProphet()
+m.set_plotting_backend(&quot;plotly-static&quot;)  # show plots correctly in jupyter notebooks
+metrics = m.fit(df)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "278b955d9594405fa919fce554838ca9", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "0d9eae9912e3467988526a129b49da72", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>predicted = m.predict(df)
+forecast = m.predict(df)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "579f386809d541828f24cbcdac2b6e27", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "4e915710442d4bdaaa4732977c401a21", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!pip install -U kaleido
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!pip install plotly --upgrade
+</pre></div>
+</div>
+</div>
+</div>
+<p>before executing next cell you must restart runtime</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import kaleido
+m.plot(forecast)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5cac4803f81b2f012e81ced8a0f7bf70ce2f9b48ab4f5082b71a6e41462d09c7.svg" src="../_images/5cac4803f81b2f012e81ced8a0f7bf70ce2f9b48ab4f5082b71a6e41462d09c7.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>m.plot_components(forecast)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/abfb587c8926b691e79b128b51950ef583da643b0818aab3062ee0281daaec82.svg" src="../_images/abfb587c8926b691e79b128b51950ef583da643b0818aab3062ee0281daaec82.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>m.plot_parameters()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a90933fdebdf026db039553033f50aeacb124e98f18dd91979d4e5f0e1e2e812.svg" src="../_images/a90933fdebdf026db039553033f50aeacb124e98f18dd91979d4e5f0e1e2e812.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>m = NeuralProphet(n_lags=10, quantiles=[0.05, 0.95])
+m.set_plotting_backend(&quot;plotly-static&quot;)
+metrics = m.fit(df)
+forecast = m.predict(df)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b09ca8a1b2074935ac5f9eeb1fb87e32", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "6dcb55ae34ab4e0c85292136f2bf573e", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "9494b26213ba4354a9c506a83c56597d", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>m.highlight_nth_step_ahead_of_each_forecast(1).plot(forecast)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f15c2979ff39631b424accb5c6a735c9a0604f52f90f8fe1e152716fd4fde26d.svg" src="../_images/f15c2979ff39631b424accb5c6a735c9a0604f52f90f8fe1e152716fd4fde26d.svg" /></div>
+</div>
+<p>for more features and examples, please refer to <a class="reference external" href="https://neuralprophet.com/how-to-guides/index.html">NP examples</a></p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter_15.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">15. Time Series Analysis toolkits</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">16.1 Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">16.2 Basic Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-libraries">16.2.1 Importing Libraries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-synthetic-data">16.2.2 Generating Synthetic Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-training">16.2.3 Model Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forecasting">16.2.4 Forecasting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manualy-visualization-of-forecast">16.2.5 Manualy Visualization of Forecast</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-components">16.2.6 Visualizing Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-change-points">16.2.7 Visualizing change points</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-visualization-of-change-points">16.2.8 Manual Visualization of Change Points</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-using-plotly-backend">16.2.9 Plot using plotly backend</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Farid Jabbari Maleki
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  LinkedIn <a href="https://www.linkedin.com/in/farid-j-maleki/">Farid J. Maleki</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

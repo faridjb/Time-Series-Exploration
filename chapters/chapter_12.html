@@ -1,0 +1,2298 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>12. Model selection &#8212; Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter_12';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="13. Feature Engineering" href="chapter_13.html" />
+    <link rel="prev" title="11. Deep Learning for Time Series Forecasting" href="chapter_11.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Time Series Exploration with Python: A Journey from Traditional to Advanced Forecasting Models
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TOC.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_01.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_02.html">2. Importing data in colab notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_03.html">3. Data Wrangling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_04.html">4. Time Series Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_05.html">5. Exploratory Data Analysis (EDA) for Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_06.html">6. Data Prepration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_07.html">7. Stationarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_08.html">8. Discovered a suite of classical time series forecasting methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_09.html">9. Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_10.html">10. Classical models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_11.html">11. Deep Learning for Time Series Forecasting</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">12. Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_13.html">13. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_14.html">14. Preprocessing using Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_15.html">15. Time Series Analysis toolkits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_16.html">16. NeuralProphet</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter_12.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter_12.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>12. Model selection</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recurrent-neural-networks-rnns">12.1 Recurrent Neural Networks (RNNs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-layer-lstm">12.1.1 Single layer LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stacked-lstm">12.1.2 Stacked LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bidirectional-lstm">12.1.3 Bidirectional LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#encoder-decoder-lstm">12.1.4 Encoder-Decoder LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-based-lstm">12.1.5 Attention-based LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hybrid-rnn-model">12.1.6 Hybrid RNN model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convolutional-neural-networks-cnns">12.2 Convolutional Neural Networks (CNNs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-cnn">12.2.1  1D CNN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dilated-cnn">12.2.2 Dilated CNN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#temporal-convolutional-network-tcn">12.2.3 Temporal Convolutional Network (TCN)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convlstm">12.2.4 ConvLSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hybrid-cnn-models">12.2.5 Hybrid CNN models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transformer-models">12.3 Transformer Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transformer-for-time-series-analysis">12.3.1 Transformer for Time Series Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-details-for-tsa">12.3.2 Implementation Details for TSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#challenges-and-considerations">12.3.3 Challenges and Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#recent-developments">12.3.4 Recent Developments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoencoders">12.4 Autoencoders</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-an-autoencoder">12.4.1 What is an Autoencoder?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#autoencoders-in-time-series-analysis">12.4.2 Autoencoders in Time Series Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">12.4.3 Implementation Details for TSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">12.4.4 Challenges and Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">12.4.5 Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-adversarial-networks-gans">12.5 Generative Adversarial Networks (GANs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basics-of-gan">12.5.1 Basics of GAN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gans-in-time-series-analysis">12.5.2 GANs in Time Series Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">12.5.3 Implementation Details for TSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">12.5.4 Challenges and Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">12.5.5 Conclusion</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="model-selection">
+<h1>12. Model selection<a class="headerlink" href="#model-selection" title="Permalink to this heading">#</a></h1>
+<p>Here are some popular deep learning models used in time series analysis and forecasting, along with their suitability for different types of problems:</p>
+<ol class="arabic simple">
+<li><p>Recurrent Neural Networks (RNNs):</p>
+<ul class="simple">
+<li><p>Suitable for sequential data with short-term dependencies.</p></li>
+<li><p>Can capture temporal patterns and dependencies in time series data.</p></li>
+<li><p>Appropriate for problems where the current prediction is dependent on previous observations.</p></li>
+<li><p>Common variants include Long Short-Term Memory (LSTM) and Gated Recurrent Unit (GRU) models.</p></li>
+<li><p>Widely used for various time series forecasting tasks, including stock market prediction, weather forecasting, and demand forecasting.</p></li>
+</ul>
+</li>
+<li><p>Convolutional Neural Networks (CNNs):</p>
+<ul class="simple">
+<li><p>Primarily designed for image processing, but can be applied to time series data as well.</p></li>
+<li><p>Effective for extracting local patterns and features from time series data.</p></li>
+<li><p>Suitable for problems where the time series can be represented as an image or transformed into a two-dimensional structure (e.g., spectrograms, wavelet transforms).</p></li>
+<li><p>Used for tasks like human activity recognition, speech recognition, and electroencephalogram (EEG) analysis.</p></li>
+</ul>
+</li>
+<li><p>Transformer Models:</p>
+<ul class="simple">
+<li><p>Originally introduced for natural language processing tasks, such as machine translation and language modeling.</p></li>
+<li><p>Can be adapted for time series analysis by treating the sequence as a language sequence.</p></li>
+<li><p>Suitable for problems where long-term dependencies and global patterns in the time series are important.</p></li>
+<li><p>Provide parallel processing capabilities and are highly scalable.</p></li>
+<li><p>Used for tasks like machine translation, sentiment analysis, and anomaly detection in time series data.</p></li>
+</ul>
+</li>
+<li><p>Autoencoders:</p>
+<ul class="simple">
+<li><p>Neural networks designed to reconstruct their input data, used for unsupervised learning.</p></li>
+<li><p>Can learn compact representations of time series data by encoding the input into a lower-dimensional latent space.</p></li>
+<li><p>Useful for dimensionality reduction and feature extraction in time series analysis.</p></li>
+<li><p>Applied to tasks like anomaly detection, denoising, and feature extraction from sensor data.</p></li>
+</ul>
+</li>
+<li><p>Generative Adversarial Networks (GANs):</p>
+<ul class="simple">
+<li><p>Comprise a generator and a discriminator network that compete against each other.</p></li>
+<li><p>Can generate synthetic time series data that follows similar patterns as the real data.</p></li>
+<li><p>Useful for data augmentation, synthetic data generation, and improving the robustness of time series models.</p></li>
+<li><p>Applied to tasks like synthetic data generation for training deep learning models and data augmentation for rare events.</p></li>
+</ul>
+</li>
+</ol>
+<p>It’s important to note that the suitability of these models may vary depending on the specific characteristics of your time series data, such as the length of the sequence, the presence of trend or seasonality, the amount of available data, and the forecasting horizon. It is recommended to experiment with different models and compare their performance on your specific problem to determine the most suitable model for your time series analysis and forecasting task.</p>
+<p>Here are some possible combinations of deep learning architectures for each above-mentioned category of time series analysis and forecasting:</p>
+<ol class="arabic simple">
+<li><p>Recurrent Neural Networks (RNNs):</p>
+<ul class="simple">
+<li><p>Single-layer LSTM/GRU: A basic RNN architecture with a single LSTM or GRU layer.</p></li>
+<li><p>Stacked LSTM/GRU: Multiple LSTM or GRU layers stacked on top of each other.</p></li>
+<li><p>Bidirectional LSTM/GRU: LSTM or GRU layers that process the input sequence in both forward and backward directions.</p></li>
+<li><p>Encoder-Decoder LSTM/GRU: Consists of an encoder LSTM or GRU to encode the input sequence and a decoder LSTM or GRU to generate the output sequence.</p></li>
+<li><p>Attention-based LSTM/GRU: Includes an attention mechanism to focus on relevant parts of the input sequence.</p></li>
+<li><p>Hybrid RNN models: Combination of LSTM/GRU layers with other types of layers, such as convolutional layers or fully connected layers.</p></li>
+</ul>
+</li>
+<li><p>Convolutional Neural Networks (CNNs):</p>
+<ul class="simple">
+<li><p>1D CNN: A basic CNN architecture with one-dimensional convolutional layers followed by pooling layers and fully connected layers.</p></li>
+<li><p>Dilated CNN: Uses dilated convolutional layers to capture patterns at different time scales.</p></li>
+<li><p>Temporal Convolutional Network (TCN): Employs causal convolutional layers with residual connections for capturing long-term dependencies.</p></li>
+<li><p>ConvLSTM: Combines convolutional layers with LSTM layers to capture spatial and temporal patterns simultaneously.</p></li>
+<li><p>Hybrid CNN models: Combination of CNN layers with other types of layers, such as recurrent layers or attention layers.</p></li>
+</ul>
+</li>
+<li><p>Transformer Models:</p>
+<ul class="simple">
+<li><p>Transformer: Consists of self-attention layers and feed-forward layers.</p></li>
+<li><p>Encoder-Decoder Transformer: Similar to the Transformer, but with separate encoder and decoder components for sequence-to-sequence tasks.</p></li>
+<li><p>Time2Vec + Transformer: Uses Time2Vec encoding to capture temporal information and combines it with the Transformer architecture.</p></li>
+<li><p>Convolutional Transformer: Incorporates convolutional layers in the Transformer architecture for capturing local patterns.</p></li>
+<li><p>Hybrid Transformer models: Combination of Transformer layers with other types of layers, such as convolutional layers or recurrent layers.</p></li>
+</ul>
+</li>
+<li><p>Autoencoders:</p>
+<ul class="simple">
+<li><p>Vanilla Autoencoder: Consists of an encoder and decoder network, where the encoder compresses the input into a latent space and the decoder reconstructs the input from the latent representation.</p></li>
+<li><p>Variational Autoencoder (VAE): Extends the vanilla autoencoder with probabilistic encodings, enabling generation of new samples.</p></li>
+<li><p>Denoising Autoencoder: Trained to reconstruct clean input from noisy input, useful for denoising time series data.</p></li>
+<li><p>Sequence-to-Sequence Autoencoder: Uses recurrent layers to handle sequential input and output for reconstructing time series data.</p></li>
+</ul>
+</li>
+<li><p>Generative Adversarial Networks (GANs):</p>
+<ul class="simple">
+<li><p>Vanilla GAN: Comprises a generator network that generates synthetic time series data and a discriminator network that distinguishes between real and synthetic data.</p></li>
+<li><p>Conditional GAN: Includes additional conditioning inputs to both the generator and discriminator networks for controlled generation of synthetic time series data.</p></li>
+<li><p>TimeGAN: Specifically designed for time series data generation by employing a combination of LSTM layers and a modified GAN architecture.</p></li>
+<li><p>Wasserstein GAN (WGAN): Utilizes the Wasserstein distance as the objective function for improved stability in training.</p></li>
+</ul>
+</li>
+</ol>
+<p>These are just some examples, and there can be various other combinations and variations of deep learning architectures depending on the specific requirements of your time series analysis and forecasting problem. It’s important to experiment and fine-tune these architectures based on your specific dataset and problem domain.</p>
+<section id="recurrent-neural-networks-rnns">
+<h2>12.1 Recurrent Neural Networks (RNNs)<a class="headerlink" href="#recurrent-neural-networks-rnns" title="Permalink to this heading">#</a></h2>
+<section id="single-layer-lstm">
+<h3>12.1.1 Single layer LSTM<a class="headerlink" href="#single-layer-lstm" title="Permalink to this heading">#</a></h3>
+<p>Let’s create a simple example where we forecast a synthetic sine wave time series using a single-layer LSTM.</p>
+<p>Steps involved:</p>
+<ol class="arabic simple">
+<li><p><strong>Synthetic Time Series Creation</strong>: We’ll create a sine wave time series for this.</p></li>
+<li><p><strong>Data Preparation</strong>: Convert the time series into sequences of fixed lengths and split them into training and testing sets.</p></li>
+<li><p><strong>LSTM Model Creation</strong>: Design a simple LSTM model using TensorFlow and Keras.</p></li>
+<li><p><strong>Training</strong>: Train the LSTM model on the training set.</p></li>
+<li><p><strong>Forecasting</strong>: Use the trained LSTM model to forecast future values.</p></li>
+<li><p><strong>Visualization</strong>: Plot the original time series, training predictions, and forecasting.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+from sklearn.metrics import mean_absolute_error
+
+# 1. Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+# main signal
+y = np.sin(x)
+
+# trend
+t = 0.1 * x
+
+# noise
+noise = np.random.normal(0, 0.2, y.shape)  # Gaussian noise with mean=0 and std=0.5
+y = y + noise + t
+
+# 2. Data Preparation
+SEQ_LEN = 10
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+# Adjust the training set and test set sizes
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# 3. LSTM Model Creation
+model = Sequential()
+model.add(LSTM(50, input_shape=(SEQ_LEN, 1)))
+model.add(Dense(1))
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# 4. Training
+model.fit(X_train, Y_train, epochs=50, batch_size=16, verbose=0)
+
+# 5. Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+
+# Metric measurements
+
+# Measure Squared Error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+# Measure Mean Absolute Error
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training data Mean Absolute Error: {train_mae:.2f}&quot;)
+print(f&quot;Testing data Mean Absolute Error: {test_mae:.2f}&quot;)
+
+# Adjusting the plotting indices:
+train_predict_plot = np.empty_like(y)
+train_predict_plot[:] = np.nan
+train_predict_plot[SEQ_LEN:SEQ_LEN+len(train_predict)] = train_predict[:, 0]
+
+# For test_predict_plot, start from the end of train_predict_plot and ensure the space is just right:
+test_predict_plot = np.empty_like(y)
+test_predict_plot[:] = np.nan
+test_predict_plot[SEQ_LEN+len(train_predict):SEQ_LEN+len(train_predict)+len(test_predict)] = test_predict[:, 0]
+
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+plt.plot(train_predict_plot, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;, linewidth=0.75)
+plt.plot(test_predict_plot, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using LSTM&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11/11 [==============================] - 0s 2ms/step
+5/5 [==============================] - 0s 3ms/step
+Training MSE: 0.0620
+Testing MSE: 0.0806
+Training data Mean Absolute Error: 0.20
+Testing data Mean Absolute Error: 0.23
+</pre></div>
+</div>
+<img alt="../_images/aa9d65031c8082c0b4f23d733ea57e6de01d982f80fbbea850d5c21ee876475e.png" src="../_images/aa9d65031c8082c0b4f23d733ea57e6de01d982f80fbbea850d5c21ee876475e.png" />
+</div>
+</div>
+<p>The above code uses a single-layer LSTM to forecast the sine wave time series. The true sine wave is in blue, training set predictions are in green, and test set predictions are in red. Adjust the number of epochs, sequence length, or LSTM units as required for different results.</p>
+<p><strong>To improve the performance of the LSTM model, you can try the following techniques:</strong></p>
+<ol class="arabic simple">
+<li><p>Increase the number of LSTM units: Adding more LSTM units can increase the model’s capacity to capture complex patterns in the data. You can experiment with different numbers of units to find the optimal balance between model complexity and performance.</p></li>
+<li><p>Use a deeper LSTM architecture: Instead of a single-layer LSTM, you can stack multiple LSTM layers on top of each other. This can help the model learn hierarchical representations of the data and capture more intricate patterns.</p></li>
+<li><p>Adjust the learning rate: The learning rate determines the step size at each iteration during training. A smaller learning rate can help the model converge more slowly but potentially to a better solution. Experiment with different learning rates to find the optimal value for your problem.</p></li>
+<li><p>Add regularization techniques: Regularization techniques such as dropout or recurrent dropout can help prevent overfitting by randomly dropping units or connections during training. This can improve the model’s generalization ability. You can add dropout layers or specify dropout rates in the LSTM layers.</p></li>
+<li><p>Increase the training data: More training data can provide the model with more examples to learn from, which can improve its generalization. If possible, consider acquiring or generating more data to train the model.</p></li>
+<li><p>Adjust the batch size: The batch size determines how many samples are processed at once during training. Smaller batch sizes can provide a noisier gradient but may help the model generalize better. Conversely, larger batch sizes can provide a smoother gradient but may result in slower convergence. Experiment with different batch sizes to find the optimal value.</p></li>
+<li><p>Try different activation functions: The choice of activation function can impact the model’s ability to capture complex relationships. In addition to the sigmoid activation function used in the output layer, you can experiment with other activation functions such as tanh or ReLU in the LSTM layer to see if they improve performance.</p></li>
+</ol>
+<p>Remember to fine-tune these techniques based on your specific problem and data characteristics.</p>
+</section>
+<section id="stacked-lstm">
+<h3>12.1.2 Stacked LSTM<a class="headerlink" href="#stacked-lstm" title="Permalink to this heading">#</a></h3>
+<p>To modify the model to a stacked LSTM, you’ll need to add more LSTM layers to the architecture. One important thing to remember when stacking LSTM layers is to set the <code class="docutils literal notranslate"><span class="pre">return_sequences</span></code> argument to <code class="docutils literal notranslate"><span class="pre">True</span></code> for all but the last LSTM layer. This allows each LSTM layer to return sequences to the next layer instead of just the output of the last time step.</p>
+<p>Here’s the modified model section with a stacked LSTM:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+from sklearn.metrics import mean_absolute_error
+
+# 1. Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+# main signal
+y = np.sin(x)
+
+# trend
+t = 0.1 * x
+
+# noise
+noise = np.random.normal(0, 0.2, y.shape)  # Gaussian noise with mean=0 and std=0.5
+
+# final signals
+y = y + noise + t
+
+# 2. Data Preparation
+SEQ_LEN = 10
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# 3. Stacked LSTM Model Creation
+model = Sequential()
+
+# First LSTM layer
+model.add(LSTM(50, return_sequences=True, input_shape=(SEQ_LEN, 1)))
+
+# Second LSTM layer
+model.add(LSTM(100, return_sequences=True))
+
+# Third LSTM layer
+model.add(LSTM(50))
+
+# Dense layer to produce final output
+model.add(Dense(1))
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# 4. Training
+model.fit(X_train, Y_train, epochs=50, batch_size=16, verbose=0)
+
+# 5. Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+
+# Metric measurements
+
+# Measure Squared Error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+# Measure Mean Absolute Error
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training data Mean Absolute Error: {train_mae:.2f}&quot;)
+print(f&quot;Testing data Mean Absolute Error: {test_mae:.2f}&quot;)
+
+# Adjusting the plotting indices:
+train_predict_plot = np.empty_like(y)
+train_predict_plot[:] = np.nan
+train_predict_plot[SEQ_LEN:SEQ_LEN+len(train_predict)] = train_predict[:, 0]
+
+test_predict_plot = np.empty_like(y)
+test_predict_plot[:] = np.nan
+test_predict_plot[SEQ_LEN+len(train_predict):SEQ_LEN+len(train_predict)+len(test_predict)] = test_predict[:, 0]
+
+# 6. Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+plt.plot(train_predict_plot, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;)
+plt.plot(test_predict_plot, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using Stacked LSTM&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11/11 [==============================] - 1s 4ms/step
+5/5 [==============================] - 0s 4ms/step
+Training MSE: 0.0586
+Testing MSE: 0.0794
+Training data Mean Absolute Error: 0.20
+Testing data Mean Absolute Error: 0.23
+</pre></div>
+</div>
+<img alt="../_images/7a3a90c4ff1d3c015c1f112ab2d58ff40b0131201ad077175e1d291c93822b87.png" src="../_images/7a3a90c4ff1d3c015c1f112ab2d58ff40b0131201ad077175e1d291c93822b87.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Bidirectional
+from sklearn.metrics import mean_absolute_error
+
+# 1. Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+# main signal
+y = np.sin(x)
+
+# trend
+t = 0.1 * x
+
+# noise
+noise = np.random.normal(0, 0.2, y.shape)  # Gaussian noise with mean=0 and std=0.2
+
+# final signals
+y = y + noise + t
+
+# 2. Data Preparation
+SEQ_LEN = 10
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# 3. Bidirectional LSTM Model Creation
+model = Sequential()
+
+# First Bidirectional LSTM layer
+model.add(Bidirectional(LSTM(50, return_sequences=True), input_shape=(SEQ_LEN, 1)))
+
+# Second Bidirectional LSTM layer
+model.add(Bidirectional(LSTM(50, return_sequences=True)))
+
+# Third Bidirectional LSTM layer
+model.add(Bidirectional(LSTM(50)))
+
+# Dense layer to produce final output
+model.add(Dense(1))
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# 4. Training
+model.fit(X_train, Y_train, epochs=50, batch_size=16, verbose=0)
+
+# 5. Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+
+# Metric measurements
+
+# Measure Squared Error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+# Measure Mean Absolute Error
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training data Mean Absolute Error: {train_mae:.2f}&quot;)
+print(f&quot;Testing data Mean Absolute Error: {test_mae:.2f}&quot;)
+
+# Adjusting the plotting indices:
+train_predict_plot = np.empty_like(y)
+train_predict_plot[:] = np.nan
+train_predict_plot[SEQ_LEN:SEQ_LEN+len(train_predict)] = train_predict[:, 0]
+
+test_predict_plot = np.empty_like(y)
+test_predict_plot[:] = np.nan
+test_predict_plot[SEQ_LEN+len(train_predict):SEQ_LEN+len(train_predict)+len(test_predict)] = test_predict[:, 0]
+
+# 6. Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+plt.plot(train_predict_plot, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;, linewidth=0.75)
+plt.plot(test_predict_plot, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using Bidirectional LSTM&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11/11 [==============================] - 2s 7ms/step
+5/5 [==============================] - 0s 6ms/step
+Training MSE: 0.0624
+Testing MSE: 0.1289
+Training data Mean Absolute Error: 0.20
+Testing data Mean Absolute Error: 0.29
+</pre></div>
+</div>
+<img alt="../_images/6646aaa945050a26d608f17b84f41fb207e005c9b94d48f64a5609af46e0d61e.png" src="../_images/6646aaa945050a26d608f17b84f41fb207e005c9b94d48f64a5609af46e0d61e.png" />
+</div>
+</div>
+</section>
+<section id="bidirectional-lstm">
+<h3>12.1.3 Bidirectional LSTM<a class="headerlink" href="#bidirectional-lstm" title="Permalink to this heading">#</a></h3>
+<p>To update the model to use Bidirectional LSTM, you’ll have to make use of the Bidirectional layer from Keras, which wraps around LSTM layers. Here’s how you can do it:</p>
+<ol class="arabic simple">
+<li><p>Import the Bidirectional layer from Keras.</p></li>
+<li><p>Wrap each LSTM layer with the Bidirectional layer.</p></li>
+</ol>
+<p>Here’s the modified code with a Bidirectional LSTM:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Bidirectional, Dropout
+from sklearn.metrics import mean_absolute_error
+
+# Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+y = np.sin(x)
+t = 0.1 * x
+noise = np.random.normal(0, 0.2, y.shape)
+y = y + noise + t
+
+# Data Preparation
+SEQ_LEN = 20  # Increased sequence length
+X, Y = [], []
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# Model Creation
+model = Sequential()
+model.add(Bidirectional(LSTM(100, return_sequences=True, activation=&#39;relu&#39;), input_shape=(SEQ_LEN, 1)))
+model.add(Dropout(0.2))
+model.add(Bidirectional(LSTM(100, return_sequences=True, activation=&#39;relu&#39;)))
+model.add(Dropout(0.2))
+model.add(Bidirectional(LSTM(100, activation=&#39;relu&#39;)))
+model.add(Dropout(0.2))
+model.add(Dense(1))
+
+# Using a learning rate schedule
+initial_learning_rate = 0.001
+lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate,
+    decay_steps=100000,
+    decay_rate=0.96,
+    staircase=True)
+
+optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
+model.compile(optimizer=optimizer, loss=&#39;mean_squared_error&#39;)
+
+# Training
+early_stopping = tf.keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True)
+model.fit(X_train, Y_train, epochs=150, batch_size=32, validation_data=(X_test, Y_test), callbacks=[early_stopping], verbose=1)
+
+# Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Metric measurements
+# Measure Squared Error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+# Measure Mean Absolute Error
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training data Mean Absolute Error: {train_mae:.2f}&quot;)
+print(f&quot;Testing data Mean Absolute Error: {test_mae:.2f}&quot;)
+
+# Visualization
+train_predict_plot = np.empty_like(y)
+train_predict_plot[:] = np.nan
+train_predict_plot[SEQ_LEN:len(train_predict) + SEQ_LEN] = train_predict[:, 0]
+
+test_predict_plot = np.empty_like(y)
+test_predict_plot[:] = np.nan
+start_idx = len(train_predict) + SEQ_LEN
+test_predict_plot[start_idx:start_idx+len(test_predict)] = test_predict[:, 0]
+
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+plt.plot(train_predict_plot, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;, linewidth=0.75)
+plt.plot(test_predict_plot, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using Bidirectional LSTM&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training MSE: 0.0884
+Testing MSE: 0.0613
+Training data Mean Absolute Error: 0.24
+Testing data Mean Absolute Error: 0.21
+</pre></div>
+</div>
+<img alt="../_images/2d3413706e796a63d59c45d3ece8df258b9e97d13ab8c742ebb5725be42fea3e.png" src="../_images/2d3413706e796a63d59c45d3ece8df258b9e97d13ab8c742ebb5725be42fea3e.png" />
+</div>
+</div>
+</section>
+<section id="encoder-decoder-lstm">
+<h3>12.1.4 Encoder-Decoder LSTM<a class="headerlink" href="#encoder-decoder-lstm" title="Permalink to this heading">#</a></h3>
+<p>The Encoder-Decoder LSTM architecture is typically used for sequence-to-sequence prediction problems. In the context of time series forecasting, the encoder LSTM model is responsible for reading and interpreting the input sequence, and the decoder LSTM model is responsible for outputting the prediction sequence.</p>
+<p>Here’s an updated version of the previous code using the Encoder-Decoder LSTM architecture for time series forecasting.
+In this Encoder-Decoder architecture:</p>
+<ul class="simple">
+<li><p>The encoder reads the input sequence and returns the final hidden state which serves as the “context” or “memory” for the decoder.</p></li>
+<li><p>The RepeatVector layer is used to repeat the encoder output
+for each time step in the output sequence.</p></li>
+<li><p>The decoder uses this repeated context as input along with its LSTM layers to produce the sequence of predictions.</p></li>
+<li><p>The TimeDistributed layer allows the dense layer to independently process each time step in the output sequence.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import LSTM, Dense, Input, RepeatVector, TimeDistributed
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
+# Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+y = np.sin(x)
+t = 0.1 * x
+noise = np.random.normal(0, 0.2, y.shape)
+y = y + noise + t
+
+# Data Preparation
+SEQ_LEN = 20
+X, Y = [], []
+for i in range(len(y) - 2*SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN:i+2*SEQ_LEN])
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+Y_train = np.reshape(Y_train, (Y_train.shape[0], Y_train.shape[1], 1))
+Y_test = np.reshape(Y_test, (Y_test.shape[0], Y_test.shape[1], 1))
+
+# Encoder-Decoder LSTM Model Creation
+encoder_inputs = Input(shape=(SEQ_LEN, 1))
+encoder = LSTM(100, activation=&#39;relu&#39;, return_state=True)
+encoder_outputs, state_h, state_c = encoder(encoder_inputs)
+encoder_states = [state_h, state_c]
+
+decoder_inputs = RepeatVector(SEQ_LEN)(encoder_outputs)
+decoder_lstm = LSTM(100, activation=&#39;relu&#39;, return_sequences=True)
+decoder_outputs = decoder_lstm(decoder_inputs, initial_state=encoder_states)
+decoder_dense = TimeDistributed(Dense(1))
+decoder_outputs = decoder_dense(decoder_outputs)
+
+model = Model(encoder_inputs, decoder_outputs)
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# Training
+model.fit(X_train, Y_train, epochs=150, batch_size=32, validation_data=(X_test, Y_test), verbose=1)
+
+# Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+
+# Flatten arrays for metric calculation
+Y_train_flattened = Y_train.reshape(Y_train.shape[0], -1)
+train_predict_flattened = train_predict.reshape(train_predict.shape[0], -1)
+Y_test_flattened = Y_test.reshape(Y_test.shape[0], -1)
+test_predict_flattened = test_predict.reshape(test_predict.shape[0], -1)
+
+
+
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Metric measurements
+
+# Measure Squared Error
+train_mse = mean_squared_error(Y_train_flattened, train_predict_flattened)
+test_mse = mean_squared_error(Y_test_flattened, test_predict_flattened)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+# Measure Mean Absolute Error
+train_mae = mean_absolute_error(Y_train[:,0,:], train_predict[:,0,:])
+test_mae = mean_absolute_error(Y_test[:,0,:], test_predict[:,0,:])
+print(f&quot;Training data Mean Absolute Error: {train_mae:.2f}&quot;)
+print(f&quot;Testing data Mean Absolute Error: {test_mae:.2f}&quot;)
+
+# Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+
+# Assuming you want to plot predictions for both train and test sets:
+train_predict_plot = np.empty_like(y)
+train_predict_plot[:] = np.nan
+train_predict_plot[SEQ_LEN:SEQ_LEN+len(train_predict)] = train_predict[:, 0, 0]
+
+test_predict_plot = np.empty_like(y)
+test_predict_plot[:] = np.nan
+test_predict_plot[2*SEQ_LEN+train_size-SEQ_LEN:2*SEQ_LEN+train_size-SEQ_LEN+len(test_predict)] = test_predict[:, 0, 0]
+
+plt.plot(train_predict_plot, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;, linewidth=0.75)
+plt.plot(test_predict_plot, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using Bidirectional LSTM&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training MSE: 0.1409
+Testing MSE: 0.6346
+Training data Mean Absolute Error: 0.21
+Testing data Mean Absolute Error: 0.41
+</pre></div>
+</div>
+<img alt="../_images/8a0010dd5b505b82ea204aec0042ab2418ac9bacdae3ce8311b5c0c95a320534.png" src="../_images/8a0010dd5b505b82ea204aec0042ab2418ac9bacdae3ce8311b5c0c95a320534.png" />
+</div>
+</div>
+</section>
+<section id="attention-based-lstm">
+<h3>12.1.5 Attention-based LSTM<a class="headerlink" href="#attention-based-lstm" title="Permalink to this heading">#</a></h3>
+<p>To incorporate an Attention mechanism into the LSTM model, we can use the <code class="docutils literal notranslate"><span class="pre">Attention</span></code> layer provided by the Keras-Attention library.</p>
+<p>In this updated code, I made the following changes:</p>
+<ul class="simple">
+<li><p>Imported the <code class="docutils literal notranslate"><span class="pre">SeqSelfAttention</span></code> layer from the <code class="docutils literal notranslate"><span class="pre">keras_self_attention</span></code> library. This layer adds attention mechanism to the LSTM layer.</p></li>
+<li><p>Defined the input layer using <code class="docutils literal notranslate"><span class="pre">Input</span></code> from <code class="docutils literal notranslate"><span class="pre">tensorflow.keras.layers</span></code>.</p></li>
+<li><p>Added the <code class="docutils literal notranslate"><span class="pre">SeqSelfAttention</span></code> layer after the LSTM layer to introduce the attention mechanism.</p></li>
+<li><p>Removed the additional reshaping of the target sequence (<code class="docutils literal notranslate"><span class="pre">y_train</span></code> and <code class="docutils literal notranslate"><span class="pre">y_test</span></code>) as it is not necessary for this model.</p></li>
+<li><p>Fit the model using <code class="docutils literal notranslate"><span class="pre">X_train</span></code> and <code class="docutils literal notranslate"><span class="pre">y_train</span></code> as input data.</p></li>
+<li><p>Evaluated the model using <code class="docutils literal notranslate"><span class="pre">X_test</span></code> and <code class="docutils literal notranslate"><span class="pre">y_test</span></code>.
+!</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.layers import LSTM, Dense,Flatten, Input, Concatenate, Permute, Dot, Multiply, Reshape
+from tensorflow.keras.models import Model
+from sklearn.metrics import mean_absolute_error
+
+# Attention Mechanism Layer
+def attention_mechanism(inputs):
+    a = Permute((2, 1))(inputs)
+    a = Dense(SEQ_LEN, activation=&#39;softmax&#39;)(a)
+    a_probs = Permute((2, 1))(a)
+    output_attention_mul = Multiply()([inputs, a_probs])
+    return output_attention_mul
+
+# Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+y = np.sin(x)
+t = 0.1 * x
+noise = np.random.normal(0, 0.2, y.shape)
+y = y + noise + t
+
+# Data Preparation
+SEQ_LEN = 20
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# Attention-based LSTM Model Creation
+inputs = Input(shape=(SEQ_LEN, 1))
+lstm_out = LSTM(50, return_sequences=True)(inputs)
+attention_out = attention_mechanism(lstm_out)
+attention_out = Flatten()(attention_out)
+output = Dense(1, activation=&#39;linear&#39;)(attention_out)
+
+model = Model(inputs=[inputs], outputs=output)
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# Training
+model.fit(X_train, Y_train, epochs=150, batch_size=32, validation_data=(X_test, Y_test), verbose=1)
+
+# Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Metric measurements
+
+# Measure Squared Error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+# Measure Mean Absolute Error
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training data Mean Absolute Error: {train_mae:.2f}&quot;)
+print(f&quot;Testing data Mean Absolute Error: {test_mae:.2f}&quot;)
+
+# Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+
+# Train predictions
+train_predict_plot = np.empty_like(y)
+train_predict_plot[:] = np.nan
+train_predict_plot[SEQ_LEN:train_size+SEQ_LEN] = train_predict[:, 0]
+
+# Test predictions
+test_predict_plot = np.empty_like(y)
+test_predict_plot[:] = np.nan
+test_predict_plot[train_size+SEQ_LEN:] = test_predict[:, 0]
+
+plt.plot(train_predict_plot, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;, linewidth=0.75)
+plt.plot(test_predict_plot, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using Attention-based LSTM&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training MSE: 0.0573
+Testing MSE: 0.1836
+Training data Mean Absolute Error: 0.19
+Testing data Mean Absolute Error: 0.35
+</pre></div>
+</div>
+<img alt="../_images/48a6e3e51dca5d4f2bccfd812bb016496921ce04de3e8464cadc5db95ae570a2.png" src="../_images/48a6e3e51dca5d4f2bccfd812bb016496921ce04de3e8464cadc5db95ae570a2.png" />
+</div>
+</div>
+</section>
+<section id="hybrid-rnn-model">
+<h3>12.1.6 Hybrid RNN model<a class="headerlink" href="#hybrid-rnn-model" title="Permalink to this heading">#</a></h3>
+<p>A Hybrid RNN model usually involves combining RNNs (or its variants like LSTMs or GRUs) with other types of neural networks (like CNNs or fully connected networks) to capitalize on the strengths of both types of networks.</p>
+<p>In the context of time series forecasting, a common approach is to use Convolutional Neural Networks (CNNs) to automatically and adaptively learn spatial hierarchies of features from the time series data, and then pass those features to RNN layers to capture temporal dependencies.</p>
+<p>Here’s an example of a Hybrid CNN-LSTM model:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Flatten, Conv1D, MaxPooling1D, Reshape
+
+from sklearn.metrics import mean_absolute_error
+
+# Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+y = np.sin(x)
+t = 0.1 * x
+noise = np.random.normal(0, 0.2, y.shape)
+y = y + noise + t
+
+# Data Preparation
+SEQ_LEN = 20
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# Hybrid CNN-LSTM Model Creation
+model = Sequential()
+
+# CNN layers
+model.add(Conv1D(filters=64, kernel_size=3, activation=&#39;relu&#39;, input_shape=(SEQ_LEN, 1)))
+model.add(MaxPooling1D(pool_size=2))
+model.add(Flatten())
+
+# Correct reshaping for LSTM
+model.add(Reshape((9, 64)))
+model.add(LSTM(50))
+
+# Dense layer for prediction
+model.add(Dense(1))
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# Training
+model.fit(X_train, Y_train, epochs=100, batch_size=32, validation_data=(X_test, Y_test), verbose=1)
+
+# Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Metric measurements
+
+# Measure Squared Error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+# Measure Mean Absolute Error
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training data Mean Absolute Error: {train_mae:.2f}&quot;)
+print(f&quot;Testing data Mean Absolute Error: {test_mae:.2f}&quot;)
+
+# Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+
+# Train predictions
+train_predict_plot = np.empty_like(y)
+train_predict_plot[:] = np.nan
+train_predict_plot[SEQ_LEN:train_size+SEQ_LEN] = train_predict[:, 0]
+
+# Test predictions
+test_predict_plot = np.empty_like(y)
+test_predict_plot[:] = np.nan
+test_predict_plot[train_size+SEQ_LEN:] = test_predict[:, 0]
+
+plt.plot(train_predict_plot, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;, linewidth=0.75)
+plt.plot(test_predict_plot, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using Hybrid CNN-LSTM&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training MSE: 0.0547
+Testing MSE: 0.0813
+Training data Mean Absolute Error: 0.19
+Testing data Mean Absolute Error: 0.23
+</pre></div>
+</div>
+<img alt="../_images/64f66a64b19d59b6a802d58a21787e55353ef4fb45343391df6cf94f3010e520.png" src="../_images/64f66a64b19d59b6a802d58a21787e55353ef4fb45343391df6cf94f3010e520.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="convolutional-neural-networks-cnns">
+<h2>12.2 Convolutional Neural Networks (CNNs)<a class="headerlink" href="#convolutional-neural-networks-cnns" title="Permalink to this heading">#</a></h2>
+<section id="d-cnn">
+<h3>12.2.1  1D CNN<a class="headerlink" href="#d-cnn" title="Permalink to this heading">#</a></h3>
+<p>The provided code aims to perform time series forecasting using a 1D Convolutional Neural Network (CNN). I’ll provide a step-by-step breakdown:</p>
+<ol class="arabic simple">
+<li><p><strong>Synthetic Time Series Creation</strong>:</p>
+<ul class="simple">
+<li><p>A synthetic time series is generated by combining a sine wave, a linear trend, and Gaussian noise. The signal represents a sinusoidal function plus a trend with some added noise.</p></li>
+</ul>
+</li>
+<li><p><strong>Data Preparation</strong>:</p>
+<ul class="simple">
+<li><p>A sliding window approach is used to prepare sequences of data for training the model. For instance, with <code class="docutils literal notranslate"><span class="pre">SEQ_LEN</span></code> set to 10, each input sequence consists of 10 time steps, and the corresponding output is the value at the next time step. This prepares the data for supervised learning.</p></li>
+<li><p>The data is then split into a training set (70% of the data) and a testing set (the remaining 30%).</p></li>
+</ul>
+</li>
+<li><p><strong>1D CNN Model Creation</strong>:</p>
+<ul class="simple">
+<li><p>A 1D Convolutional Neural Network model is constructed for sequence prediction.</p>
+<ul>
+<li><p>A 1D convolutional layer (<code class="docutils literal notranslate"><span class="pre">Conv1D</span></code>) captures patterns in the sequence data.</p></li>
+<li><p>A max-pooling layer (<code class="docutils literal notranslate"><span class="pre">MaxPooling1D</span></code>) is used to down-sample the input representation, capturing the most important information.</p></li>
+<li><p>A flattening layer (<code class="docutils literal notranslate"><span class="pre">Flatten</span></code>) transforms the 2D output of the convolutional layers to a 1D vector.</p></li>
+<li><p>One dense layer (<code class="docutils literal notranslate"><span class="pre">Dense</span></code>) with 50 neurons and another one for output prediction are added.</p></li>
+</ul>
+</li>
+<li><p>The model is compiled using the ‘adam’ optimizer and Mean Squared Error (MSE) as the loss function.</p></li>
+</ul>
+</li>
+<li><p><strong>Training</strong>:</p>
+<ul class="simple">
+<li><p>The model is trained using the training data (both <code class="docutils literal notranslate"><span class="pre">X_train</span></code> and <code class="docutils literal notranslate"><span class="pre">Y_train</span></code>). The model iteratively adjusts its weights to minimize the loss over 100 epochs using batches of 16 sequences at a time.</p></li>
+</ul>
+</li>
+<li><p><strong>Forecasting</strong>:</p>
+<ul class="simple">
+<li><p>The trained model is used to predict values on both the training and testing sets.</p></li>
+<li><p>Mean Absolute Error (MAE) is calculated for both the training and testing predictions to measure the model’s performance.</p></li>
+</ul>
+</li>
+<li><p><strong>Visualization</strong>:</p>
+<ul class="simple">
+<li><p>The true time series, as well as the predictions made by the model on both the training and testing sets, are plotted on the same graph. This allows for a visual assessment of how well the model’s predictions align with the actual values.</p></li>
+</ul>
+</li>
+</ol>
+<p>In essence, this code takes a noisy sinusoidal time series, trains a 1D CNN on it to understand its patterns, and then makes future predictions. It visualizes the actual time series and the predictions to see how close they are. The performance of the model is measured using the Mean Absolute Error on both the training and testing datasets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense
+from sklearn.metrics import mean_absolute_error
+
+# Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+# main signal
+y = np.sin(x)
+
+# trend
+t = 0.1 * x
+
+# noise
+noise = np.random.normal(0, 0.2, y.shape)  # Gaussian noise with mean=0 and std=0.2
+
+# final signals
+y = y + noise + t
+
+# Data Preparation
+SEQ_LEN = 10
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# 1D CNN Model Creation
+model = Sequential()
+
+# 1D Convolutional layers
+model.add(Conv1D(filters=64, kernel_size=3, activation=&#39;relu&#39;, input_shape=(SEQ_LEN, 1)))
+model.add(MaxPooling1D(pool_size=2))
+model.add(Flatten())
+
+# Dense layer for prediction
+model.add(Dense(50, activation=&#39;relu&#39;))
+model.add(Dense(1))
+
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# Training
+model.fit(X_train, Y_train, epochs=100, batch_size=16, verbose=0)
+
+# Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Metric measurements
+
+# Measure Squared Error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+# Measure Mean Absolute Error
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training data Mean Absolute Error: {train_mae:.2f}&quot;)
+print(f&quot;Testing data Mean Absolute Error: {test_mae:.2f}&quot;)
+
+# Adjusting the plotting indices:
+train_predict_plot = np.empty_like(y)
+train_predict_plot[:] = np.nan
+train_predict_plot[SEQ_LEN:SEQ_LEN+len(train_predict)] = train_predict[:, 0]
+
+test_predict_plot = np.empty_like(y)
+test_predict_plot[:] = np.nan
+test_predict_plot[SEQ_LEN+len(train_predict):SEQ_LEN+len(train_predict)+len(test_predict)] = test_predict[:, 0]
+
+# 6. Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+plt.plot(train_predict_plot, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;, linewidth=0.75)
+plt.plot(test_predict_plot, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using 1D CNN&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training MSE: 0.0473
+Testing MSE: 0.0993
+Training data Mean Absolute Error: 0.17
+Testing data Mean Absolute Error: 0.26
+</pre></div>
+</div>
+<img alt="../_images/8ee30fcabaec379b990d5a57f4667f1c1926bf29aba1368d8603b6ae84777049.png" src="../_images/8ee30fcabaec379b990d5a57f4667f1c1926bf29aba1368d8603b6ae84777049.png" />
+</div>
+</div>
+</section>
+<section id="dilated-cnn">
+<h3>12.2.2 Dilated CNN<a class="headerlink" href="#dilated-cnn" title="Permalink to this heading">#</a></h3>
+<p><strong>Convolutional Neural Networks (CNNs)</strong> are designed to automatically and adaptively learn spatial hierarchies of features from input images. CNNs have been very successful in various image recognition tasks.</p>
+<p><strong>1D CNNs</strong>, as the name suggests, work with one-dimensional sequences instead of two-dimensional images. They have proven useful in various time series forecasting problems and natural language processing tasks where data is represented as a sequence (e.g., sentence, audio waveform).</p>
+<p><strong>Dilated Convolutions</strong>, or atrous convolutions, introduce another parameter to convolutional layers called the dilation rate. This dilation rate determines how far apart each weight of the convolutional filter is applied, effectively expanding the receptive field of the kernel without increasing the number of parameters or the computational cost.</p>
+<p>For instance:</p>
+<ul class="simple">
+<li><p>A 1D convolution with a kernel size of 3 and a dilation rate of 1 would have its weights applied to the input sequence as <code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">x+1,</span> <span class="pre">x+2]</span></code>.</p></li>
+<li><p>With a dilation rate of 2, the same kernel would cover <code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">x+2,</span> <span class="pre">x+4]</span></code>.</p></li>
+<li><p>With a dilation rate of 3, it would be <code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">x+3,</span> <span class="pre">x+6]</span></code>, and so on.</p></li>
+</ul>
+<p><strong>Dilated CNN vs. Regular 1D CNN:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Receptive Field</strong>: One of the primary benefits of dilated convolutions is the increase in the receptive field. With standard convolutions, the receptive field grows linearly with the depth of the network. In contrast, with dilated convolutions, the receptive field grows exponentially, which allows the model to gather information from a wider range of input data without increasing the model’s complexity.</p></li>
+<li><p><strong>Parameters and Computational Cost</strong>: Despite the increased receptive field, dilated convolutions do not introduce additional parameters or increase the computational cost, making them particularly attractive for tasks where capturing long-range dependencies is essential.</p></li>
+<li><p><strong>Application</strong>: Regular 1D CNNs are generally applied when short-term patterns or local features are of primary interest. In contrast, dilated CNNs are more useful in scenarios where long-term dependencies or global context matter, like in certain time series forecasting tasks or semantic segmentation in images.</p></li>
+<li><p><strong>Hierarchical Representation</strong>: By stacking dilated convolutional layers with increasing dilation rates, models can form a hierarchical representation of data. Each subsequent layer with a larger dilation rate can capture patterns at different scales or resolutions.</p></li>
+</ol>
+<p>In summary, while both regular 1D CNNs and dilated CNNs operate on sequential data, dilated CNNs introduce a dilation rate to expand the receptive field of convolutional filters without increasing computational complexity. This makes dilated CNNs particularly useful for tasks that require the model to consider long-range dependencies in the data.</p>
+<p>Here is an example that shows an updated code with Dilated CNN model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
+# Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+# main signal
+y = np.sin(x)
+
+# trend
+t = 0.1 * x
+
+# noise
+noise = np.random.normal(0, 0.2, y.shape)  # Gaussian noise with mean=0 and std=0.2
+
+# final signals
+y = y + noise + t
+
+# Data Preparation
+SEQ_LEN = 10
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# Dilated CNN Model Creation
+model = Sequential()
+
+model.add(Conv1D(64, 2, dilation_rate=1, activation=&#39;relu&#39;, input_shape=(SEQ_LEN, 1)))
+model.add(MaxPooling1D(pool_size=2))
+
+model.add(Conv1D(64, 2, dilation_rate=2, activation=&#39;relu&#39;))  # dilation_rate=2 means skipping one element in between
+model.add(MaxPooling1D(pool_size=2))
+
+model.add(Flatten())
+model.add(Dense(50, activation=&#39;relu&#39;))
+model.add(Dense(1))
+
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# Training
+model.fit(X_train, Y_train, epochs=50, batch_size=16, verbose=0)
+
+# Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Metric measurements
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training MAE: {train_mae:.4f}&quot;)
+print(f&quot;Testing MAE: {test_mae:.4f}&quot;)
+
+# Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+plt.plot(np.arange(SEQ_LEN, SEQ_LEN+len(train_predict)), train_predict, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;,linewidth=0.75)
+plt.plot(np.arange(SEQ_LEN+len(train_predict), SEQ_LEN+len(train_predict)+len(test_predict)), test_predict, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using Dilated CNN&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training MSE: 0.0582
+Testing MSE: 0.0695
+Training MAE: 0.1910
+Testing MAE: 0.2105
+</pre></div>
+</div>
+<img alt="../_images/6c6f22064feec2b248fffb908495d8e53baf908f6a2f72b6c517c57394b92ae4.png" src="../_images/6c6f22064feec2b248fffb908495d8e53baf908f6a2f72b6c517c57394b92ae4.png" />
+</div>
+</div>
+</section>
+<section id="temporal-convolutional-network-tcn">
+<h3>12.2.3 Temporal Convolutional Network (TCN)<a class="headerlink" href="#temporal-convolutional-network-tcn" title="Permalink to this heading">#</a></h3>
+<p>Temporal Convolutional Networks (TCNs) are a type of deep learning model specifically designed for processing time series data. TCNs leverage the power of convolutional neural networks (CNNs) to capture temporal dependencies in the data, making them suitable for tasks such as time series analysis and forecasting.</p>
+<p>The key characteristic of TCNs is the use of dilated convolutions, which allow for an expanded receptive field without increasing the number of parameters. Dilated convolutions have gaps between their filter weights, enabling them to capture long-range dependencies in the input sequence. This makes TCNs capable of modeling both short-term and long-term temporal patterns.</p>
+<p>Applications of TCNs in time series analysis include:</p>
+<ol class="arabic simple">
+<li><p>Time Series Classification: TCNs can be used for classifying time series data into different categories. For example, they can be employed for activity recognition from sensor data or detecting anomalies in sensor readings.</p></li>
+<li><p>Time Series Forecasting: TCNs can be utilized for predicting future values in a time series sequence. They can capture complex temporal patterns and learn to forecast future trends based on historical data.</p></li>
+<li><p>Natural Language Processing: TCNs can be applied to sequence modeling tasks in natural language processing, such as text classification, sentiment analysis, and machine translation. In these cases, the input sequence is treated as a temporal sequence of words or characters.</p></li>
+<li><p>Speech Recognition: TCNs can be used in speech recognition tasks to model and process audio waveforms over time. They can capture phonetic information and temporal dependencies in speech signals.</p></li>
+</ol>
+<p>TCNs offer advantages such as parallel processing, efficient memory utilization, and the ability to capture long-range dependencies. They have shown promising results in various time series analysis tasks, often achieving competitive performance compared to other models like recurrent neural networks (RNNs) and long short-term memory (LSTM) networks.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!pip install keras-tcn
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tcn import TCN
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
+# Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+# main signal
+y = np.sin(x)
+
+# trend
+t = 0.1 * x
+
+# noise
+noise = np.random.normal(0, 0.2, y.shape)  # Gaussian noise with mean=0 and std=0.2
+
+# final signals
+y = y + noise + t
+
+# Data Preparation
+SEQ_LEN = 10
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# TCN Model Creation
+model = Sequential()
+
+model.add(TCN(input_shape=(SEQ_LEN, 1), nb_filters=64, kernel_size=2, nb_stacks=1, dilations=[1, 2, 4, 8], return_sequences=False))
+model.add(Dense(1))
+
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# Training
+model.fit(X_train, Y_train, epochs=50, batch_size=16, verbose=0)
+
+# Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Metric measurements
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training MAE: {train_mae:.4f}&quot;)
+print(f&quot;Testing MAE: {test_mae:.4f}&quot;)
+
+# 6. Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+plt.plot(np.arange(SEQ_LEN, SEQ_LEN+len(train_predict)), train_predict, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;,linewidth=0.75)
+plt.plot(np.arange(SEQ_LEN+len(train_predict), SEQ_LEN+len(train_predict)+len(test_predict)), test_predict, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using TCN&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training MSE: 0.0431
+Testing MSE: 0.0741
+Training MAE: 0.1613
+Testing MAE: 0.2190
+</pre></div>
+</div>
+<img alt="../_images/7ccc2576e12e9709aa3ad778b0d1514d25070bdf45d40113fac92c6de9cc82e2.png" src="../_images/7ccc2576e12e9709aa3ad778b0d1514d25070bdf45d40113fac92c6de9cc82e2.png" />
+</div>
+</div>
+</section>
+<section id="convlstm">
+<h3>12.2.4 ConvLSTM<a class="headerlink" href="#convlstm" title="Permalink to this heading">#</a></h3>
+<p>ConvLSTM is a type of recurrent neural network that incorporates convolutional layers within LSTM (Long Short-Term Memory) units. It combines the spatial learning capabilities of convolutional neural networks (CNNs) with the temporal modeling capabilities of LSTMs. ConvLSTM is specifically designed for processing spatiotemporal data, making it well-suited for tasks involving time series analysis and prediction.</p>
+<p>In ConvLSTM, the input data is typically in the form of a sequence of two-dimensional (2D) feature maps, where each feature map represents a frame or a snapshot in time. The convolutional LSTM units allow the network to learn spatial patterns across the feature maps as well as capture the temporal dependencies between consecutive frames.</p>
+<p>The main advantages of ConvLSTM for time series analysis and prediction include:</p>
+<ol class="arabic simple">
+<li><p><strong>Spatial-Temporal Learning</strong>: ConvLSTM can capture both spatial and temporal patterns in the input data. It can automatically learn hierarchical representations of the spatiotemporal features, enabling it to model complex dependencies within the time series.</p></li>
+<li><p><strong>End-to-End Learning</strong>: ConvLSTM can learn to extract relevant features directly from the raw input data without requiring manual feature engineering. It can effectively learn spatial and temporal representations in an end-to-end manner, reducing the need for manual preprocessing.</p></li>
+<li><p><strong>Variable-Length Sequences</strong>: ConvLSTM can handle variable-length input sequences, making it suitable for time series data with varying lengths. It can adaptively process sequences of different lengths and capture long-term dependencies across the time axis.</p></li>
+<li><p><strong>Robustness to Noise</strong>: ConvLSTM’s ability to model spatial and temporal dependencies helps in reducing the impact of noise in the input data. It can learn to filter out noise and focus on relevant patterns, leading to improved prediction accuracy.</p></li>
+</ol>
+<p>The applications of ConvLSTM in time series analysis and prediction are wide-ranging, including:</p>
+<ol class="arabic simple">
+<li><p><strong>Video Analysis</strong>: ConvLSTM is commonly used for video understanding tasks such as action recognition, video classification, and video segmentation. It can model temporal dynamics and spatial structures within video sequences, enabling accurate analysis and prediction.</p></li>
+<li><p><strong>Weather Forecasting</strong>: ConvLSTM can be applied to analyze and predict weather patterns using spatiotemporal data such as temperature, humidity, and wind speed. It can capture the dependencies between different weather features over time, leading to accurate weather forecasting.</p></li>
+<li><p><strong>Financial Time Series Analysis</strong>: ConvLSTM can be used to model and predict financial time series data, such as stock prices, exchange rates, and market indices. It can capture the temporal dependencies and non-linear patterns in the data, assisting in making predictions and informed decisions in the financial domain.</p></li>
+<li><p><strong>Healthcare Monitoring</strong>: ConvLSTM can analyze time series data from medical sensors, such as electrocardiograms (ECG) or electroencephalograms (EEG), to monitor patient health and detect anomalies. It can learn temporal patterns in the physiological signals, aiding in early diagnosis and intervention.</p></li>
+<li><p><strong>Energy Load Forecasting</strong>: ConvLSTM can predict energy consumption patterns based on historical data, allowing better load management and energy planning. It can capture the temporal variations in energy demand and incorporate external factors like weather conditions to improve forecasting accuracy.</p></li>
+</ol>
+<p>ConvLSTM has shown promising results in various time series analysis tasks, thanks to its ability to model spatiotemporal dependencies effectively. Its combination of convolutional and LSTM layers enables it to learn complex patterns and capture long-term dependencies in time series data, making it a powerful tool for prediction and analysis in domains involving sequential data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import ConvLSTM2D, Flatten, Dense
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
+# Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+# main signal
+y = np.sin(x)
+
+# trend
+t = 0.1 * x
+
+# noise
+noise = np.random.normal(0, 0.2, y.shape)  # Gaussian noise with mean=0 and std=0.2
+
+# final signals
+y = y + noise + t
+
+# Data Preparation
+SEQ_LEN = 10
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+
+X_train = np.reshape(X_train, (X_train.shape[0], 1, SEQ_LEN, 1, 1))
+X_test = np.reshape(X_test, (X_test.shape[0], 1, SEQ_LEN, 1, 1))
+
+# ConvLSTM Model Creation
+model = Sequential()
+
+model.add(ConvLSTM2D(filters=64, kernel_size=(1,1), activation=&#39;relu&#39;, input_shape=(1, SEQ_LEN, 1, 1), return_sequences=False))
+model.add(Flatten())
+model.add(Dense(1))
+
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# Training
+model.fit(X_train, Y_train, epochs=50, batch_size=16, verbose=0)
+
+# Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Metric measurements
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training MAE: {train_mae:.4f}&quot;)
+print(f&quot;Testing MAE: {test_mae:.4f}&quot;)
+
+# Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+plt.plot(np.arange(SEQ_LEN, SEQ_LEN+len(train_predict)), train_predict, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;,linewidth=0.75)
+plt.plot(np.arange(SEQ_LEN+len(train_predict), SEQ_LEN+len(train_predict)+len(test_predict)), test_predict, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using ConvLSTM&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training MSE: 0.0555
+Testing MSE: 0.1023
+Training MAE: 0.1895
+Testing MAE: 0.2597
+</pre></div>
+</div>
+<img alt="../_images/8c91baba9675647ed11570c9075555ebe20df9101ddbf9c586243ed16c21b7fb.png" src="../_images/8c91baba9675647ed11570c9075555ebe20df9101ddbf9c586243ed16c21b7fb.png" />
+</div>
+</div>
+</section>
+<section id="hybrid-cnn-models">
+<h3>12.2.5 Hybrid CNN models<a class="headerlink" href="#hybrid-cnn-models" title="Permalink to this heading">#</a></h3>
+<p>A hybrid CNN model combines Convolutional Neural Networks (CNNs) and Recurrent Neural Networks (RNNs) to leverage the strengths of both architectures for time series analysis and forecasting.</p>
+<p>In a traditional time series analysis using RNNs, such as LSTMs, the sequential nature of the data is captured by the recurrent connections. However, RNNs may struggle to capture long-term dependencies in the data and can be computationally expensive. On the other hand, CNNs are powerful in capturing local patterns and spatial dependencies in data. By combining CNNs and RNNs in a hybrid model, we can benefit from the ability of CNNs to extract meaningful features from the time series data and the ability of RNNs to model temporal dependencies.</p>
+<p>Here’s an overview of how to use a hybrid CNN model for time series analysis and forecasting:</p>
+<ol class="arabic simple">
+<li><p><strong>Data Preprocessing:</strong> Prepare your time series data by converting it into a suitable format for the hybrid CNN model. This typically involves transforming the time series into input-output pairs, where the input consists of a window of past observations and the output is the target value to predict.</p></li>
+<li><p><strong>Model Architecture:</strong> Design a hybrid CNN model that combines CNN layers with LSTM or GRU layers. The CNN layers can extract local patterns and features from the input time series, while the LSTM/GRU layers capture the temporal dependencies in the data. You can experiment with different configurations, such as the number of CNN and LSTM/GRU layers, the size of filters in CNN layers, and the number of units in LSTM/GRU layers, to find the best architecture for your specific problem.</p></li>
+<li><p><strong>Training:</strong> Train the hybrid CNN model on your training data. During training, the model learns to extract relevant features from the time series data and capture the underlying patterns. You can use various loss functions, optimization algorithms (e.g., Adam, RMSprop), and learning schedules to train the model.</p></li>
+<li><p><strong>Evaluation:</strong> Evaluate the performance of your model using appropriate evaluation metrics for time series forecasting, such as mean absolute error (MAE), root mean squared error (RMSE), or mean absolute percentage error (MAPE). Assess how well your model generalizes to unseen data by testing it on a separate validation set.</p></li>
+<li><p><strong>Forecasting:</strong> Once you have a trained hybrid CNN model, you can use it to make predictions on new, unseen time series data. Provide the model with a window of past observations as input and obtain the predicted value as output. You can iterate this process to generate forecasts for multiple future time steps.</p></li>
+<li><p><strong>Model Tuning:</strong> Fine-tune your model by experimenting with different hyperparameters, such as learning rate, batch size, and regularization techniques (e.g., dropout, L2 regularization). You can also explore other architectural variations, such as adding additional dense layers, using different activation functions, or incorporating attention mechanisms.</p></li>
+</ol>
+<p>Remember to preprocess your data appropriately, handle missing values, consider scaling or normalizing the data, and split it into training, validation, and testing sets to avoid overfitting and obtain reliable performance estimates.</p>
+<p>By leveraging the capabilities of CNNs and RNNs, hybrid CNN models can effectively capture both local and global patterns in time series data, leading to improved forecasting accuracy. However, it’s important to note that the choice of model architecture and hyperparameters may vary depending on the specific characteristics of your time series dataset and the forecasting task at hand.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense, LSTM
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
+# Synthetic Time Series Creation
+x = np.linspace(0, 50, 500)
+y = np.sin(x)
+noise = 0.1 * x + np.random.normal(0, 0.2, y.shape)
+y = y + noise
+
+# Data Preparation
+SEQ_LEN = 10
+X, Y = [], []
+
+for i in range(len(y) - SEQ_LEN):
+    X.append(y[i:i+SEQ_LEN])
+    Y.append(y[i+SEQ_LEN])
+
+X, Y = np.array(X), np.array(Y)
+train_size = int(0.7 * len(X))
+X_train, Y_train = X[:train_size], Y[:train_size]
+X_test, Y_test = X[train_size:], Y[train_size:]
+
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# Hybrid CNN-LSTM Model Creation
+model = Sequential()
+model.add(Conv1D(64, 3, activation=&#39;relu&#39;, input_shape=(SEQ_LEN, 1)))
+model.add(MaxPooling1D(pool_size=2))
+model.add(LSTM(50, activation=&#39;relu&#39;))
+model.add(Dense(1))
+
+model.compile(optimizer=&#39;adam&#39;, loss=&#39;mean_squared_error&#39;)
+
+# Training
+model.fit(X_train, Y_train, epochs=50, batch_size=16, verbose=0)
+
+# Forecasting
+train_predict = model.predict(X_train)
+test_predict = model.predict(X_test)
+
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Metric measurements
+train_mse = mean_squared_error(Y_train, train_predict)
+test_mse = mean_squared_error(Y_test, test_predict)
+print(f&quot;Training MSE: {train_mse:.4f}&quot;)
+print(f&quot;Testing MSE: {test_mse:.4f}&quot;)
+
+train_mae = mean_absolute_error(Y_train, train_predict)
+test_mae = mean_absolute_error(Y_test, test_predict)
+print(f&quot;Training MAE: {train_mae:.4f}&quot;)
+print(f&quot;Testing MAE: {test_mae:.4f}&quot;)
+
+# Visualization
+plt.figure(figsize=(8, 4))
+plt.plot(y, label=&quot;True Value&quot;, color=&#39;blue&#39;, linewidth=0.25)
+plt.plot(np.arange(SEQ_LEN, SEQ_LEN+len(train_predict)), train_predict, label=&quot;Training Set Prediction&quot;, color=&#39;green&#39;, linewidth=0.75)
+plt.plot(np.arange(SEQ_LEN+len(train_predict), SEQ_LEN+len(train_predict)+len(test_predict)), test_predict, label=&quot;Test Set Prediction&quot;, color=&#39;red&#39;)
+plt.xlabel(&quot;Steps&quot;)
+plt.ylabel(&quot;Value&quot;)
+plt.title(&quot;Time Series Forecasting using Hybrid CNN-LSTM&quot;)
+plt.legend(loc=&quot;upper left&quot;, fontsize=9)
+plt.show()
+exit()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training MSE: 0.0658
+Testing MSE: 0.2110
+Training MAE: 0.2033
+Testing MAE: 0.3880
+</pre></div>
+</div>
+<img alt="../_images/c2cc03e4dfcdb2d2973f7629e4cdf6bb0da9c8f6351f6243af22bb643f0799b3.png" src="../_images/c2cc03e4dfcdb2d2973f7629e4cdf6bb0da9c8f6351f6243af22bb643f0799b3.png" />
+</div>
+</div>
+<p>The main difference between ConvLSTM and a hybrid LSTM lies in their architectural design and the way they process sequential data.</p>
+<ol class="arabic simple">
+<li><p>ConvLSTM:
+ConvLSTM is a type of recurrent neural network (RNN) architecture that combines convolutional layers and LSTM layers. It extends the LSTM model by incorporating convolutional operations within the LSTM cells. The ConvLSTM model is designed to capture both spatial and temporal dependencies in the input data simultaneously. It operates on 3D input tensors, where the dimensions are (batch_size, time_steps, rows, columns, channels).</p></li>
+<li><p>Hybrid LSTM:
+A hybrid LSTM refers to a combination of different neural network layers, where an LSTM layer is used in conjunction with other layers such as convolutional layers, fully connected layers, or other types of recurrent layers. The specific architecture of a hybrid LSTM can vary depending on the problem domain and the specific requirements of the task.</p></li>
+</ol>
+<p>In general, the choice between ConvLSTM and a hybrid LSTM depends on the nature of the data and the problem at hand:</p>
+<ul class="simple">
+<li><p>ConvLSTM is useful when dealing with spatiotemporal data, such as video data or image sequences, where both spatial and temporal information is important. ConvLSTM can effectively capture the dependencies in both spatial and temporal dimensions simultaneously.</p></li>
+<li><p>A hybrid LSTM, on the other hand, allows you to combine LSTM with other types of layers, enabling more flexibility and the ability to incorporate different types of information or features. This can be beneficial when working with time series data that may have additional non-sequential features or when there is a need to incorporate domain-specific knowledge into the model architecture.</p></li>
+</ul>
+<p>Ultimately, the choice between ConvLSTM and hybrid LSTM depends on the specific characteristics of the dataset and the goals of the task. It is often recommended to experiment with different architectures and compare their performance to determine the most suitable model for a given task.</p>
+</section>
+</section>
+<section id="transformer-models">
+<h2>12.3 Transformer Models<a class="headerlink" href="#transformer-models" title="Permalink to this heading">#</a></h2>
+<p>The Transformer architecture, introduced in the paper “<em>Attention Is All You Need</em>” by <em>Vaswani et al. in 2017</em>, revolutionized the field of Natural Language Processing (NLP) by achieving state-of-the-art performance on a wide range of tasks. Since then, researchers have been actively exploring its applications in other domains, including Time Series Analysis (TSA).</p>
+<section id="transformer-for-time-series-analysis">
+<h3>12.3.1 Transformer for Time Series Analysis<a class="headerlink" href="#transformer-for-time-series-analysis" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Sequence Modeling</strong>: Like sequences of words in text, time series data can be considered as a sequence of data points. Transformers, with their self-attention mechanism, are capable of capturing dependencies regardless of their distance in the sequence, making them highly suitable for modeling time series data.</p></li>
+<li><p><strong>Variable-Length Sequences</strong>: Transformers can handle variable-length sequences. This is especially beneficial in time series forecasting, where one might want to predict multiple future time steps at once or handle series of varying lengths.</p></li>
+<li><p><strong>Interpretable Results</strong>: The self-attention mechanism produces attention weights, which can be interpreted as the importance of various time steps in predicting the next point. This can be useful in understanding influential past events or patterns in the series.</p></li>
+</ol>
+</section>
+<section id="implementation-details-for-tsa">
+<h3>12.3.2 Implementation Details for TSA<a class="headerlink" href="#implementation-details-for-tsa" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Embedding Layer</strong>: In NLP tasks, the Transformer starts with an embedding layer that turns tokens into vectors. In the context of TSA, this can be a simple dense layer, scaling, or even skipped, as the input is already numeric.</p></li>
+<li><p><strong>Positional Encoding</strong>: One of the main features of the Transformer architecture is that it doesn’t have an inherent notion of the position or order of data, which is crucial for time series. To account for this, positional encodings (usually sinusoidal) are added to the embeddings to give the model information about the position of data points in the sequence.</p></li>
+<li><p><strong>Forecasting Horizon</strong>: For forecasting, the model can be trained in a way similar to autoregressive models. For instance, given values up to time ( t ), predict the value at time ( t+1 ).</p></li>
+<li><p><strong>Multivariate Time Series</strong>: If there are multiple series (e.g., multiple features measured over time), these can be treated as channels, similar to how RGB channels are handled in image data.</p></li>
+</ol>
+</section>
+<section id="challenges-and-considerations">
+<h3>12.3.3 Challenges and Considerations<a class="headerlink" href="#challenges-and-considerations" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Computational Cost</strong>: Transformers can be computationally expensive and might require specialized hardware (like GPUs) for efficient training.</p></li>
+<li><p><strong>Data Requirements</strong>: Transformers typically require a lot of data to train without overfitting. For many real-world time series tasks (like financial data), data can be limited.</p></li>
+<li><p><strong>Sequence Length</strong>: Long sequences can be challenging due to memory requirements. Techniques like windowing or down-sampling can be considered.</p></li>
+<li><p><strong>Hybrid Models</strong>: Often, hybrid models that combine transformers with other architectures (like CNNs or LSTMs) can be used for better results.</p></li>
+</ol>
+</section>
+<section id="recent-developments">
+<h3>12.3.4 Recent Developments<a class="headerlink" href="#recent-developments" title="Permalink to this heading">#</a></h3>
+<p>There have been newer architectures like the Temporal Fusion Transformer (TFT) designed specifically for time series forecasting. The TFT uses the self-attention mechanism of the Transformer, combined with recurrent-style gates, to better handle the temporal dependencies of time series data.</p>
+</section>
+<section id="conclusion">
+<h3>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">#</a></h3>
+<p>While Transformers are primarily known for their achievements in NLP, their potential for time series forecasting is significant. With the right adaptations and considerations, they can be a powerful tool for TSA tasks. However, as always, the choice of model should be based on the specific characteristics of the data and the problem at hand.</p>
+</section>
+</section>
+<section id="autoencoders">
+<h2>12.4 Autoencoders<a class="headerlink" href="#autoencoders" title="Permalink to this heading">#</a></h2>
+<p>Autoencoders have gained significant attention in Time Series Analysis (TSA) due to their ability to learn representations from time series data in an unsupervised manner. Let’s dive into the details.</p>
+<section id="what-is-an-autoencoder">
+<h3>12.4.1 What is an Autoencoder?<a class="headerlink" href="#what-is-an-autoencoder" title="Permalink to this heading">#</a></h3>
+<p>An autoencoder is a neural network used for unsupervised learning of efficient codings. The main idea behind an autoencoder is to encode an input (in our case, a time series) into a compact, lower-dimensional representation and then decode that representation back into the original input. The network is trained to minimize the difference between the input and its reconstruction.</p>
+</section>
+<section id="autoencoders-in-time-series-analysis">
+<h3>12.4.2 Autoencoders in Time Series Analysis<a class="headerlink" href="#autoencoders-in-time-series-analysis" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Feature Extraction</strong>: Time series data often contain noise and redundant information. Autoencoders can capture the most salient features of the data by reducing its dimensionality, making subsequent analysis or forecasting more efficient.</p></li>
+<li><p><strong>Anomaly Detection</strong>: One of the most popular applications of autoencoders in TSA is anomaly detection. After training on “normal” time series data, the autoencoder will have higher reconstruction error for anomalous data points or sequences, signaling potential outliers or events of interest.</p></li>
+<li><p><strong>Denoising</strong>: Denoising autoencoders are trained to reconstruct time series data from noisy versions of the data, effectively serving as a filter to smooth out noise and make patterns more discernible.</p></li>
+<li><p><strong>Sequence-to-Sequence Forecasting</strong>: Variants of autoencoders, like the sequence-to-sequence model with LSTM layers, can be used for multi-step ahead forecasting.</p></li>
+<li><p><strong>Compression</strong>: In scenarios where storage is a concern, autoencoders can be used to compress time series data efficiently.</p></li>
+</ol>
+</section>
+<section id="id1">
+<h3>12.4.3 Implementation Details for TSA<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Sequence Length</strong>: The choice of sequence length (how many time steps per input sequence) can impact the performance of an autoencoder, and it’s often domain-specific.</p></li>
+<li><p><strong>Architecture Variants</strong>: Depending on the task and data, different architectures can be employed:</p>
+<ul class="simple">
+<li><p><strong>Vanilla Autoencoders</strong>: Simple feed-forward networks.</p></li>
+<li><p><strong>Convolutional Autoencoders (CAE)</strong>: Effective for time series with local patterns or when using sliding windows.</p></li>
+<li><p><strong>Recurrent Autoencoders</strong>: Use RNNs, typically LSTMs or GRUs, to handle sequences and are suited for longer dependencies.</p></li>
+<li><p><strong>Variational Autoencoders (VAE)</strong>: Adds a probabilistic twist, enabling the generation of new, similar sequences.</p></li>
+</ul>
+</li>
+<li><p><strong>Loss Functions</strong>: Mean Squared Error (MSE) is commonly used for continuous time series data. For binary or categorical series, a cross-entropy loss might be more appropriate.</p></li>
+</ol>
+</section>
+<section id="id2">
+<h3>12.4.4 Challenges and Considerations<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Interpretability</strong>: The representations learned by autoencoders are not always directly interpretable.</p></li>
+<li><p><strong>Training Complexity</strong>: Training deep autoencoders can be computationally intensive and may require a lot of data.</p></li>
+<li><p><strong>Choosing Architecture</strong>: The type and depth of the autoencoder should match the complexity and characteristics of the time series data.</p></li>
+</ol>
+</section>
+<section id="id3">
+<h3>12.4.5 Conclusion<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<p>Autoencoders offer a flexible, unsupervised approach to TSA, capable of feature extraction, anomaly detection, denoising, and more. Their ability to capture latent structures in data makes them a valuable tool, especially when labeled data is scarce or when trying to uncover hidden patterns in the series. However, like all models, their efficacy depends on the specific problem, data characteristics, and proper tuning.</p>
+</section>
+</section>
+<section id="generative-adversarial-networks-gans">
+<h2>12.5 Generative Adversarial Networks (GANs)<a class="headerlink" href="#generative-adversarial-networks-gans" title="Permalink to this heading">#</a></h2>
+<p>Generative Adversarial Networks (GANs) have emerged as a powerful tool for generative tasks across various domains. They have been adapted and employed for Time Series Analysis (TSA) as well. Here’s an overview:</p>
+<section id="basics-of-gan">
+<h3>12.5.1 Basics of GAN<a class="headerlink" href="#basics-of-gan" title="Permalink to this heading">#</a></h3>
+<p>A GAN consists of two primary components:</p>
+<ol class="arabic simple">
+<li><p><strong>Generator (G)</strong>: This network tries to generate data. Given some random noise as input, it produces an output that ideally is indistinguishable from real data.</p></li>
+<li><p><strong>Discriminator (D)</strong>: This network tries to distinguish between real data and fake data produced by the generator.</p></li>
+</ol>
+<p>The training process is a game where the generator tries to produce fake samples that the discriminator can’t distinguish from real samples, while the discriminator tries to get better at distinguishing real samples from fake. Over time, the generator gets better at generating realistic samples.</p>
+</section>
+<section id="gans-in-time-series-analysis">
+<h3>12.5.2 GANs in Time Series Analysis<a class="headerlink" href="#gans-in-time-series-analysis" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Data Augmentation</strong>: One of the primary uses of GANs in TSA is to augment existing data. If you have limited time series data, a GAN can generate additional data that resembles your real data.</p></li>
+<li><p><strong>Anomaly Detection</strong>: After a GAN is trained on “normal” time series data, you can use it to identify anomalies. The idea is that the generator will not be good at generating anomalies (because it hasn’t seen them), so anomalies will have different characteristics when processed by the discriminator or will lead to higher reconstruction errors.</p></li>
+<li><p><strong>Forecasting</strong>: GANs can be combined with other architectures (like LSTMs or CNNs) to predict future values in a time series. The GAN ensures that the generated sequences are realistic, providing an additional layer of regularization.</p></li>
+<li><p><strong>Feature Extraction</strong>: The generator in a GAN can be used as a feature extractor. The layers of the generator can transform a time series into a compact representation, which can then be used for tasks like clustering or classification.</p></li>
+<li><p><strong>Simulation</strong>: For domains like finance, GANs can simulate different economic scenarios or stock price movements, helping in risk assessment and strategy testing.</p></li>
+</ol>
+</section>
+<section id="id4">
+<h3>12.5.3 Implementation Details for TSA<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Sequence Length</strong>: Similar to other neural architectures for TSA, the length of the input sequence can impact the performance of a GAN. This decision often depends on the domain and specific problem.</p></li>
+<li><p><strong>Architecture Variants</strong>: There are many GAN variants that can be applied to TSA:</p>
+<ul class="simple">
+<li><p><strong>Conditional GANs (cGANs)</strong>: Generate time series data based on certain conditions or labels.</p></li>
+<li><p><strong>Recurrent GANs (R-GANs)</strong>: Incorporate RNNs to handle sequence data better.</p></li>
+<li><p><strong>Wasserstein GANs (W-GANs)</strong>: Use a different loss function to provide more stability during training.</p></li>
+</ul>
+</li>
+<li><p><strong>Stability</strong>: GANs are notoriously difficult to train due to issues like mode collapse, vanishing gradients, and oscillatory behavior. Techniques like gradient clipping, using different architectures, or employing the Wasserstein loss can help mitigate these challenges.</p></li>
+</ol>
+</section>
+<section id="id5">
+<h3>12.5.4 Challenges and Considerations<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Evaluation</strong>: Evaluating the performance of GANs, especially in generative tasks, can be tricky. Traditional accuracy metrics might not be appropriate, and qualitative assessments (like visual inspection) often become necessary.</p></li>
+<li><p><strong>Mode Collapse</strong>: This occurs when the generator produces limited varieties of samples, or the same sample, regardless of the input noise.</p></li>
+<li><p><strong>Training Time</strong>: GANs can be computationally expensive and time-consuming to train, especially for long time series data.</p></li>
+</ol>
+</section>
+<section id="id6">
+<h3>12.5.5 Conclusion<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<p>GANs present a novel approach to TSA, providing capabilities beyond traditional methods. While they offer a powerful mechanism for generative tasks, anomaly detection, and even forecasting, their complex training dynamics necessitate careful tuning and understanding. As research progresses, we’ll likely see even more robust and specialized GAN architectures for time series data.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter_11.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">11. Deep Learning for Time Series Forecasting</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter_13.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">13. Feature Engineering</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recurrent-neural-networks-rnns">12.1 Recurrent Neural Networks (RNNs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-layer-lstm">12.1.1 Single layer LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stacked-lstm">12.1.2 Stacked LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bidirectional-lstm">12.1.3 Bidirectional LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#encoder-decoder-lstm">12.1.4 Encoder-Decoder LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-based-lstm">12.1.5 Attention-based LSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hybrid-rnn-model">12.1.6 Hybrid RNN model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convolutional-neural-networks-cnns">12.2 Convolutional Neural Networks (CNNs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-cnn">12.2.1  1D CNN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dilated-cnn">12.2.2 Dilated CNN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#temporal-convolutional-network-tcn">12.2.3 Temporal Convolutional Network (TCN)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convlstm">12.2.4 ConvLSTM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hybrid-cnn-models">12.2.5 Hybrid CNN models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transformer-models">12.3 Transformer Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transformer-for-time-series-analysis">12.3.1 Transformer for Time Series Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-details-for-tsa">12.3.2 Implementation Details for TSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#challenges-and-considerations">12.3.3 Challenges and Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#recent-developments">12.3.4 Recent Developments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoencoders">12.4 Autoencoders</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-an-autoencoder">12.4.1 What is an Autoencoder?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#autoencoders-in-time-series-analysis">12.4.2 Autoencoders in Time Series Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">12.4.3 Implementation Details for TSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">12.4.4 Challenges and Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">12.4.5 Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-adversarial-networks-gans">12.5 Generative Adversarial Networks (GANs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basics-of-gan">12.5.1 Basics of GAN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gans-in-time-series-analysis">12.5.2 GANs in Time Series Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">12.5.3 Implementation Details for TSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">12.5.4 Challenges and Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">12.5.5 Conclusion</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Farid Jabbari Maleki
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  LinkedIn <a href="https://www.linkedin.com/in/farid-j-maleki/">Farid J. Maleki</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

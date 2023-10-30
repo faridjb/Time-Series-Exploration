@@ -1,0 +1,2172 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>10. Classical models &#8212; Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter_10';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="11. Deep Learning for Time Series Forecasting" href="chapter_11.html" />
+    <link rel="prev" title="9. Metrics" href="chapter_09.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Time Series Exploration with Python: A Journey from Traditional to Advanced Forecasting Models
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TOC.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_01.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_02.html">2. Importing data in colab notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_03.html">3. Data Wrangling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_04.html">4. Time Series Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_05.html">5. Exploratory Data Analysis (EDA) for Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_06.html">6. Data Prepration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_07.html">7. Stationarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_08.html">8. Discovered a suite of classical time series forecasting methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_09.html">9. Metrics</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">10. Classical models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_11.html">11. Deep Learning for Time Series Forecasting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_12.html">12. Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_13.html">13. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_14.html">14. Preprocessing using Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_15.html">15. Time Series Analysis toolkits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_16.html">16. NeuralProphet</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter_10.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter_10.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>10. Classical models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregression-ar">10.1 Autoregression (AR)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-average-ma">10.2 Moving Average (MA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-moving-average-arma">10.3 Autoregressive Moving Average (ARMA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-integrated-moving-average-arima">10.4 Autoregressive Integrated Moving Average (ARIMA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonal-autoregressive-integrated-moving-average-sarima">10.5 Seasonal Autoregressive Integrated Moving-Average (SARIMA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonal-autoregressive-integrated-moving-average-with-exogenous-regressors-sarimax">10.6 Seasonal Autoregressive Integrated Moving-Average with Exogenous Regressors (SARIMAX)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-autoregression-var">10.7 Vector Autoregression (VAR)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-autoregression-moving-average-varma">10.8 Vector Autoregression Moving-Average (VARMA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-autoregression-moving-average-with-exogenous-regressors-varmax">10.9 Vector Autoregression Moving-Average with Exogenous Regressors (VARMAX)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-exponential-smoothing-ses">10.10 Simple Exponential Smoothing (SES)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#holt-winters-exponential-smoothing-hwes">10.11 Holt Winter’s Exponential Smoothing (HWES)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="classical-models">
+<h1>10. Classical models<a class="headerlink" href="#classical-models" title="Permalink to this heading">#</a></h1>
+<section id="autoregression-ar">
+<h2>10.1 Autoregression (AR)<a class="headerlink" href="#autoregression-ar" title="Permalink to this heading">#</a></h2>
+<p>Auto-regression (AR) is a fundamental concept in time series analysis, where a time series is a sequence of data points measured or recorded at successive points in time. Auto-regression involves modeling a time series as a linear combination of its past values. The idea is to predict the future values of the series based on its own past values. The notation for an autoregressive model is AR(p), where “p” represents the number of lagged (past) values used for prediction.</p>
+<p>Here’s how you can apply auto-regression in time series analysis:</p>
+<ol class="arabic simple">
+<li><p><strong>Data Preparation:</strong> Start by collecting your time series data. Ensure it’s stationary, which means that its statistical properties do not change over time. If your data is non-stationary, consider differencing it to make it stationary.</p></li>
+<li><p><strong>Choose the Order (p):</strong> Determine the order of the autoregressive model, denoted as “p.” This represents the number of past time steps you’ll use to predict the current value. You can choose this order based on domain knowledge or by examining autocorrelation and partial autocorrelation plots of your data.</p></li>
+<li><p><strong>Model Estimation:</strong> Use statistical software or programming languages like Python (using libraries like statsmodels or ARIMA) to estimate the AR(p) model’s parameters. The goal is to find coefficients for the past values (lags) that minimize the prediction error.</p></li>
+<li><p><strong>Model Evaluation:</strong> Evaluate the model’s goodness of fit using metrics like Mean Squared Error (MSE), Akaike Information Criterion (AIC), Bayesian Information Criterion (BIC), or others. You may also use visual methods like plotting the predicted vs. actual values.</p></li>
+</ol>
+<p>Here’s a simple example in Python using the statsmodels library to perform AR(2) modeling on a synthetic time series:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import pandas as pd
+
+# Load the dataset
+url = &#39;https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv&#39;
+df = pd.read_csv(url, header=0, index_col=0, parse_dates=True)
+
+# Extract the passenger counts as the data
+data = df[&#39;Passengers&#39;]
+
+# Fit an AR(2) model
+order = 2
+model = sm.tsa.AutoReg(data, lags=order, trend=&#39;n&#39;).fit()
+
+# Make predictions
+predictions = model.predict(start=order, end=len(data)-1)
+
+# Set font size
+plt.rcParams.update({&#39;font.size&#39;: 9})
+
+# Plot the original and predicted time series
+plt.figure(figsize=(8, 4))
+plt.plot(data.index, data, label=&#39;Original Data&#39;)
+plt.plot(data.index[order:], predictions, label=f&#39;AR({order}) Predictions&#39;, linestyle=&#39;--&#39;)
+plt.legend()
+plt.xlabel(&#39;Time&#39;)
+plt.ylabel(&#39;Passenger Count&#39;)
+plt.title(f&#39;AR({order}) Model&#39;)
+plt.grid(True)
+
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.10/dist-packages/statsmodels/tsa/base/tsa_model.py:473: ValueWarning: No frequency information was provided, so inferred frequency MS will be used.
+  self._init_dates(dates, freq)
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this example, we generated a synthetic time series and then fitted an AR(2) model to it. The model was used to make predictions, which were then plotted alongside the original data for visualization. You can adjust the order and model parameters as needed for your specific dataset and requirements.</p>
+<p>The method is suitable for <em><strong>univariate time series without trend and seasonal</strong></em> components.</p>
+</section>
+<section id="moving-average-ma">
+<h2>10.2 Moving Average (MA)<a class="headerlink" href="#moving-average-ma" title="Permalink to this heading">#</a></h2>
+<p>Moving Average is a commonly used technique in time series analysis for <strong>smoothing out noisy or random fluctuations in the data</strong>.</p>
+<p>It is a statistical method used to analyze data points by creating a series of averages of different subsets of the full dataset.</p>
+<p>In Moving Average, a sliding window of a fixed size (the “window size”) is applied to the time series data, and the mean of the data points within the window is calculated. This mean value is then used to replace the value of the central data point in the window. The window is then shifted by one time step, and the process is repeated for the next subset of data points. This produces a new smoothed series of data points, with the size of the window determining the level of smoothing applied.</p>
+<p>The moving average method is useful in time series analysis for identifying trends and seasonality in the data by removing noise and random fluctuations. It can also be used to forecast future values by taking the moving average of the past values and extrapolating this trend forward. The Moving Average is widely used in the financial industry for technical analysis of stock prices and financial market indices. It is also used in forecasting demand for products, such as in the retail industry, and in predicting traffic patterns, weather patterns, and other types of time series data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the dataset
+df = pd.read_csv(&#39;https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv&#39;, header=0, index_col=0, parse_dates=True)
+
+# Create a rolling window of size 12 and calculate the moving average
+window_size = 12
+rolling = df.rolling(window=window_size)
+rolling_mean = rolling.mean()
+
+# Set font size
+plt.rcParams.update({&#39;font.size&#39;: 9})
+
+# Plot the original data and the moving average
+plt.figure(figsize=(8, 4))
+plt.plot(df, label=&#39;Original&#39;)
+plt.plot(rolling_mean, label=&#39;Moving Average&#39;,linestyle=&#39;--&#39;)
+plt.legend(loc=&#39;best&#39;)
+plt.xlabel(&#39;Date&#39;)
+plt.ylabel(&#39;Passenger Count&#39;)
+plt.title(&#39;Original Data and Moving Average&#39;)
+plt.grid(True)
+
+# Set x-axis limits to start from the beginning
+plt.xlim(df.index[0], df.index[-1])
+
+plt.show()
+
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d8e2a1af48ceaa46656fcf1832cf0bbc73e5bb24e91ea8f7a7887ad8a3a992fc.png" src="../_images/d8e2a1af48ceaa46656fcf1832cf0bbc73e5bb24e91ea8f7a7887ad8a3a992fc.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>Moving Average (MA) is a commonly used method in time  series analysis for smoothing out the fluctuations in a time series and identifying underlying trends.</p></li>
+<li><p>MA can be used when you have a time series dataset that exhibits fluctuations or seasonality, but you want to identify the underlying trend in the data.</p></li>
+<li><p>MA is often used in combination with other time series analysis techniques, such as autoregression, to build more complex models.</p></li>
+<li><p>In addition, MA can be used for forecasting future values in a time series, by using the calculated moving average to predict the future values of the series.</p></li>
+</ul>
+<p>Overall, Moving Average is a versatile tool that can be applied to a wide range of time series datasets to extract meaningful insights and make predictions.</p>
+</section>
+<section id="autoregressive-moving-average-arma">
+<h2>10.3 Autoregressive Moving Average (ARMA)<a class="headerlink" href="#autoregressive-moving-average-arma" title="Permalink to this heading">#</a></h2>
+<p>The Autoregressive Moving Average (ARMA) method models the next step in the sequence as a linear function of the observations and residual errors at prior time steps.</p>
+<p>It combines both Autoregression (AR) and Moving Average (MA) models.</p>
+<p>The notation for the model involves specifying the order for the AR(p) and MA(q) models as parameters to an ARMA function, e.g. ARMA(p, q). An ARIMA model can be used to develop AR or MA models.</p>
+<p>The method is suitable for univariate time series without trend and seasonal components.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import pandas as pd
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+# Load the dataset
+url = &#39;https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv&#39;
+df = pd.read_csv(url, header=0, index_col=0, parse_dates=True)
+
+# Extract the passenger counts as the data
+data = df[&#39;Passengers&#39;]
+
+# Fit an ARMA(2,2) model
+order = (2, 0, 2)
+model = sm.tsa.SARIMAX(data, order=order, trend=&#39;n&#39;).fit()
+
+# Make predictions
+predictions = model.predict(start=order[2], end=len(data)-1)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Calculate metrics
+mae = mean_absolute_error(data[order[2]:], predictions)
+mse = mean_squared_error(data[order[2]:], predictions)
+rmse = np.sqrt(mse)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Set font size
+plt.rcParams.update({&#39;font.size&#39;: 9})
+
+# Plot the original and predicted time series
+plt.figure(figsize=(8, 4))
+plt.plot(data.index, data, label=&#39;Original Data&#39;)
+plt.plot(data.index[order[2]:], predictions, label=f&#39;ARMA({order[0]}, {order[2]}) Predictions&#39;, linestyle=&#39;--&#39;)
+plt.legend()
+plt.xlabel(&#39;Time&#39;)
+plt.ylabel(&#39;Passenger Count&#39;)
+plt.title(f&#39;ARMA({order[0]}, {order[2]}) Model&#39;)
+plt.grid(True)
+
+# Print metrics
+print(f&#39;Mean Absolute Error (MAE): {mae:.2f}&#39;)
+print(f&#39;Mean Squared Error (MSE): {mse:.2f}&#39;)
+print(f&#39;Root Mean Squared Error (RMSE): {rmse:.2f}&#39;)
+
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean Absolute Error (MAE): 24.14
+Mean Squared Error (MSE): 962.12
+Root Mean Squared Error (RMSE): 31.02
+</pre></div>
+</div>
+<img alt="../_images/72854aca23bde844e2d5e87622a515c254731fd42f7ea63069d2cd3d61ce4baa.png" src="../_images/72854aca23bde844e2d5e87622a515c254731fd42f7ea63069d2cd3d61ce4baa.png" />
+</div>
+</div>
+</section>
+<section id="autoregressive-integrated-moving-average-arima">
+<h2>10.4 Autoregressive Integrated Moving Average (ARIMA)<a class="headerlink" href="#autoregressive-integrated-moving-average-arima" title="Permalink to this heading">#</a></h2>
+<p>The Autoregressive Integrated Moving Average (ARIMA) method models the next step in the sequence as a linear function of the differenced observations and residual errors at prior time steps.</p>
+<p>It combines both Autoregression (AR) and Moving Average (MA) models as well as a differencing pre-processing step of the sequence to make the sequence stationary, called integration (I).</p>
+<p>The notation for the model involves specifying the order for the AR(p), I(d), and MA(q) models as parameters to an ARIMA function, e.g. ARIMA(p, d, q). An ARIMA model can also be used to develop AR, MA, and ARMA models.</p>
+<p>The method is suitable for univariate time series with trend and without seasonal components.
+Autoregressive Integrated Moving Average (ARIMA) is a commonly used time series analysis technique for modeling and forecasting time series data. ARIMA models are a combination of three basic components:</p>
+<ol class="arabic simple">
+<li><p>Autoregression (AR): The AR component of an ARIMA model uses past values of the time series to predict future values. Specifically, it assumes that future values of the time series depend on its past values and that the relationship between the past and future values can be captured using a linear regression model.</p></li>
+<li><p>Moving Average (MA): The MA component of an ARIMA model uses past errors or residuals of the time series to predict future values. Specifically, it assumes that future values of the time series depend on the past errors or residuals and that the relationship between the errors and future values can be captured using a linear regression model.</p></li>
+<li><p>Integration (I): The I component of an ARIMA model involves differencing the time series to remove trends or seasonality. Specifically, it assumes that future values of the time series depend on the differences between its past values and that the differences can be captured using a linear regression model.</p></li>
+</ol>
+<p>ARIMA models are characterized by three parameters: p, d, and q. The parameter p is the order of the AR component, the parameter d is the degree of differencing required to make the time series stationary, and the parameter q is the order of the MA component. These parameters can be determined using statistical techniques such as autocorrelation and partial autocorrelation analysis.</p>
+<p>Overall, ARIMA models are widely used in various fields, such as economics, finance, and engineering, for time series forecasting, anomaly detection, and other applications.</p>
+<p>Here’s a list of some datasets that can be used to apply ARIMA models:</p>
+<ol class="arabic simple">
+<li><p>Airline Passengers Dataset - Monthly totals of international airline passengers from 1949 to 1960. <a class="reference external" href="https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv">https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv</a></p></li>
+<li><p>Daily Female Births Dataset - Daily female births in California in 1959. <a class="reference external" href="https://raw.githubusercontent.com/jbrownlee/Datasets/master/daily-total-female-births.csv">https://raw.githubusercontent.com/jbrownlee/Datasets/master/daily-total-female-births.csv</a></p></li>
+<li><p>Monthly Sunspots Dataset - Monthly count of sunspots from 1749 to 1983. <a class="reference external" href="https://raw.githubusercontent.com/jbrownlee/Datasets/master/monthly-sunspots.csv">https://raw.githubusercontent.com/jbrownlee/Datasets/master/monthly-sunspots.csv</a></p></li>
+<li><p>Shampoo Sales Dataset - Monthly sales of shampoo over a three-year period. <a class="reference external" href="https://raw.githubusercontent.com/jbrownlee/Datasets/master/shampoo.csv">https://raw.githubusercontent.com/jbrownlee/Datasets/master/shampoo.csv</a></p></li>
+<li><p>Daily Water Usage Dataset - Daily water usage in Baltimore from 1885 to 1963. <a class="reference external" href="https://raw.githubusercontent.com/jbrownlee/Datasets/master/daily-water-usage.csv">https://raw.githubusercontent.com/jbrownlee/Datasets/master/daily-water-usage.csv</a></p></li>
+</ol>
+<p>You can use these datasets to apply ARIMA models using Python libraries such as <code class="docutils literal notranslate"><span class="pre">pandas</span></code>, <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code>, and <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>. Simply load the dataset using <code class="docutils literal notranslate"><span class="pre">pandas</span></code>, preprocess it, and fit an ARIMA model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import pandas as pd
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+# Load the dataset
+url = &#39;https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv&#39;
+df = pd.read_csv(url, header=0, index_col=0, parse_dates=True)
+
+# Extract the passenger counts as the data
+data = df[&#39;Passengers&#39;]
+
+# Fit an ARIMA(2,1,2) model
+order = (2, 1, 2)
+model = sm.tsa.ARIMA(data, order=order, trend=&#39;n&#39;).fit()
+
+# Make predictions
+predictions = model.predict(start=len(data), end=len(data) + 11, typ=&#39;levels&#39;)
+
+# Calculate metrics
+mae = mean_absolute_error(data[-12:], predictions)
+mse = mean_squared_error(data[-12:], predictions)
+rmse = np.sqrt(mse)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Set font size
+plt.rcParams.update({&#39;font.size&#39;: 9})
+
+# Plot the original and predicted time series
+plt.figure(figsize=(8, 4))
+plt.plot(data.index, data, label=&#39;Original Data&#39;)
+plt.plot(predictions.index, predictions, label=f&#39;ARIMA({order[0]}, {order[1]}, {order[2]}) Predictions&#39;, linestyle=&#39;--&#39;)
+plt.fill_between(predictions.index, predictions - .96 * rmse, predictions + .96 * rmse, alpha=0.3, color=&#39;gray&#39;, label=&#39;95% Confidence Interval&#39;)
+plt.legend()
+plt.xlabel(&#39;Time&#39;)
+plt.ylabel(&#39;Passenger Count&#39;)
+plt.title(f&#39;ARIMA({order[0]}, {order[1]}, {order[2]}) Model&#39;)
+plt.grid(True)
+
+# Print metrics
+print(f&#39;Mean Absolute Error (MAE): {mae:.2f}&#39;)
+print(f&#39;Mean Squared Error (MSE): {mse:.2f}&#39;)
+print(f&#39;Root Mean Squared Error (RMSE): {rmse:.2f}&#39;)
+
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean Absolute Error (MAE): 50.60
+Mean Squared Error (MSE): 3386.11
+Root Mean Squared Error (RMSE): 58.19
+</pre></div>
+</div>
+<img alt="../_images/e2c6384f4a470cac2a737a053f21092aa3da39a8a5ee033397e59805ec4d4fbb.png" src="../_images/e2c6384f4a470cac2a737a053f21092aa3da39a8a5ee033397e59805ec4d4fbb.png" />
+</div>
+</div>
+</section>
+<section id="seasonal-autoregressive-integrated-moving-average-sarima">
+<h2>10.5 Seasonal Autoregressive Integrated Moving-Average (SARIMA)<a class="headerlink" href="#seasonal-autoregressive-integrated-moving-average-sarima" title="Permalink to this heading">#</a></h2>
+<p>The Seasonal Autoregressive Integrated Moving Average (SARIMA) model is an extension of the ARIMA model that includes a seasonal component. It is suitable for analyzing time series data that exhibit both temporal dependence and seasonal variation, and is particularly useful when the time series data exhibits a predictable pattern of seasonal variation, such as monthly or quarterly data.</p>
+<p>The SARIMA model combines the ARIMA model with the ability to perform the same autoregression, differencing, and moving average modeling at the seasonal level. The model is characterized by three parameters (p, d, q), which are the same as in the ARIMA model, and three additional parameters (P, D, Q), which correspond to the seasonal counterparts of p, d, and q. The seasonal component is typically specified as the number of time steps in a seasonal cycle, denoted by s.</p>
+<p>In practice, the SARIMA model is typically applied to time series data by first identifying the appropriate order of differencing required to make the data stationary. Once the data has been differenced, the seasonal component is modeled using the SARIMA model. The model is commonly used in a variety of applications, including finance, economics, and meteorology. It is particularly useful for forecasting applications, where the goal is to predict future values of the time series. The model can also be used for anomaly detection and trend analysis.</p>
+<p>Overall, the SARIMA model is a powerful tool for analyzing time series data with complex temporal and seasonal patterns. It allows for accurate modeling and forecasting of time series data, making it an essential tool for time series analysis in many different fields.</p>
+<p>here’s an example Python code for applying SARIMA on the airline passenger dataset for predicting future values:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import statsmodels.api as sm
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def apply_sarima(df, order=(1, 1, 1), seasonal_order=(1, 1, 1, 12)):
+    # Assuming your dataframe has a single column named &#39;data&#39;
+    # Replace &#39;data&#39; with your actual column name
+    endog = df[list(df[:])[0]]
+
+    # Create the SARIMA model
+    model = sm.tsa.SARIMAX(endog, order=order, seasonal_order=seasonal_order)
+
+    # Fit the model
+    results = model.fit()
+
+    # Return the SARIMA model output
+    return results
+
+
+# Assuming you have a dataframe named &#39;df&#39; with &#39;data&#39; column
+# You can replace &#39;df&#39; and &#39;data&#39; with your actual dataframe and column names
+
+# Load the dataset
+df = pd.read_csv(&#39;https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv&#39;, parse_dates=[&#39;Month&#39;], index_col=[&#39;Month&#39;])
+
+# Apply SARIMA model using the function
+sarima_results = apply_sarima(df, order=(2, 1, 1), seasonal_order=(1, 1, 1, 12))  # Example orders
+
+# Print the model summary
+print(sarima_results.summary())
+
+# Predicting future values
+future_periods = 24
+forecast = sarima_results.get_forecast(steps=future_periods)
+
+# Extract the predicted values and their confidence intervals
+predicted_values = forecast.predicted_mean
+confidence_intervals = forecast.conf_int()
+
+# Generate the future dates for the predicted values
+last_date = df.index[-1]
+future_dates = pd.date_range(start=last_date, periods=future_periods+1, freq=&#39;MS&#39;)[1:]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Set font size
+plt.rcParams.update({&#39;font.size&#39;: 9})
+
+# Plotting the original data, predicted values, and confidence intervals
+plt.figure(figsize=(8, 4))
+plt.plot(df.index, df[list(df[:])[0]], label=&#39;Original Data&#39;)
+plt.plot(future_dates, predicted_values, label=&#39;SARIMA Predictions&#39;)
+plt.fill_between(future_dates, confidence_intervals.iloc[:, 0], confidence_intervals.iloc[:, 1], alpha=0.3)
+plt.xlabel(&#39;Date&#39;)
+plt.ylabel(&#39;Passengers&#39;)
+plt.title(&#39;Original Data vs SARIMA Predictions&#39;)
+plt.grid(True)
+
+# Set x-axis limits to start from the beginning
+plt.xlim(df.index[0], future_dates[-1])
+
+plt.legend()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ea4efdde5cee3cde960f25ee89d738f7bc16adcf2944a68adbe34e9b6dc9fb54.png" src="../_images/ea4efdde5cee3cde960f25ee89d738f7bc16adcf2944a68adbe34e9b6dc9fb54.png" />
+</div>
+</div>
+</section>
+<section id="seasonal-autoregressive-integrated-moving-average-with-exogenous-regressors-sarimax">
+<h2>10.6 Seasonal Autoregressive Integrated Moving-Average with Exogenous Regressors (SARIMAX)<a class="headerlink" href="#seasonal-autoregressive-integrated-moving-average-with-exogenous-regressors-sarimax" title="Permalink to this heading">#</a></h2>
+<p>The Seasonal Autoregressive Integrated Moving-Average with Exogenous Regressors (SARIMAX) is an extension of the SARIMA model that allows for the inclusion of additional explanatory variables, known as exogenous regressors or covariates. These variables can help to explain and predict the behavior of the time series being analyzed.</p>
+<p>In SARIMAX, the model is a combination of SARIMA and a regression model. The SARIMA component captures the temporal structure of the time series while the regression component captures the relationship between the time series and the exogenous variables.</p>
+<p>The notation for the SARIMAX model is SARIMAX(p, d, q)(P, D, Q)m, where the p, d, and q parameters refer to the autoregressive, differencing, and moving average components, respectively, of the non-seasonal part of the model. The P, D, and Q parameters refer to the seasonal autoregressive, differencing, and moving average components, respectively. The m parameter represents the number of time steps in each season.</p>
+<p>The exogenous variables are included in the model as additional predictors. These variables can be lagged versions of the time series being analyzed, or they can be entirely separate variables that are thought to influence the behavior of the time series.</p>
+<p>SARIMAX is useful when there are external factors that may affect the behavior of the time series being analyzed, such as economic indicators or weather patterns. By incorporating these variables into the model, SARIMAX can produce more accurate forecasts than a traditional SARIMA model.</p>
+<p>SARIMAX can be used in a variety of fields, including finance, economics, and marketing, among others. It is particularly useful in situations where there are multiple variables that may affect the behavior of the time series being analyzed.</p>
+<p>Overall, SARIMAX is a powerful tool for analyzing time series data that incorporates both temporal structure and external factors. It allows for accurate modeling and forecasting of time series data, making it an essential tool for time series analysis in many different fields.</p>
+<p>The method is suitable for univariate time series with trend and/or seasonal components and exogenous variables.</p>
+<p>here’s an example of applying SARIMAX on the airline passenger dataset:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+
+# Load the dataset
+url = &#39;https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv&#39;
+df = pd.read_csv(url, parse_dates=[&#39;Month&#39;], index_col=[&#39;Month&#39;])
+
+# Extract the time series data
+series = df[&#39;Passengers&#39;]
+
+# Perform Dickey-Fuller test for stationarity
+result = adfuller(series)
+print(&quot;ADF Statistic:&quot;, result[0])
+print(&quot;p-value:&quot;, result[1])
+
+# If the series is not stationary, you can apply differencing:
+# series = series.diff().dropna()
+
+
+
+# Define the SARIMAX model
+p = 1  # Autoregressive order (from PACF)
+d = 1  # Differencing order (usually 1 for first-order differencing)
+q = 1  # Moving average order (from ACF)
+P = 1  # Seasonal autoregressive order (from seasonal PACF)
+D = 1  # Seasonal differencing order (usually 1 for seasonal differencing)
+Q = 1  # Seasonal moving average order (from seasonal ACF)
+s = 12  # Seasonal period (e.g., 12 for monthly data)
+
+# Create the SARIMAX model
+model = sm.tsa.SARIMAX(series, order=(p, d, q), seasonal_order=(P, D, Q, s))
+
+# Fit the model
+results = model.fit()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Print model summary
+print(results.summary())
+
+
+# Plot the forecasted values
+forecast_steps = 12  # Number of steps to forecast
+forecast = results.get_forecast(steps=forecast_steps)
+forecast_mean = forecast.predicted_mean
+forecast_ci = forecast.conf_int()
+
+plt.figure(figsize=(8, 6))
+plt.plot(series, label=&#39;Observed&#39;)
+plt.plot(pd.date_range(start=series.index[-1], periods=forecast_steps+1, freq=&#39;M&#39;)[1:], forecast_mean, label=&#39;Forecast&#39;, marker=&#39;o&#39;)
+plt.fill_between(pd.date_range(start=series.index[-1], periods=forecast_steps+1, freq=&#39;M&#39;)[1:], forecast_ci.iloc[:, 0], forecast_ci.iloc[:, 1], color=&#39;gray&#39;, alpha=0.3)
+plt.xlabel(&#39;Month&#39;)
+plt.ylabel(&#39;Passengers&#39;)
+plt.legend()
+plt.title(&#39;SARIMAX Forecast for Airline Passengers Data&#39;)
+plt.grid(True)  # Add grid
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                     SARIMAX Results                                      
+==========================================================================================
+Dep. Variable:                         Passengers   No. Observations:                  144
+Model:             SARIMAX(1, 1, 1)x(1, 1, 1, 12)   Log Likelihood                -506.149
+Date:                            Tue, 17 Oct 2023   AIC                           1022.299
+Time:                                    02:37:09   BIC                           1036.675
+Sample:                                01-01-1949   HQIC                          1028.140
+                                     - 12-01-1960                                         
+Covariance Type:                              opg                                         
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ar.L1         -0.1272      0.356     -0.357      0.721      -0.825       0.570
+ma.L1         -0.2149      0.325     -0.660      0.509      -0.853       0.423
+ar.S.L12      -0.9272      0.214     -4.341      0.000      -1.346      -0.509
+ma.S.L12       0.8395      0.309      2.717      0.007       0.234       1.445
+sigma2       130.7821     15.420      8.481      0.000     100.559     161.006
+===================================================================================
+Ljung-Box (L1) (Q):                   0.00   Jarque-Bera (JB):                 7.05
+Prob(Q):                              0.99   Prob(JB):                         0.03
+Heteroskedasticity (H):               2.65   Skew:                             0.13
+Prob(H) (two-sided):                  0.00   Kurtosis:                         4.11
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+</pre></div>
+</div>
+<img alt="../_images/9da3a57366ea1ac75c73bda955665d3989048a5ddb8f261f6d9d7c590ddf7079.png" src="../_images/9da3a57366ea1ac75c73bda955665d3989048a5ddb8f261f6d9d7c590ddf7079.png" />
+</div>
+</div>
+</section>
+<section id="vector-autoregression-var">
+<h2>10.7 Vector Autoregression (VAR)<a class="headerlink" href="#vector-autoregression-var" title="Permalink to this heading">#</a></h2>
+<p>Vector Autoregression (VAR) is a statistical model used for time series analysis. Unlike the univariate models such as ARIMA and SARIMA, VAR is a multivariate model that allows us to analyze the relationships among multiple time series variables simultaneously. The basic idea behind VAR is to model each variable as a linear function of its own lagged values and the lagged values of the other variables in the system.</p>
+<p>In other words, a VAR model is a system of equations where each variable in the system is modeled as a function of its own past values and the past values of all the other variables in the system. This allows us to capture the dynamic interdependencies among the variables and to forecast the future values of each variable based on the past values of all the variables in the system.</p>
+<p>VAR models are used in a variety of fields such as economics, finance, engineering, and social sciences. They can be particularly useful in analyzing the behavior of macroeconomic variables such as GDP, inflation, and interest rates, and in forecasting future values of these variables.</p>
+<p>To predict the future values of the variables in a VAR model, we can use the same principle as in the univariate models such as ARIMA and SARIMA. We first estimate the parameters of the model using historical data, and then use the estimated model to forecast the future values of the variables. The forecasted values are obtained by applying the estimated model to the lagged values of the variables in the system.</p>
+<p>VAR models are particularly useful when we have multiple time series variables that are interdependent and influence each other. They allow us to capture the dynamic relationships among the variables and to forecast their future values based on the past values of all the variables in the system. However, VAR models can be more complex than the univariate models and require more data to estimate the parameters accurately. They also assume that the variables in the system are stationary and normally distributed.</p>
+<p>The notation for the model involves specifying the order for the AR(p) model as parameters to a VAR function, e.g. VAR(p).</p>
+<p>The method is suitable for multivariate time series without trend and seasonal components.</p>
+<p>Here are some datasets (multivariate)that can be used to apply VAR:</p>
+<ol class="arabic simple">
+<li><p>Macroeconomic data of G7 countries: This dataset contains macroeconomic data of the G7 countries from 1950 to 2014. You can download it from here: <a class="reference external" href="https://fred.stlouisfed.org/categories/32262">https://fred.stlouisfed.org/categories/32262</a></p></li>
+<li><p>Stock price data: This dataset contains stock price data of various companies. You can download it from here: <a class="reference external" href="https://finance.yahoo.com/">https://finance.yahoo.com/</a></p></li>
+<li><p>Climate data: This dataset contains climate data from various locations around the world. You can download it from here: <a class="reference external" href="https://www.ncdc.noaa.gov/">https://www.ncdc.noaa.gov/</a></p></li>
+<li><p>International trade data: This dataset contains international trade data of various countries. You can download it from here: <a class="reference external" href="https://data.worldbank.org/">https://data.worldbank.org/</a></p></li>
+<li><p>Crime data: This dataset contains crime data from various cities. You can download it from here: <a class="reference external" href="https://www.kaggle.com/uciml/crime-in-los-angeles">https://www.kaggle.com/uciml/crime-in-los-angeles</a></p></li>
+</ol>
+<p>Please note that these datasets are just examples and there are many other datasets available that can be used to apply VAR.</p>
+<p>Here’s an example of how to use Vector Autoregression (VAR) to predict stock prices using Python and the yfinance library.</p>
+<p>First, let’s import the necessary libraries and load the data:</p>
+</section>
+<section id="vector-autoregression-moving-average-varma">
+<h2>10.8 Vector Autoregression Moving-Average (VARMA)<a class="headerlink" href="#vector-autoregression-moving-average-varma" title="Permalink to this heading">#</a></h2>
+<p>Vector Autoregression Moving-Average (VARMA) is a statistical time series model that extends the Vector Autoregression (VAR) model to include moving average (MA) terms. The model is used to describe the behavior of multiple time series, where each variable is modeled as a linear function of past values of itself and past values of other variables in the system.</p>
+<p>The VARMA model is represented as VARMA(p, q), where p is the number of lagged values of the endogenous variables in the model, and q is the number of lagged error terms included in the model. The model is used when the time series data exhibit both serial correlation and cross-correlation between the variables.</p>
+<p>VARMA models are used when the time series data is stationary, meaning that the statistical properties of the data do not change over time. These models are suitable for analyzing and forecasting economic time series, such as stock prices, exchange rates, and interest rates, as well as other types of time series data, such as weather patterns and medical data.</p>
+<p>The VARMA model is appropriate for time series data that exhibit interdependence among multiple variables and have a stationary behavior. These models are useful when we want to capture the effect of one variable on another, in addition to the effect of its own past values. VARMA models can also be useful for modeling data with short-term or long-term memory, as well as data with seasonal patterns.</p>
+<p>The method is suitable for multivariate time series without trend and seasonal components.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+# Load the macrodata dataset
+from statsmodels.datasets import macrodata
+data = macrodata.load_pandas().data
+
+data.head(5)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-d46fe408-90bb-4394-9c70-4a0036f12711">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>quarter</th>
+      <th>realgdp</th>
+      <th>realcons</th>
+      <th>realinv</th>
+      <th>realgovt</th>
+      <th>realdpi</th>
+      <th>cpi</th>
+      <th>m1</th>
+      <th>tbilrate</th>
+      <th>unemp</th>
+      <th>pop</th>
+      <th>infl</th>
+      <th>realint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1959.0</td>
+      <td>1.0</td>
+      <td>2710.349</td>
+      <td>1707.4</td>
+      <td>286.898</td>
+      <td>470.045</td>
+      <td>1886.9</td>
+      <td>28.98</td>
+      <td>139.7</td>
+      <td>2.82</td>
+      <td>5.8</td>
+      <td>177.146</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1959.0</td>
+      <td>2.0</td>
+      <td>2778.801</td>
+      <td>1733.7</td>
+      <td>310.859</td>
+      <td>481.301</td>
+      <td>1919.7</td>
+      <td>29.15</td>
+      <td>141.7</td>
+      <td>3.08</td>
+      <td>5.1</td>
+      <td>177.830</td>
+      <td>2.34</td>
+      <td>0.74</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1959.0</td>
+      <td>3.0</td>
+      <td>2775.488</td>
+      <td>1751.8</td>
+      <td>289.226</td>
+      <td>491.260</td>
+      <td>1916.4</td>
+      <td>29.35</td>
+      <td>140.5</td>
+      <td>3.82</td>
+      <td>5.3</td>
+      <td>178.657</td>
+      <td>2.74</td>
+      <td>1.09</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1959.0</td>
+      <td>4.0</td>
+      <td>2785.204</td>
+      <td>1753.7</td>
+      <td>299.356</td>
+      <td>484.052</td>
+      <td>1931.3</td>
+      <td>29.37</td>
+      <td>140.0</td>
+      <td>4.33</td>
+      <td>5.6</td>
+      <td>179.386</td>
+      <td>0.27</td>
+      <td>4.06</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1960.0</td>
+      <td>1.0</td>
+      <td>2847.699</td>
+      <td>1770.5</td>
+      <td>331.722</td>
+      <td>462.199</td>
+      <td>1955.5</td>
+      <td>29.54</td>
+      <td>139.6</td>
+      <td>3.50</td>
+      <td>5.2</td>
+      <td>180.007</td>
+      <td>2.31</td>
+      <td>1.19</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-d46fe408-90bb-4394-9c70-4a0036f12711')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-d46fe408-90bb-4394-9c70-4a0036f12711 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-d46fe408-90bb-4394-9c70-4a0036f12711');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Preprocess the dataset and select some columns
+df = data[[&#39;realgdp&#39;, &#39;realinv&#39;, &#39;realgovt&#39;,&#39;cpi&#39;,	&#39;m1&#39;,	&#39;tbilrate&#39;,	&#39;unemp&#39;,	&#39;pop&#39;,	&#39;infl&#39;,	&#39;realint&#39;]]
+df.index = pd.date_range(start=&#39;1959-01-01&#39;, periods=len(df), freq=&#39;Q&#39;)
+
+df.head(5)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-28bc312e-263a-498e-9451-4ab5c1eadc64">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>realgdp</th>
+      <th>realinv</th>
+      <th>realgovt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1959-03-31</th>
+      <td>2710.349</td>
+      <td>286.898</td>
+      <td>470.045</td>
+    </tr>
+    <tr>
+      <th>1959-06-30</th>
+      <td>2778.801</td>
+      <td>310.859</td>
+      <td>481.301</td>
+    </tr>
+    <tr>
+      <th>1959-09-30</th>
+      <td>2775.488</td>
+      <td>289.226</td>
+      <td>491.260</td>
+    </tr>
+    <tr>
+      <th>1959-12-31</th>
+      <td>2785.204</td>
+      <td>299.356</td>
+      <td>484.052</td>
+    </tr>
+    <tr>
+      <th>1960-03-31</th>
+      <td>2847.699</td>
+      <td>331.722</td>
+      <td>462.199</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-28bc312e-263a-498e-9451-4ab5c1eadc64')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-28bc312e-263a-498e-9451-4ab5c1eadc64 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-28bc312e-263a-498e-9451-4ab5c1eadc64');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+
+# Visualize the results
+df.plot()
+plt.legend(loc=&#39;best&#39;)
+
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e3f53d0bdd53b0cb036f60d92b338e21863092cc88e17bb1d2d5686165089245.png" src="../_images/e3f53d0bdd53b0cb036f60d92b338e21863092cc88e17bb1d2d5686165089245.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>
+
+# Split the dataset into training and testing sets
+train_size = int(len(df) * 0.8)
+train, test = df[:train_size], df[train_size:]
+
+# Check stationarity and apply differencing if necessary
+train_diff = train.diff().dropna()
+
+# Define the order of the VARMAX model
+order = (1, 0)
+
+# Fit the VARMAX model
+model = VARMAX(train_diff, order=order)
+model_fit = model.fit(maxiter=1000)  # Increase maxiter
+
+# Get the predicted values
+predictions_diff = model_fit.forecast(steps=len(test))
+predictions = predictions_diff.cumsum() + train.iloc[-1].values
+
+# Evaluate the model
+mse = mean_squared_error(test[&#39;realgdp&#39;], predictions[&#39;realgdp&#39;])
+rmse = sqrt(mse)
+print(&quot;RMSE: %.3f&quot; % rmse)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RMSE: 565.476
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>plt.plot(test[&#39;realgdp&#39;], label=&#39;Actual data&#39;)
+plt.plot(predictions[&#39;realgdp&#39;], label=&#39;predicted data&#39;)
+plt.legend(loc=&#39;best&#39;)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2a581f7835052685ee1df112f02a1c9454968be37d3d786eb022691a91ff8725.png" src="../_images/2a581f7835052685ee1df112f02a1c9454968be37d3d786eb022691a91ff8725.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+# Load the macrodata dataset
+from statsmodels.datasets import macrodata
+data = macrodata.load_pandas().data
+
+# Preprocess the dataset
+df = data[[&#39;realgdp&#39;, &#39;realinv&#39;, &#39;realgovt&#39;]]
+df.index = pd.date_range(start=&#39;1959-01-01&#39;, periods=len(df), freq=&#39;Q&#39;)
+
+# Split the dataset into training and testing sets
+train_size = int(len(df) * 0.8)
+train, test = df[:train_size], df[train_size:]
+
+# Check stationarity and apply differencing if necessary
+train_diff = train.diff().dropna()
+
+# Manual model order selection
+orders = [(1, 0), (2, 0), (1, 1), (2, 1)]  # Example orders to evaluate
+best_order = None
+best_rmse = float(&#39;inf&#39;)
+
+for order in orders:
+    # Fit the VARMAX model
+    model = VARMAX(train_diff, order=order)
+    model_fit = model.fit(maxiter=1000)  # Increase maxiter if needed
+
+    # Get the predicted values
+    predictions_diff = model_fit.forecast(steps=len(test))
+    predictions = predictions_diff.cumsum() + train.iloc[-1].values
+
+    # Evaluate the model
+    mse = mean_squared_error(test[&#39;realgdp&#39;], predictions[&#39;realgdp&#39;])
+    rmse = sqrt(mse)
+
+    # Compare RMSE to find the best order
+    if rmse &lt; best_rmse:
+        best_rmse = rmse
+        best_order = order
+
+# Fit the VARMAX model with the best_order
+model = VARMAX(train_diff, order=best_order)
+model_fit = model.fit(maxiter=1000)  # Increase maxiter if needed
+
+# Get the predicted values
+predictions_diff = model_fit.forecast(steps=len(test))
+predictions = predictions_diff.cumsum() + train.iloc[-1].values
+
+# Evaluate the model
+mse = mean_squared_error(test[&#39;realgdp&#39;], predictions[&#39;realgdp&#39;])
+rmse = sqrt(mse)
+print(&quot;Best Order: &quot;, best_order)
+print(&quot;RMSE: %.3f&quot; % rmse)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>plt.plot(test[&#39;realgdp&#39;], label=&#39;Actual data&#39;)
+plt.plot(predictions[&#39;realgdp&#39;], label=&#39;predicted data&#39;)
+plt.legend(loc=&#39;best&#39;)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b62893882ea84f36d986e897b772cf8bfd75d4d734f3738853b5765927bfb74e.png" src="../_images/b62893882ea84f36d986e897b772cf8bfd75d4d734f3738853b5765927bfb74e.png" />
+</div>
+</div>
+</section>
+<section id="vector-autoregression-moving-average-with-exogenous-regressors-varmax">
+<h2>10.9 Vector Autoregression Moving-Average with Exogenous Regressors (VARMAX)<a class="headerlink" href="#vector-autoregression-moving-average-with-exogenous-regressors-varmax" title="Permalink to this heading">#</a></h2>
+<p>The Vector Autoregression Moving-Average with Exogenous Regressors (VARMAX) is an extension of the VARMA model that also includes the modeling of exogenous variables. It is a multivariate version of the ARMAX method.</p>
+<p>Exogenous variables are also called covariates and can be thought of as parallel input sequences that have observations at the same time steps as the original series. The primary series(es) are referred to as endogenous data to contrast it from the exogenous sequence(s). The observations for exogenous variables are included in the model directly at each time step and are not modeled in the same way as the primary endogenous sequence (e.g. as an AR, MA, etc. process).</p>
+<p>The VARMAX method can also be used to model the subsumed models with exogenous variables, such as VARX and VMAX.</p>
+<p>The method is suitable for multivariate time series without trend and seasonal components with exogenous variables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+# Load the dataset
+url = &quot;https://raw.githubusercontent.com/jbrownlee/Datasets/master/pollution.csv&quot;
+df = pd.read_csv(url, header=0, index_col=0, parse_dates=[0])
+df.head(5)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-ff7b0276-7250-437d-b1e4-f87b933ad92c">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>month</th>
+      <th>day</th>
+      <th>hour</th>
+      <th>pm2.5</th>
+      <th>DEWP</th>
+      <th>TEMP</th>
+      <th>PRES</th>
+      <th>cbwd</th>
+      <th>Iws</th>
+      <th>Is</th>
+      <th>Ir</th>
+    </tr>
+    <tr>
+      <th>No</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>2010</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>-21</td>
+      <td>-11.0</td>
+      <td>1021.0</td>
+      <td>NW</td>
+      <td>1.79</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2010</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>-21</td>
+      <td>-12.0</td>
+      <td>1020.0</td>
+      <td>NW</td>
+      <td>4.92</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2010</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>-21</td>
+      <td>-11.0</td>
+      <td>1019.0</td>
+      <td>NW</td>
+      <td>6.71</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2010</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>-21</td>
+      <td>-14.0</td>
+      <td>1019.0</td>
+      <td>NW</td>
+      <td>9.84</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2010</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>-20</td>
+      <td>-12.0</td>
+      <td>1018.0</td>
+      <td>NW</td>
+      <td>12.97</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-ff7b0276-7250-437d-b1e4-f87b933ad92c')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-ff7b0276-7250-437d-b1e4-f87b933ad92c button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-ff7b0276-7250-437d-b1e4-f87b933ad92c');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Preprocess the dataset
+df = df[[&#39;pm2.5&#39;, &#39;DEWP&#39;, &#39;TEMP&#39;, &#39;PRES&#39;, &#39;Iws&#39;, &#39;Is&#39;, &#39;Ir&#39;]]
+df = df.fillna(df.bfill())  # Fill missing values with backward fill
+df.head(5)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-15172760-6370-49b7-9f8b-593c612edd86">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pm2.5</th>
+      <th>DEWP</th>
+      <th>TEMP</th>
+      <th>PRES</th>
+      <th>Iws</th>
+      <th>Is</th>
+      <th>Ir</th>
+    </tr>
+    <tr>
+      <th>No</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>129.0</td>
+      <td>-21</td>
+      <td>-11.0</td>
+      <td>1021.0</td>
+      <td>1.79</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>129.0</td>
+      <td>-21</td>
+      <td>-12.0</td>
+      <td>1020.0</td>
+      <td>4.92</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>129.0</td>
+      <td>-21</td>
+      <td>-11.0</td>
+      <td>1019.0</td>
+      <td>6.71</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>129.0</td>
+      <td>-21</td>
+      <td>-14.0</td>
+      <td>1019.0</td>
+      <td>9.84</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>129.0</td>
+      <td>-20</td>
+      <td>-12.0</td>
+      <td>1018.0</td>
+      <td>12.97</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-15172760-6370-49b7-9f8b-593c612edd86')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-15172760-6370-49b7-9f8b-593c612edd86 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-15172760-6370-49b7-9f8b-593c612edd86');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error: Runtime no longer has a reference to this dataframe, please re-run this cell and try again.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+import pandas as pd
+from statsmodels.tsa.statespace.varmax import VARMAX
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+# Load the dataset
+url = &quot;https://raw.githubusercontent.com/jbrownlee/Datasets/master/pollution.csv&quot;
+df = pd.read_csv(url, header=0, index_col=0, parse_dates=[0])
+df.head(5)
+
+# Preprocess the dataset
+df = df[[&#39;pm2.5&#39;, &#39;DEWP&#39;, &#39;TEMP&#39;, &#39;PRES&#39;, &#39;Iws&#39;, &#39;Is&#39;, &#39;Ir&#39;]]
+df = df.fillna(df.bfill())  # Fill missing values with backward fill
+df.head(5)
+
+# Split the dataset into train and test sets
+train_size = int(len(df) * 0.8)
+train, test = df[:train_size], df[train_size:]
+
+# Model order selection
+order = (1, 0)  # (p, q)
+best_order = None
+best_rmse = float(&#39;inf&#39;)
+
+for p in range(1, 5):
+    for q in range(1, 5):
+        model = VARMAX(train, order=(p, q))
+        model_fit = model.fit(disp=False)
+
+        # Get the predicted values
+        predictions = model_fit.forecast(steps=len(test), exog=test[[&#39;DEWP&#39;, &#39;TEMP&#39;, &#39;PRES&#39;, &#39;Iws&#39;, &#39;Is&#39;, &#39;Ir&#39;]])
+
+        # Calculate RMSE
+        rmse = sqrt(mean_squared_error(test[&#39;pm2.5&#39;], predictions[&#39;pm2.5&#39;]))
+
+        # Check if the current model has better performance
+        if rmse &lt; best_rmse:
+            best_rmse = rmse
+            best_order = (p, q)
+            print(best_order)
+
+# Fit the VARMAX model with the best order
+model = VARMAX(df, order=best_order, exog=df[[&#39;DEWP&#39;, &#39;TEMP&#39;, &#39;PRES&#39;, &#39;Iws&#39;, &#39;Is&#39;, &#39;Ir&#39;]])
+model_fit = model.fit(disp=False)
+
+# Get the predicted values
+predictions = model_fit.forecast(steps=len(test), exog=test[[&#39;DEWP&#39;, &#39;TEMP&#39;, &#39;PRES&#39;, &#39;Iws&#39;, &#39;Is&#39;, &#39;Ir&#39;]])
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Calculate RMSE
+rmse = sqrt(mean_squared_error(test[&#39;pm2.5&#39;], predictions[&#39;pm2.5&#39;]))
+print(&quot;RMSE:&quot;, rmse)
+
+# Plotting the actual and predicted values
+plt.plot(test.index, test[&#39;pm2.5&#39;], label=&#39;Actual&#39;)
+plt.plot(test.index, predictions[&#39;pm2.5&#39;], label=&#39;Predicted&#39;)
+plt.xlabel(&#39;Time&#39;)
+plt.ylabel(&#39;pm2.5&#39;)
+plt.title(&#39;Actual vs Predicted&#39;)
+plt.legend()
+plt.xticks(rotation=45)
+plt.show()
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="simple-exponential-smoothing-ses">
+<h2>10.10 Simple Exponential Smoothing (SES)<a class="headerlink" href="#simple-exponential-smoothing-ses" title="Permalink to this heading">#</a></h2>
+<p>Simple Exponential Smoothing (SES) is a technique used in time series analysis to forecast future values based on the weighted average of past observations. It is a popular method for smoothing out noise and identifying underlying patterns or trends in a time series dataset.</p>
+<p>In SES, each observation in the time series is given a weight, with more recent observations typically receiving higher weights. The weights decrease exponentially as we move further back in time, hence the name “exponential smoothing.”</p>
+<p>The formula for simple exponential smoothing is as follows:</p>
+<p><span class="math notranslate nohighlight">\( \hat{y}_{t+1} = \alpha \cdot y_t + (1 - \alpha) \cdot \hat{y}_t \)</span></p>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\hat{y}_{t+1}\)</span> is the forecasted value for the next time period <span class="math notranslate nohighlight">\(t+1\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha\)</span> is the smoothing factor (0 &lt; <span class="math notranslate nohighlight">\(\alpha\)</span> &lt; 1), which determines the weight given to the most recent observation. A higher <span class="math notranslate nohighlight">\(\alpha\)</span> places more emphasis on recent data, while a lower <span class="math notranslate nohighlight">\(\alpha\)</span> places more equal weight on all observations.</p></li>
+<li><p><span class="math notranslate nohighlight">\(y_t\)</span> is the actual value of the time series at time t.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{y}_t\)</span> is the predicted value of the time series at time t based on the previous forecast.</p></li>
+</ul>
+<p>To initiate the forecasting process, an initial value for <span class="math notranslate nohighlight">\(\hat{y}_0\)</span> needs to be chosen. It can be based on different approaches, such as the average of the initial observations or the first observation in the series.</p>
+<p>The SES method is computationally simple and easy to implement. However, it assumes a constant level of the time series and does not consider seasonal patterns or other complex patterns in the data. Therefore, it is most suitable for datasets with a relatively stable and trendless behavior.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import matplotlib.pyplot as plt
+from statsmodels.tsa.api import SimpleExpSmoothing
+
+# Sample time series data
+data = pd.Series([23, 27, 31, 35, 38, 41, 45, 48, 50, 52])
+
+data.head(5)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    23
+1    27
+2    31
+3    35
+4    38
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import matplotlib.pyplot as plt
+from statsmodels.tsa.api import SimpleExpSmoothing
+
+# Sample time series data
+data = pd.Series([23, 27, 31, 35, 38, 41, 45, 48, 50, 52])
+
+# Apply Simple Exponential Smoothing
+model = SimpleExpSmoothing(data)
+model_fit = model.fit()
+
+# Forecast the next value
+forecast = model_fit.forecast(steps=1)
+
+# Generate the index for the forecasted point
+forecast_index = pd.RangeIndex(start=data.index[-1], stop=data.index[-1]+1)
+print(forecast_index)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RangeIndex(start=9, stop=10, step=1)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Plotting the actual data and forecasted point
+plt.plot(data.index, data, label=&#39;Actual Data&#39;)
+# plt.plot(data.index[-1], forecast, label=&#39;Actual Data&#39;)
+plt.scatter(forecast_index, forecast, color=&#39;red&#39;, marker=&#39;x&#39;, label=&#39;Forecasted Point&#39;)
+plt.xlabel(&#39;Date&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;Simple Exponential Smoothing Forecast&#39;)
+plt.legend()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8085cb732c6ca790b476655e26910a4b61350cb115858302cf02486748d6bd4c.png" src="../_images/8085cb732c6ca790b476655e26910a4b61350cb115858302cf02486748d6bd4c.png" />
+</div>
+</div>
+</section>
+<section id="holt-winters-exponential-smoothing-hwes">
+<h2>10.11 Holt Winter’s Exponential Smoothing (HWES)<a class="headerlink" href="#holt-winters-exponential-smoothing-hwes" title="Permalink to this heading">#</a></h2>
+<p>Holt-Winters’ Exponential Smoothing (HWES) is a popular forecasting method used for time series data. It is an extension of simple exponential smoothing that takes into account the trends and seasonality in the data. HWES is effective in capturing both short-term fluctuations and long-term trends, making it suitable for forecasting data with complex patterns.</p>
+<p>The HWES method utilizes three smoothing equations: one for the level, one for the trend, and one for the seasonality. These equations are updated iteratively to generate forecasts. Here’s a brief overview of the steps involved:</p>
+<ol class="arabic">
+<li><p>Initialization: The initial values for the level, trend, and seasonality components are estimated. This can be done using various techniques, such as averaging the first few observations.</p></li>
+<li><p>Level Smoothing: The level component represents the overall average value of the time series. In each time period, the observed value is combined with the smoothed value from the previous period to update the current level estimate. The level smoothing equation is typically defined as follows:</p>
+<p><span class="math notranslate nohighlight">\(Level(t) = α * Observation(t) + (1 - α) * [Level(t-1) + Trend(t-1)]\)</span></p>
+<p>Here, α is the smoothing parameter for the level component, and it determines the weight given to the most recent observation.</p>
+</li>
+<li><p>Trend Smoothing: The trend component represents the direction and rate of change in the time series. The trend smoothing equation is used to update the trend estimate based on the difference between the current level estimate and the previous level estimate. The trend smoothing equation is typically defined as:</p>
+<p><span class="math notranslate nohighlight">\(Trend(t) = β * [Level(t) - Level(t-1)] + (1 - β) * Trend(t-1)\)</span></p>
+<p>Here, β is the smoothing parameter for the trend component, and it controls the weight given to the recent trend.</p>
+</li>
+<li><p>Seasonality Smoothing: The seasonality component represents the periodic patterns in the data. This is applicable when the data exhibits a regular repeating pattern, such as weekly, monthly, or quarterly. The seasonality smoothing equation is used to update the seasonal estimate based on the difference between the current level estimate and the previous seasonally adjusted observation. The seasonal smoothing equation is typically defined as:</p>
+<p><span class="math notranslate nohighlight">\(Seasonality(t) = γ * [Observation(t) - Level(t)] + (1 - γ) * Seasonality(t-m)\)</span></p>
+<p>Here, γ is the smoothing parameter for the seasonality component, and it determines the weight given to the recent seasonality term. ‘m’ represents the length of the seasonal pattern (e.g., 12 for monthly data with a yearly pattern).</p>
+</li>
+<li><p>Forecasting: Once the level, trend, and seasonality estimates are updated, they can be used to generate forecasts for future time periods. The forecast equation is typically defined as:</p>
+<p><span class="math notranslate nohighlight">\(Forecast(t+k) = Level(t) + k * Trend(t) + Seasonality(t+k-m+1)\)</span></p>
+<p>Here, k represents the number of periods ahead for which you want to generate forecasts.</p>
+</li>
+</ol>
+<p>By iteratively updating the level, trend, and seasonality estimates and generating forecasts, HWES provides a way to predict future values of the time series. The choice of smoothing parameters (α, β, γ) and the length of the seasonal pattern (m) depends on the characteristics of the data and can be determined through optimization or manual tuning.</p>
+<p>It’s worth noting that HWES assumes that the time series exhibits a constant level, trend, and seasonality over time. Therefore, it may not be suitable for data with sudden changes or irregular patterns. In such cases, other forecasting methods like ARIMA or machine learning techniques may be more appropriate.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># HWES example
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from random import random
+import matplotlib.pyplot as plt
+
+# contrived dataset
+data = [x + random() for x in range(1, 100)]
+
+# fit model
+model = ExponentialSmoothing(data)
+model_fit = model.fit()
+
+# make prediction
+yhat = model_fit.predict(len(data), len(data))
+
+# Plotting the original data and the predicted value
+plt.plot(data, label=&#39;Original Data&#39;)
+plt.plot([len(data)], [yhat], marker=&#39;o&#39;, markersize=8, color=&#39;red&#39;, label=&#39;Predicted Value&#39;)
+plt.xlabel(&#39;Time&#39;)
+plt.ylabel(&#39;Value&#39;)
+plt.title(&#39;HWES Example&#39;)
+plt.legend()
+plt.show()
+
+print(&quot;Predicted value:&quot;, yhat)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/54f08f912c853d946a1daac465e4a596309aa7611dafbe7ac5189f6c1609b5f2.png" src="../_images/54f08f912c853d946a1daac465e4a596309aa7611dafbe7ac5189f6c1609b5f2.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Predicted value: [99.95133705]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter_09.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">9. Metrics</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter_11.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">11. Deep Learning for Time Series Forecasting</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregression-ar">10.1 Autoregression (AR)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-average-ma">10.2 Moving Average (MA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-moving-average-arma">10.3 Autoregressive Moving Average (ARMA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoregressive-integrated-moving-average-arima">10.4 Autoregressive Integrated Moving Average (ARIMA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonal-autoregressive-integrated-moving-average-sarima">10.5 Seasonal Autoregressive Integrated Moving-Average (SARIMA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonal-autoregressive-integrated-moving-average-with-exogenous-regressors-sarimax">10.6 Seasonal Autoregressive Integrated Moving-Average with Exogenous Regressors (SARIMAX)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-autoregression-var">10.7 Vector Autoregression (VAR)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-autoregression-moving-average-varma">10.8 Vector Autoregression Moving-Average (VARMA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-autoregression-moving-average-with-exogenous-regressors-varmax">10.9 Vector Autoregression Moving-Average with Exogenous Regressors (VARMAX)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-exponential-smoothing-ses">10.10 Simple Exponential Smoothing (SES)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#holt-winters-exponential-smoothing-hwes">10.11 Holt Winter’s Exponential Smoothing (HWES)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Farid Jabbari Maleki
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  LinkedIn <a href="https://www.linkedin.com/in/farid-j-maleki/">Farid J. Maleki</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

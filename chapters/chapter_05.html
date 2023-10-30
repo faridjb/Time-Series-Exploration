@@ -1,0 +1,880 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>5. Exploratory Data Analysis (EDA) for Time Series &#8212; Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter_05';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6. Data Prepration" href="chapter_06.html" />
+    <link rel="prev" title="4. Time Series Concepts" href="chapter_04.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Time Series Exploration with Python: A Journey from Traditional to Advanced Forecasting Models
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TOC.html">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_01.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_02.html">2. Importing data in colab notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_03.html">3. Data Wrangling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_04.html">4. Time Series Concepts</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. Exploratory Data Analysis (EDA) for Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_06.html">6. Data Prepration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_07.html">7. Stationarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_08.html">8. Discovered a suite of classical time series forecasting methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_09.html">9. Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_10.html">10. Classical models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_11.html">11. Deep Learning for Time Series Forecasting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_12.html">12. Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_13.html">13. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_14.html">14. Preprocessing using Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_15.html">15. Time Series Analysis toolkits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter_16.html">16. NeuralProphet</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/faridjb/Time-Series-Exploration/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter_05.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter_05.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>5. Exploratory Data Analysis (EDA) for Time Series</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-time-series-data">5.1 Visualizing Time Series Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-trends-and-seasonality">5.2 Identifying Trends and Seasonality</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-and-multiplicative-decomposition">5.2.1 Additive and Multiplicative Decomposition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-averages-smoothing">5.2.2. Moving Averages(Smoothing)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stl-decomposition-seasonal-trend-decomposition-using-loess">5.2.3. STL Decomposition (Seasonal-Trend decomposition using LOESS)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acf-and-pacf-plots">5.3 ACF and PACF plots</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="exploratory-data-analysis-eda-for-time-series">
+<h1>5. Exploratory Data Analysis (EDA) for Time Series<a class="headerlink" href="#exploratory-data-analysis-eda-for-time-series" title="Permalink to this heading">#</a></h1>
+<p>Before diving deep into time series modeling, it’s essential to understand the underlying characteristics of the data. That’s where Exploratory Data Analysis (EDA) plays a crucial role. For time series data, EDA helps in:</p>
+<ol class="arabic simple">
+<li><p>Understanding underlying patterns such as trends and seasonality.</p></li>
+<li><p>Identifying outliers or any unusual data points.</p></li>
+<li><p>Validating assumptions related to time series forecasting models.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate sample time series data
+time = np.linspace(0, 2 * np.pi, 100)
+trend = time * 0.5
+seasonality = np.sin(time)
+noise = np.random.normal(0, 0.5, 100)
+timeseries = trend + seasonality + noise
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 3))  # Adjust the figure size as per your preference
+plt.plot(time, timeseries)
+plt.xlabel(&#39;Time&#39;, fontsize=10)  # Adjust x-axis label font size
+plt.ylabel(&#39;Value&#39;, fontsize=10)  # Adjust y-axis label font size
+plt.title(&#39;Time Series Data&#39;, fontsize=12)  # Adjust title font size
+
+# Adjust tick label font size for both x and y axes
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+
+plt.grid(True)
+plt.tight_layout()  # Ensure all elements fit within the figure
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/11e068f2dd038ad79bc7bf45a83673001aee01aed4a3b1608bd1aae39b62f6a9.png" src="../_images/11e068f2dd038ad79bc7bf45a83673001aee01aed4a3b1608bd1aae39b62f6a9.png" />
+</div>
+</div>
+<section id="visualizing-time-series-data">
+<h2>5.1 Visualizing Time Series Data<a class="headerlink" href="#visualizing-time-series-data" title="Permalink to this heading">#</a></h2>
+<p>The simplest and often the most informative EDA technique is visualization.</p>
+<ul class="simple">
+<li><p><strong>Line Plots</strong>: This is the most common technique, where time is on the x-axis, and the metric is on the y-axis.</p></li>
+</ul>
+</section>
+<section id="identifying-trends-and-seasonality">
+<h2>5.2 Identifying Trends and Seasonality<a class="headerlink" href="#identifying-trends-and-seasonality" title="Permalink to this heading">#</a></h2>
+<p>Once visualized, you can easily spot:</p>
+<ul class="simple">
+<li><p><strong>Trend</strong>: Long-term movement in data.</p></li>
+<li><p><strong>Seasonality</strong>: Repeating patterns or cycles.</p></li>
+<li><p><strong>Residual (or Noise)</strong>: Random variations left after extracting trend and seasonality.</p></li>
+</ul>
+<p>For instance, monthly sales of a store might have an upward trend and a noticeable pattern that repeats every year (e.g., spikes during Black Friday or Christmas).</p>
+<p>To identify and separate these components explicitly, you can use decomposition methods:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from statsmodels.tsa.seasonal import seasonal_decompose
+import matplotlib.pyplot as plt
+
+# Perform seasonal decomposition
+result = seasonal_decompose(timeseries, model=&#39;additive&#39;, period=12)
+
+# Create a figure with subplots
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(8, 8))  # Adjust the figure size as per your preference
+
+# Plot the original time series
+ax1.plot(timeseries)
+ax1.set_ylabel(&#39;Original&#39;, fontsize=8)  # Adjust y-axis label font size
+ax1.set_title(&#39;Seasonal Decomposition of Time Series&#39;, fontsize=12)  # Adjust title font size
+
+# Plot the trend component
+ax2.plot(result.trend)
+ax2.set_ylabel(&#39;Trend&#39;, fontsize=10)  # Adjust y-axis label font size
+
+# Plot the seasonal component
+ax3.plot(result.seasonal)
+ax3.set_ylabel(&#39;Seasonal&#39;, fontsize=10)  # Adjust y-axis label font size
+
+# Plot the residual component
+ax4.plot(result.resid)
+ax4.set_xlabel(&#39;Time&#39;, fontsize=10)  # Adjust x-axis label font size
+ax4.set_ylabel(&#39;Residual&#39;, fontsize=10)  # Adjust y-axis label font size
+
+# Adjust tick label font size for all subplots
+for ax in [ax1, ax2, ax3, ax4]:
+    ax.tick_params(axis=&#39;both&#39;, labelsize=8)
+
+plt.tight_layout()  # Ensure all elements fit within the figure
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7f289e83e63f69ba6cd4675d23de97700d820ea3fd4432887e6757d6053392fd.png" src="../_images/7f289e83e63f69ba6cd4675d23de97700d820ea3fd4432887e6757d6053392fd.png" />
+</div>
+</div>
+<section id="additive-and-multiplicative-decomposition">
+<h3>5.2.1 Additive and Multiplicative Decomposition<a class="headerlink" href="#additive-and-multiplicative-decomposition" title="Permalink to this heading">#</a></h3>
+<p>Depending on the nature of the trend and seasonality, decomposition can be:</p>
+<ul class="simple">
+<li><p><strong>Additive</strong>: When the magnitude of seasonality doesn’t change as the time series value changes. Mathematically, it’s expressed as:
+[ Y_t = Trend + Seasonal + Residual ]</p></li>
+<li><p><strong>Multiplicative</strong>: When the magnitude of seasonality increases or decreases as the time series value increases or decreases. Mathematically:
+[ Y_t = Trend \times Seasonal \times Residual ]</p></li>
+</ul>
+<p><strong>Example Code for Additive and Multiplicative Decomposition</strong>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+# Sample Data
+time = np.linspace(0, 2 * np.pi, 100)
+trend = time * 0.5
+seasonality = np.sin(time)
+noise = np.random.normal(0, 0.5, 100)
+
+# Additive Model
+additive_series = trend + seasonality + noise
+result_add = seasonal_decompose(additive_series, model=&#39;additive&#39;, period=25)
+
+# Multiplicative Model
+multiplicative_series = trend * (1 + seasonality) * (1 + noise)
+
+# Making sure the series is positive
+min_val = np.min(multiplicative_series)
+if min_val &lt;= 0:
+    multiplicative_series -= min_val - 1  # Subtract the absolute minimum value and subtract an extra 1 for safety.
+
+result_mul = seasonal_decompose(multiplicative_series, model=&#39;multiplicative&#39;, period=25)
+
+# Create a figure with subplots for both models
+fig, axes = plt.subplots(4, 2, figsize=(8, 12))  # Adjusted rows to 4
+
+# Plot the additive model decomposition
+axes[0, 0].plot(result_add.observed)
+axes[0, 0].set_title(&#39;Additive Model - Observed&#39;, fontsize=9)  # Adjust title font size
+
+axes[0, 1].plot(result_add.trend)
+axes[0, 1].set_title(&#39;Additive Model - Trend&#39;, fontsize=9)
+
+axes[1, 0].plot(result_add.seasonal)
+axes[1, 0].set_title(&#39;Additive Model - Seasonal&#39;, fontsize=9)
+
+axes[1, 1].plot(result_add.resid)
+axes[1, 1].set_title(&#39;Additive Model - Residual&#39;, fontsize=9)
+
+
+
+# Plot the multiplicative model decomposition
+axes[2, 0].plot(result_mul.observed)
+axes[2, 0].set_title(&#39;Multiplicative Model - Observed&#39;, fontsize=9)
+
+axes[2, 1].plot(result_mul.trend)
+axes[2, 1].set_title(&#39;Multiplicative Model - Trend&#39;, fontsize=9)
+
+axes[3, 0].plot(result_mul.seasonal)
+axes[3, 0].set_title(&#39;Multiplicative Model - Seasonal&#39;, fontsize=9)
+
+axes[3, 1].plot(result_mul.resid)
+axes[3, 1].set_title(&#39;Multiplicative Model - Residual&#39;, fontsize=9)
+
+# Adjust tick label font size for all subplots
+for ax in axes.flatten():
+    ax.tick_params(axis=&#39;both&#39;, labelsize=9)
+
+plt.tight_layout()  # Ensure all elements fit within the figure
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ad4bd58437abc60adfba7717d57c670b56bf00b1230706c086caf894d99051b3.png" src="../_images/ad4bd58437abc60adfba7717d57c670b56bf00b1230706c086caf894d99051b3.png" />
+</div>
+</div>
+</section>
+<section id="moving-averages-smoothing">
+<h3>5.2.2. Moving Averages(Smoothing)<a class="headerlink" href="#moving-averages-smoothing" title="Permalink to this heading">#</a></h3>
+<p>Classical decomposition using moving averages involves smoothing the series to identify the trend. The seasonality is then identified by taking the average value for each season, and the residual is what’s left after removing trend and seasonality.</p>
+<ul class="simple">
+<li><p><strong>Centered Moving Average</strong>: Used for even periods, it averages data symmetrically around a central point.</p></li>
+<li><p><strong>Trailing Moving Average</strong>: Used for odd periods, it takes average up to the data point.</p></li>
+</ul>
+<p><strong>Example for Decomposition using Moving Averages</strong>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate a sample time series dataset
+np.random.seed(0)
+n = 100
+time_series = np.random.rand(n) * 10 + np.sin(np.linspace(0, 4 * np.pi, n)) * 2
+
+# Define the window size for moving averages
+centered_window_size = 6  # Even period
+trailing_window_size = 7  # Odd period
+
+# Calculate the centered moving average
+centered_ma = np.convolve(time_series, np.ones(centered_window_size)/centered_window_size, mode=&#39;same&#39;)
+
+# Calculate the trailing moving average
+trailing_ma = np.convolve(time_series, np.ones(trailing_window_size)/trailing_window_size, mode=&#39;valid&#39;)
+
+# Calculate the residual (difference between original and centered moving average)
+residual = time_series - centered_ma
+
+# Create a figure with two subplots
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 8), sharex=True)
+
+# Plot the original time series and centered moving average
+ax1.plot(time_series, label=&quot;Original Time Series&quot;)
+ax1.plot(centered_ma, label=f&quot;Centered Moving Average ({centered_window_size}-point window)&quot;)
+ax1.set_title(&quot;Centered Moving Average&quot;, fontsize=9)  # Adjust title font size
+ax1.set_ylabel(&quot;Value&quot;, fontsize=9)  # Adjust y-axis label font size
+ax1.legend()
+ax1.grid(True)
+
+# Plot the original time series and trailing moving average
+ax2.plot(time_series, label=&quot;Original Time Series&quot;)
+ax2.plot(np.arange(trailing_window_size-1, n), trailing_ma, label=f&quot;Trailing Moving Average ({trailing_window_size}-point window)&quot;)
+ax2.set_title(&quot;Trailing Moving Average&quot;, fontsize=9)  # Adjust title font size
+ax2.set_xlabel(&quot;Time&quot;, fontsize=9)  # Adjust x-axis label font size
+ax2.set_ylabel(&quot;Value&quot;, fontsize=9)  # Adjust y-axis label font size
+ax2.legend()
+ax2.grid(True)
+
+plt.tight_layout()
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b114d926868573854da8b61755f1da12a07462e04fc7fecadf099d73cc7d3af8.png" src="../_images/b114d926868573854da8b61755f1da12a07462e04fc7fecadf099d73cc7d3af8.png" />
+</div>
+</div>
+</section>
+<section id="stl-decomposition-seasonal-trend-decomposition-using-loess">
+<h3>5.2.3. STL Decomposition (Seasonal-Trend decomposition using LOESS)<a class="headerlink" href="#stl-decomposition-seasonal-trend-decomposition-using-loess" title="Permalink to this heading">#</a></h3>
+<p>STL stands for Seasonal-Trend decomposition using LOESS (locally estimated scatterplot smoothing). It’s a more flexible method than classical decomposition, allowing for changing seasonality patterns over time and robust to outliers.</p>
+<p><strong>Example for STL Decomposition</strong>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from statsmodels.datasets import elec_equip as ds
+
+elec_equip = ds.load().data.iloc[:, 0]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from statsmodels.tsa.seasonal import STL
+import matplotlib.pyplot as plt
+
+def add_stl_plot(fig, res, legend):
+    &quot;&quot;&quot;Add 3 plots from a second STL fit&quot;&quot;&quot;
+    axs = fig.get_axes()
+    comps = [&quot;trend&quot;, &quot;seasonal&quot;, &quot;resid&quot;]
+    for ax, comp in zip(axs[1:], comps):
+        series = getattr(res, comp)
+        if comp == &quot;resid&quot;:
+            ax.plot(series, marker=&quot;o&quot;, linestyle=&quot;none&quot;, markersize=2)
+        else:
+            ax.plot(series)
+            if comp == &quot;trend&quot;:
+                ax.legend(legend, frameon=False)
+
+
+
+stl = STL(elec_equip, period=12, robust=True)
+res_robust = stl.fit()
+fig = res_robust.plot()
+
+# Reduce font size for titles and labels
+for ax in fig.get_axes():
+    ax.set_title(ax.get_title(), fontsize=9)
+    ax.set_xlabel(ax.get_xlabel(), fontsize=9)
+    ax.set_ylabel(ax.get_ylabel(), fontsize=9)
+
+res_non_robust = STL(elec_equip, period=12, robust=False).fit()
+add_stl_plot(fig, res_non_robust, [&quot;Robust&quot;, &quot;Non-robust&quot;])
+
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/670959e624a35a723fc7655f0fb20d1cdcc92336947d47fac62156592b183cfb.png" src="../_images/670959e624a35a723fc7655f0fb20d1cdcc92336947d47fac62156592b183cfb.png" />
+</div>
+</div>
+<p>Conclusion:</p>
+<p>Time series decomposition provides a structured way to analyze and visualize the underlying components of a series. Choosing between additive and multiplicative or between classical and STL decomposition largely depends on the nature of the data and the specific characteristics you aim to capture.</p>
+</section>
+</section>
+<section id="acf-and-pacf-plots">
+<h2>5.3 ACF and PACF plots<a class="headerlink" href="#acf-and-pacf-plots" title="Permalink to this heading">#</a></h2>
+<p>These are crucial plots when it comes to understanding the auto-correlation characteristics of a time series:</p>
+<ul class="simple">
+<li><p><strong>ACF (Auto-Correlation Function)</strong>: It gives us the correlation of the series with its lagged values. It’s helpful to determine the order of the moving average (MA) component in an ARIMA model.</p></li>
+<li><p><strong>PACF (Partial Auto-Correlation Function)</strong>: It gives the correlation which is not explained by the previous lags. Helps determine the order of the autoregressive (AR) component in an ARIMA model.</p></li>
+</ul>
+<p>Here’s how you generate them:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+import matplotlib.pyplot as plt
+
+# Create a figure with subplots for autocorrelation and partial autocorrelation plots
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 8))  # Adjust the figure size as per your preference
+
+# Plot the autocorrelation function (ACF)
+plot_acf(timeseries, lags=20, ax=ax1)
+ax1.set_title(&#39;Autocorrelation Function (ACF)&#39;, fontsize=9)  # Adjust title font size
+ax1.set_xlabel(&#39;Lags&#39;, fontsize=9)  # Adjust x-axis label font size
+ax1.set_ylabel(&#39;ACF&#39;, fontsize=9)  # Adjust y-axis label font size
+ax1.grid(True)  # Add grid
+
+# Plot the partial autocorrelation function (PACF)
+plot_pacf(timeseries, lags=20, ax=ax2)
+ax2.set_title(&#39;Partial Autocorrelation Function (PACF)&#39;, fontsize=9)  # Adjust title font size
+ax2.set_xlabel(&#39;Lags&#39;, fontsize=9)  # Adjust x-axis label font size
+ax2.set_ylabel(&#39;PACF&#39;, fontsize=9)  # Adjust y-axis label font size
+ax2.grid(True)  # Add grid
+
+# Adjust tick label font size for both subplots
+for ax in [ax1, ax2]:
+    ax.tick_params(axis=&#39;both&#39;, labelsize=9)
+
+plt.tight_layout()  # Ensure all elements fit within the figure
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b61e734eacdf14ff7fc067823813a0ffc30fa5e5be10cd36b377f1706268fb17.png" src="../_images/b61e734eacdf14ff7fc067823813a0ffc30fa5e5be10cd36b377f1706268fb17.png" />
+</div>
+</div>
+<p>Understanding ACF and PACF:</p>
+<ul class="simple">
+<li><p>A slow decay in ACF suggests a moving average component.</p></li>
+<li><p>A sharp drop in PACF after a certain lag <code class="docutils literal notranslate"><span class="pre">k</span></code> suggests that an autoregressive term up to <code class="docutils literal notranslate"><span class="pre">k</span></code> is significant.</p></li>
+</ul>
+<p>Conclusion:</p>
+<p>Exploratory Data Analysis (EDA) is an essential first step in time series analysis, just as in any other data analysis task. Visualization helps to get a feel for the time series data. Decomposition helps in understanding its components, and ACF &amp; PACF plots assist in understanding the correlation characteristics, which are vital for models like ARIMA.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter_04.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">4. Time Series Concepts</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter_06.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">6. Data Prepration</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-time-series-data">5.1 Visualizing Time Series Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-trends-and-seasonality">5.2 Identifying Trends and Seasonality</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-and-multiplicative-decomposition">5.2.1 Additive and Multiplicative Decomposition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-averages-smoothing">5.2.2. Moving Averages(Smoothing)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stl-decomposition-seasonal-trend-decomposition-using-loess">5.2.3. STL Decomposition (Seasonal-Trend decomposition using LOESS)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acf-and-pacf-plots">5.3 ACF and PACF plots</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Farid Jabbari Maleki
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  LinkedIn <a href="https://www.linkedin.com/in/farid-j-maleki/">Farid J. Maleki</a>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
