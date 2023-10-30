@@ -1,7 +1,7 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: Time Series Exploration with Python, A Journey from Traditional to Advanced Forecasting Models
+title: "Time Series Exploration with Python: A Journey from Traditional to Advanced Forecasting Models"
 author: Farid Jabbari Maleki
 advisor: Dr. Milad Totounchian
 #logo: logo.svg

@@ -1,4 +1,4 @@
-# **Time Series Exploration with Python:** _A Journey from Traditional to Advanced Forecasting Models_
+# **Time Series Exploration with Python**<br/>_A Journey from Traditional to Advanced Forecasting Models_
 
 ## Author
 
@@ -6,7 +6,7 @@
 
 **Email**: Farid.j.maleki@gmail.com
 
-## Adviser
+## Advisor
 
 Dr. Milad Totounchian
 
