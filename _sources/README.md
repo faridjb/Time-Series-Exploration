@@ -1,4 +1,6 @@
-# **Time Series Exploration with Python:** _A Journey from Traditional to Advanced Forecasting Models_
+# **Time Series Exploration with Python:**
+
+_A Journey from Traditional to Advanced Forecasting Models_
 
 ## Author
 
@@ -8,6 +10,6 @@
 
 ## Adviser
 
-Dr. Milad Totounchian
+[Dr. Milad Toutounchian](https://drexel.edu/cci/about/directory/T/Toutounchian-Milad/)
 
 **Email**: mt3393@drexel.edu
