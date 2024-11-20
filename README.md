@@ -2,6 +2,8 @@
 
 _A Journey from Traditional to Advanced Forecasting Models_
 
+[link of jupyter book](https://faridjb.github.io/Time-Series-Exploration/TOC.html)
+
 ## Author
 
 [Farid Jabbari Maleki](https://www.linkedin.com/in/farid-j-maleki/)
