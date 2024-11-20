@@ -2,7 +2,7 @@
 
 _A Journey from Traditional to Advanced Forecasting Models_
 
-[link of jupyter book](https://faridjb.github.io/Time-Series-Exploration/TOC.html)
+--> [link of jupyter book](https://faridjb.github.io/Time-Series-Exploration/TOC.html)
 
 ## Author
 
